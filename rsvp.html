@@ -1070,7 +1070,6 @@
       hint.style.display = 'none';
 
       // Check if guest has already answered
-      const guestName = getGuestName();
       if (guestName) {
         checkGuestAnswer(guestName);
       } else {
@@ -1081,7 +1080,7 @@
     // Check if guest has already answered
     async function checkGuestAnswer(name) {
       try {
-        const response = await fetch(`${API_URL}?action=checkGuest&name=${encodeURIComponent(name)}`);
+        const response = await fetch(`${SCRIPT_URL}?action=checkGuest&name=${encodeURIComponent(name)}`);
         const data = await response.json();
         
         if (data.success && data.found) {
