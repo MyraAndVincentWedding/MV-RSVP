@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vincent & Myra - Our Album</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Infant:wght@300;400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <style>
+    :root {
+      --dusty-blue: #6B8CAE;
+      --dusty-blue-light: #8BAAC4;
+      --dusty-blue-dark: #5A7A9A;
+      --cream: #FAF8F5;
+      --dark: #2D3748;
+      --gray: #6B7280;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    /* Hero Section */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #EBF0F5 0%, #D4DFE8 50%, #C8D4E0 100%);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 10;
+    }
+
+    .hero-content {
+      text-align: center;
+    }
+
+    .hero-monogram {
+      width: 150px;
+      height: 150px;
+      object-fit: contain;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Infant', serif;
+      font-size: 2.5rem;
+      font-weight: 300;
+      color: var(--dark);
+      margin-bottom: 0.5rem;
+      opacity: 0;
+    }
+
+    .hero-subtitle {
+      font-size: 0.9rem;
+      color: var(--gray);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      opacity: 0;
+    }
+
+    .hero-loading {
+      margin-top: 2rem;
+      opacity: 0;
+    }
+
+    .hero-loading-bar {
+      width: 150px;
+      height: 3px;
+      background: rgba(107, 140, 174, 0.2);
+      border-radius: 2px;
+      overflow: hidden;
+      margin: 0 auto 0.5rem;
+    }
+
+    .hero-loading-fill {
+      width: 0%;
+      height: 100%;
+      background: var(--dusty-blue);
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+
+    .hero-loading-text {
+      font-size: 0.75rem;
+      color: var(--gray-light);
+    }
+
+    /* Carousel Section */
+    .carousel-section {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--cream);
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .carousel-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      perspective: 1000px;
+    }
+
+    .carousel-track {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .carousel-slide {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.5);
+      opacity: 0;
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .carousel-slide img {
+      max-width: 55vw;
+      max-height: 65vh;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+    }
+
+    .carousel-slide.active {
+      z-index: 3;
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+
+    .carousel-slide.active img {
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    }
+
+    .carousel-slide.prev {
+      z-index: 2;
+      transform: translate(-115%, -50%) scale(0.75);
+      opacity: 0.6;
+    }
+
+    .carousel-slide.prev img {
+      filter: brightness(0.7);
+    }
+
+    .carousel-slide.next {
+      z-index: 2;
+      transform: translate(15%, -50%) scale(0.75);
+      opacity: 0.6;
+    }
+
+    .carousel-slide.next img {
+      filter: brightness(0.7);
+    }
+
+    .carousel-slide.hidden {
+      z-index: 0;
+      transform: translate(-50%, -50%) scale(0.5);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Progress Bar */
+    .progress-container {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      z-index: 20;
+      opacity: 0;
+    }
+
+    .progress-bar {
+      width: 200px;
+      height: 3px;
+      background: rgba(107, 140, 174, 0.2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: var(--dusty-blue);
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      font-size: 0.75rem;
+      color: var(--gray);
+      min-width: 60px;
+    }
+
+    /* Navigation */
+    .nav-controls {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      display: flex;
+      gap: 0.5rem;
+      z-index: 20;
+      opacity: 0;
+    }
+
+    .nav-btn {
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(107, 140, 174, 0.1);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+
+    .nav-btn:hover {
+      background: rgba(107, 140, 174, 0.2);
+    }
+
+    .nav-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--dusty-blue);
+    }
+
+    .nav-btn.active {
+      background: var(--dusty-blue);
+    }
+
+    .nav-btn.active svg {
+      stroke: white;
+    }
+
+    /* Footer */
+    .album-footer {
+      position: fixed;
+      bottom: 2rem;
+      left: 2rem;
+      z-index: 20;
+      opacity: 0;
+    }
+
+    .footer-monogram {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      opacity: 0.6;
+    }
+
+    /* Music Button */
+    .music-btn {
+      position: fixed;
+      top: 2rem;
+      right: 2rem;
+      width: 44px;
+      height: 44px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(107, 140, 174, 0.1);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      transition: all 0.3s;
+    }
+
+    .music-btn:hover {
+      background: rgba(107, 140, 174, 0.2);
+    }
+
+    .music-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--dusty-blue);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-monogram { width: 100px; height: 100px; }
+      .hero-title { font-size: 1.8rem; }
+      .carousel-slide img { max-width: 75vw; max-height: 55vh; }
+      .carousel-slide.prev { transform: translate(-105%, -50%) scale(0.7); }
+      .carousel-slide.next { transform: translate(5%, -50%) scale(0.7); }
+      .nav-controls { right: 1rem; bottom: 5rem; }
+      .album-footer { left: 1rem; bottom: 5rem; }
+      .progress-container { bottom: 5rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Hero -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <img src="MV.png" alt="MV" class="hero-monogram">
+      <h1 class="hero-title">Our Love Story</h1>
+      <p class="hero-subtitle">Prenup Album</p>
+      <div class="hero-loading" id="heroLoading">
+        <div class="hero-loading-bar">
+          <div class="hero-loading-fill" id="heroLoadingFill"></div>
+        </div>
+        <p class="hero-loading-text" id="heroLoadingText">Loading photos...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Carousel -->
+  <section class="carousel-section" id="carouselSection">
+    <div class="carousel-container">
+      <div class="carousel-track" id="carouselTrack"></div>
+    </div>
+  </section>
+
+  <!-- Progress -->
+  <div class="progress-container" id="progressContainer">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <span class="progress-text" id="progressText">1 / 240</span>
+  </div>
+
+  <!-- Navigation -->
+  <div class="nav-controls" id="navControls">
+    <button class="nav-btn" id="prevBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </button>
+    <button class="nav-btn active" id="playPauseBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="pauseIcon">
+        <rect x="6" y="4" width="4" height="16"/>
+        <rect x="14" y="4" width="4" height="16"/>
+      </svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="playIcon" style="display:none">
+        <polygon points="5 3 19 12 5 21 5 3"/>
+      </svg>
+    </button>
+    <button class="nav-btn" id="nextBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 18l6-6-6-6"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Footer -->
+  <div class="album-footer" id="albumFooter">
+    <img src="MV.png" alt="MV" class="footer-monogram">
+  </div>
+
+  <!-- Background Music -->
+  <audio id="bgMusic" loop>
+    <source src="cc.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Music Toggle -->
+  <button class="music-btn" id="musicBtn">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="musicOn">
+      <path d="M9 18V5l12-2v13"/>
+      <circle cx="6" cy="18" r="3"/>
+      <circle cx="18" cy="16" r="3"/>
+    </svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="musicOff" style="display:none">
+      <path d="M9 18V5l12-2v13"/>
+      <circle cx="6" cy="18" r="3"/>
+      <circle cx="18" cy="16" r="3"/>
+      <line x1="1" y1="1" x2="23" y2="23"/>
+    </svg>
+  </button>
+
+  <script>
+    const photos = [
+      "2S6A6715.jpg","2S6A6719.jpg","2S6A6721.jpg","2S6A6725.jpg","2S6A6735.jpg",
+      "2S6A6746.jpg","2S6A6752.jpg","2S6A6759.jpg","2S6A6765.jpg","2S6A6771.jpg",
+      "2S6A6773.jpg","2S6A6776.jpg","2S6A6778.jpg","2S6A6780.jpg","2S6A6787.jpg",
+      "2S6A6796.jpg","2S6A6802.jpg","2S6A6815.jpg","2S6A6824.jpg","2S6A6827.jpg",
+      "2S6A6835.jpg","2S6A6838.jpg","2S6A6850.jpg","2S6A6861.jpg","2S6A6869.jpg",
+      "2S6A6887.jpg","2S6A6890.jpg","2S6A6898.jpg","2S6A6900.jpg","2S6A6907.jpg",
+      "2S6A6910.jpg","2S6A6918.jpg","2S6A6925.jpg","2S6A6935.jpg","2S6A6939.jpg",
+      "2S6A6942.jpg","2S6A6947.jpg","2S6A6950.jpg","2S6A6953.jpg","2S6A6959.jpg",
+      "2S6A6965.jpg","2S6A6979.jpg","2S6A6992.jpg","2S6A6999.jpg","2S6A7003.jpg",
+      "2S6A7007.jpg","2S6A7018.jpg","2S6A7026.jpg","2S6A7038.jpg","2S6A7048.jpg",
+      "2S6A7051.jpg","2S6A7056.jpg","2S6A7065.jpg","2S6A7077.jpg","2S6A7083.jpg",
+      "2S6A7084.jpg","2S6A7089.jpg","2S6A7093.jpg","2S6A7094.jpg","2S6A7099.jpg",
+      "2S6A7101.jpg","2S6A7103.jpg","2S6A7121.jpg","2S6A7123.jpg","2S6A7128.jpg",
+      "2S6A7132.jpg","2S6A7144.jpg","2S6A7147.jpg","2S6A7155.jpg","2S6A7162.jpg",
+      "2S6A7174.jpg","2S6A7185.jpg","2S6A7187.jpg","2S6A7192.jpg","2S6A7195.jpg",
+      "2S6A7199.jpg","2S6A7205.jpg","2S6A7212.jpg","2S6A7217.jpg","2S6A7219.jpg",
+      "2S6A7226.jpg","2S6A7235.jpg","2S6A7245.jpg","2S6A7253.jpg","2S6A7259.jpg",
+      "2S6A7281.jpg","2S6A7282.jpg","2S6A7290.jpg","2S6A7298.jpg","2S6A7303.jpg",
+      "2S6A7308.jpg","2S6A7312.jpg","2S6A7317.jpg","2S6A7325.jpg","2S6A7334.jpg",
+      "2S6A7339.jpg","2S6A7342.jpg","2S6A7345.jpg","2S6A7350.jpg","2S6A7356.jpg",
+      "2S6A7365.jpg","2S6A7367.jpg","2S6A7379.jpg","2S6A7383.jpg","2S6A7387.jpg",
+      "2S6A7392.jpg","2S6A7394.jpg","2S6A7395.jpg","2S6A7398.jpg","2S6A7403.jpg",
+      "2S6A7405.jpg","2S6A7409.jpg","2S6A7412.jpg","2S6A7416.jpg","2S6A7419.jpg",
+      "2S6A7422.jpg","2S6A7432.jpg","2S6A7437.jpg","2S6A7440.jpg","2S6A7446.jpg",
+      "2S6A7449.jpg","2S6A7455.jpg","2S6A7459.jpg","2S6A7461.jpg","2S6A7467.jpg",
+      "2S6A7473.jpg","2S6A7476.jpg","2S6A7478.jpg","2S6A7482.jpg","2S6A7486.jpg",
+      "2S6A7492.jpg","2S6A7495.jpg","2S6A7515.jpg","2S6A7530.jpg","2S6A7536.jpg",
+      "2S6A7540.jpg","2S6A7542.jpg","2S6A7545.jpg","2S6A7567.jpg","2S6A7569.jpg",
+      "2S6A7572.jpg","2S6A7580.jpg","2S6A7586.jpg","2S6A7591.jpg","2S6A7599.jpg",
+      "2S6A7604.jpg","2S6A7611.jpg","2S6A7616.jpg","2S6A7619.jpg","2S6A7622.jpg",
+      "2S6A7629.jpg","2S6A7632.jpg","2S6A7633.jpg","2S6A7638.jpg","2S6A7643.jpg",
+      "2S6A7645.jpg","2S6A7655.jpg","2S6A7660.jpg","2S6A7663.jpg","2S6A7666.jpg",
+      "2S6A7672.jpg","2S6A7674.jpg","2S6A7680.jpg","2S6A7687.jpg","2S6A7692.jpg",
+      "2S6A7700.jpg","2S6A7712.jpg","2S6A7730.jpg","2S6A7734.jpg","2S6A7742.jpg",
+      "2S6A7746.jpg","2S6A7753.jpg","2S6A7763.jpg","2S6A7785.jpg","2S6A7788.jpg",
+      "2S6A7797.jpg","IMG_9188.jpg","IMG_9189.jpg","IMG_9192.jpg","IMG_9195.jpg",
+      "IMG_9204.jpg","IMG_9205.jpg","IMG_9213.jpg","IMG_9218.jpg","IMG_9230.jpg",
+      "IMG_9243.jpg","IMG_9249.jpg","IMG_9253.jpg","IMG_9260.jpg","IMG_9261.jpg",
+      "IMG_9263.jpg","IMG_9264.jpg","IMG_9265.jpg","IMG_9280.jpg","IMG_9284.jpg",
+      "IMG_9288.jpg","IMG_9289.jpg","IMG_9291.jpg","IMG_9301.jpg","IMG_9305.jpg",
+      "IMG_9312.jpg","IMG_9317.jpg","IMG_9322.jpg","IMG_9326.jpg","IMG_9329.jpg",
+      "IMG_9350.jpg","IMG_9351.jpg","IMG_9359.jpg","IMG_9362.jpg","IMG_9364.jpg",
+      "IMG_9370.jpg","IMG_9377.jpg","IMG_9380.jpg","IMG_9386.jpg","IMG_9392.jpg",
+      "IMG_9397.jpg","IMG_9400.jpg","IMG_9410.jpg","IMG_9420.jpg","IMG_9445.jpg",
+      "IMG_9451.jpg","IMG_9461.jpg","IMG_9465.jpg","IMG_9472.jpg","IMG_9476.jpg",
+      "IMG_9479.jpg","IMG_9482.jpg","IMG_9484.jpg","IMG_9488.jpg","IMG_9489.jpg",
+      "IMG_9492.jpg","IMG_9498.jpg","IMG_9508.jpg","IMG_9538.jpg","IMG_9539.jpg",
+      "IMG_9586.jpg","IMG_9595.jpg","IMG_9606.jpg","IMG_9610.jpg","IMG_9613.jpg"
+    ];
+
+    const track = document.getElementById('carouselTrack');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const pauseIcon = document.getElementById('pauseIcon');
+    const playIcon = document.getElementById('playIcon');
+    const bgMusic = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('musicBtn');
+    const musicOn = document.getElementById('musicOn');
+    const musicOff = document.getElementById('musicOff');
+
+    let musicPlaying = false;
+
+    // Music toggle
+    musicBtn.addEventListener('click', () => {
+      if (musicPlaying) {
+        bgMusic.pause();
+        musicOn.style.display = 'none';
+        musicOff.style.display = 'block';
+      } else {
+        bgMusic.currentTime = 8;
+        bgMusic.play();
+        musicOn.style.display = 'block';
+        musicOff.style.display = 'none';
+      }
+      musicPlaying = !musicPlaying;
+    });
+
+    // Start music after preload
+    function startMusic() {
+      bgMusic.currentTime = 8;
+      bgMusic.play().then(() => {
+        musicPlaying = true;
+        musicOn.style.display = 'block';
+        musicOff.style.display = 'none';
+      }).catch(() => {
+        // Autoplay blocked, user needs to click
+        musicPlaying = false;
+        musicOn.style.display = 'none';
+        musicOff.style.display = 'block';
+      });
+    }
+
+    let currentIndex = 0;
+    let isPlaying = true;
+    let slideInterval;
+    const SLIDE_DURATION = 4000;
+
+    // Build slides
+    photos.forEach((photo, i) => {
+      const slide = document.createElement('div');
+      slide.className = 'carousel-slide';
+      slide.dataset.index = i;
+      slide.innerHTML = `<img src="Prenup/${photo}" alt="Photo ${i + 1}">`;
+      track.appendChild(slide);
+    });
+
+    const slides = document.querySelectorAll('.carousel-slide');
+
+    function updatePositions() {
+      slides.forEach((slide, i) => {
+        slide.classList.remove('active', 'prev', 'next', 'hidden');
+
+        if (i === currentIndex) {
+          slide.classList.add('active');
+        } else if (i === (currentIndex - 1 + photos.length) % photos.length) {
+          slide.classList.add('prev');
+        } else if (i === (currentIndex + 1) % photos.length) {
+          slide.classList.add('next');
+        } else {
+          slide.classList.add('hidden');
+        }
+      });
+    }
+
+    function updateProgress() {
+      const percent = ((currentIndex + 1) / photos.length) * 100;
+      progressFill.style.width = percent + '%';
+      progressText.textContent = `${currentIndex + 1} / ${photos.length}`;
+    }
+
+    function showSlide(index) {
+      currentIndex = index;
+      updatePositions();
+      updateProgress();
+    }
+
+    function nextSlide() {
+      const next = (currentIndex + 1) % photos.length;
+      showSlide(next, 'next');
+    }
+
+    function prevSlide() {
+      const prev = (currentIndex - 1 + photos.length) % photos.length;
+      showSlide(prev, 'prev');
+    }
+
+    function startAutoPlay() {
+      clearInterval(slideInterval);
+      slideInterval = setInterval(nextSlide, SLIDE_DURATION);
+      isPlaying = true;
+      pauseIcon.style.display = 'block';
+      playIcon.style.display = 'none';
+    }
+
+    function stopAutoPlay() {
+      clearInterval(slideInterval);
+      isPlaying = false;
+      pauseIcon.style.display = 'none';
+      playIcon.style.display = 'block';
+    }
+
+    // Controls
+    document.getElementById('playPauseBtn').addEventListener('click', () => {
+      if (isPlaying) {
+        stopAutoPlay();
+      } else {
+        startAutoPlay();
+      }
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      stopAutoPlay();
+      nextSlide();
+    });
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      stopAutoPlay();
+      prevSlide();
+    });
+
+    // Hero animation then preload images
+    gsap.fromTo('.hero-monogram',
+      { opacity: 0, scale: 0.8 },
+      { opacity: 1, scale: 1, duration: 1.2, delay: 0.3, ease: 'back.out(1.7)' }
+    );
+    gsap.fromTo('.hero-title',
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 1, delay: 0.6 }
+    );
+    gsap.fromTo('.hero-subtitle',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 1, delay: 0.9 }
+    );
+    gsap.to('.hero-loading', { opacity: 1, duration: 0.5, delay: 1.2 });
+
+    // Preload all images
+    function preloadAllImages() {
+      return new Promise((resolve) => {
+        let loaded = 0;
+        const total = photos.length;
+        const heroLoadingFill = document.getElementById('heroLoadingFill');
+        const heroLoadingText = document.getElementById('heroLoadingText');
+
+        if (total === 0) {
+          resolve();
+          return;
+        }
+
+        photos.forEach((photo) => {
+          const img = new Image();
+          img.onload = img.onerror = () => {
+            loaded++;
+            const percent = Math.round((loaded / total) * 100);
+            heroLoadingFill.style.width = percent + '%';
+            heroLoadingText.textContent = `Loading photos... ${percent}%`;
+
+            if (loaded === total) {
+              resolve();
+            }
+          };
+          img.src = `Prenup/${photo}`;
+        });
+      });
+    }
+
+    // Wait for hero animation then preload
+    setTimeout(() => {
+      preloadAllImages().then(() => {
+        document.getElementById('heroLoadingText').textContent = 'Ready!';
+
+        setTimeout(() => {
+          gsap.to('.hero', {
+            opacity: 0,
+            duration: 1,
+            onComplete: () => {
+              document.getElementById('hero').style.display = 'none';
+              document.getElementById('carouselSection').style.opacity = '1';
+              document.getElementById('carouselSection').style.visibility = 'visible';
+              document.getElementById('progressContainer').style.opacity = '1';
+              document.getElementById('navControls').style.opacity = '1';
+              document.getElementById('albumFooter').style.opacity = '1';
+              document.getElementById('musicBtn').style.opacity = '1';
+
+              updatePositions();
+              updateProgress();
+              startAutoPlay();
+              startMusic();
+            }
+          });
+        }, 500);
+      });
+    }, 1500);
+  </script>
+</body>
+</html>
