@@ -353,7 +353,7 @@
     <div class="progress-bar">
       <div class="progress-fill" id="progressFill"></div>
     </div>
-    <span class="progress-text" id="progressText">1 / 240</span>
+    <span class="progress-text" id="progressText">1 / --</span>
   </div>
 
   <!-- Navigation -->
@@ -405,57 +405,6 @@
   </button>
 
   <script>
-    const photos = [
-      "2S6A6715.jpg","2S6A6719.jpg","2S6A6721.jpg","2S6A6725.jpg","2S6A6735.jpg",
-      "2S6A6746.jpg","2S6A6752.jpg","2S6A6759.jpg","2S6A6765.jpg","2S6A6771.jpg",
-      "2S6A6773.jpg","2S6A6776.jpg","2S6A6778.jpg","2S6A6780.jpg","2S6A6787.jpg",
-      "2S6A6796.jpg","2S6A6802.jpg","2S6A6815.jpg","2S6A6824.jpg","2S6A6827.jpg",
-      "2S6A6835.jpg","2S6A6838.jpg","2S6A6850.jpg","2S6A6861.jpg","2S6A6869.jpg",
-      "2S6A6887.jpg","2S6A6890.jpg","2S6A6898.jpg","2S6A6900.jpg","2S6A6907.jpg",
-      "2S6A6910.jpg","2S6A6918.jpg","2S6A6925.jpg","2S6A6935.jpg","2S6A6939.jpg",
-      "2S6A6942.jpg","2S6A6947.jpg","2S6A6950.jpg","2S6A6953.jpg","2S6A6959.jpg",
-      "2S6A6965.jpg","2S6A6979.jpg","2S6A6992.jpg","2S6A6999.jpg","2S6A7003.jpg",
-      "2S6A7007.jpg","2S6A7018.jpg","2S6A7026.jpg","2S6A7038.jpg","2S6A7048.jpg",
-      "2S6A7051.jpg","2S6A7056.jpg","2S6A7065.jpg","2S6A7077.jpg","2S6A7083.jpg",
-      "2S6A7084.jpg","2S6A7089.jpg","2S6A7093.jpg","2S6A7094.jpg","2S6A7099.jpg",
-      "2S6A7101.jpg","2S6A7103.jpg","2S6A7121.jpg","2S6A7123.jpg","2S6A7128.jpg",
-      "2S6A7132.jpg","2S6A7144.jpg","2S6A7147.jpg","2S6A7155.jpg","2S6A7162.jpg",
-      "2S6A7174.jpg","2S6A7185.jpg","2S6A7187.jpg","2S6A7192.jpg","2S6A7195.jpg",
-      "2S6A7199.jpg","2S6A7205.jpg","2S6A7212.jpg","2S6A7217.jpg","2S6A7219.jpg",
-      "2S6A7226.jpg","2S6A7235.jpg","2S6A7245.jpg","2S6A7253.jpg","2S6A7259.jpg",
-      "2S6A7281.jpg","2S6A7282.jpg","2S6A7290.jpg","2S6A7298.jpg","2S6A7303.jpg",
-      "2S6A7308.jpg","2S6A7312.jpg","2S6A7317.jpg","2S6A7325.jpg","2S6A7334.jpg",
-      "2S6A7339.jpg","2S6A7342.jpg","2S6A7345.jpg","2S6A7350.jpg","2S6A7356.jpg",
-      "2S6A7365.jpg","2S6A7367.jpg","2S6A7379.jpg","2S6A7383.jpg","2S6A7387.jpg",
-      "2S6A7392.jpg","2S6A7394.jpg","2S6A7395.jpg","2S6A7398.jpg","2S6A7403.jpg",
-      "2S6A7405.jpg","2S6A7409.jpg","2S6A7412.jpg","2S6A7416.jpg","2S6A7419.jpg",
-      "2S6A7422.jpg","2S6A7432.jpg","2S6A7437.jpg","2S6A7440.jpg","2S6A7446.jpg",
-      "2S6A7449.jpg","2S6A7455.jpg","2S6A7459.jpg","2S6A7461.jpg","2S6A7467.jpg",
-      "2S6A7473.jpg","2S6A7476.jpg","2S6A7478.jpg","2S6A7482.jpg","2S6A7486.jpg",
-      "2S6A7492.jpg","2S6A7495.jpg","2S6A7515.jpg","2S6A7530.jpg","2S6A7536.jpg",
-      "2S6A7540.jpg","2S6A7542.jpg","2S6A7545.jpg","2S6A7567.jpg","2S6A7569.jpg",
-      "2S6A7572.jpg","2S6A7580.jpg","2S6A7586.jpg","2S6A7591.jpg","2S6A7599.jpg",
-      "2S6A7604.jpg","2S6A7611.jpg","2S6A7616.jpg","2S6A7619.jpg","2S6A7622.jpg",
-      "2S6A7629.jpg","2S6A7632.jpg","2S6A7633.jpg","2S6A7638.jpg","2S6A7643.jpg",
-      "2S6A7645.jpg","2S6A7655.jpg","2S6A7660.jpg","2S6A7663.jpg","2S6A7666.jpg",
-      "2S6A7672.jpg","2S6A7674.jpg","2S6A7680.jpg","2S6A7687.jpg","2S6A7692.jpg",
-      "2S6A7700.jpg","2S6A7712.jpg","2S6A7730.jpg","2S6A7734.jpg","2S6A7742.jpg",
-      "2S6A7746.jpg","2S6A7753.jpg","2S6A7763.jpg","2S6A7785.jpg","2S6A7788.jpg",
-      "2S6A7797.jpg","IMG_9188.jpg","IMG_9189.jpg","IMG_9192.jpg","IMG_9195.jpg",
-      "IMG_9204.jpg","IMG_9205.jpg","IMG_9213.jpg","IMG_9218.jpg","IMG_9230.jpg",
-      "IMG_9243.jpg","IMG_9249.jpg","IMG_9253.jpg","IMG_9260.jpg","IMG_9261.jpg",
-      "IMG_9263.jpg","IMG_9264.jpg","IMG_9265.jpg","IMG_9280.jpg","IMG_9284.jpg",
-      "IMG_9288.jpg","IMG_9289.jpg","IMG_9291.jpg","IMG_9301.jpg","IMG_9305.jpg",
-      "IMG_9312.jpg","IMG_9317.jpg","IMG_9322.jpg","IMG_9326.jpg","IMG_9329.jpg",
-      "IMG_9350.jpg","IMG_9351.jpg","IMG_9359.jpg","IMG_9362.jpg","IMG_9364.jpg",
-      "IMG_9370.jpg","IMG_9377.jpg","IMG_9380.jpg","IMG_9386.jpg","IMG_9392.jpg",
-      "IMG_9397.jpg","IMG_9400.jpg","IMG_9410.jpg","IMG_9420.jpg","IMG_9445.jpg",
-      "IMG_9451.jpg","IMG_9461.jpg","IMG_9465.jpg","IMG_9472.jpg","IMG_9476.jpg",
-      "IMG_9479.jpg","IMG_9482.jpg","IMG_9484.jpg","IMG_9488.jpg","IMG_9489.jpg",
-      "IMG_9492.jpg","IMG_9498.jpg","IMG_9508.jpg","IMG_9538.jpg","IMG_9539.jpg",
-      "IMG_9586.jpg","IMG_9595.jpg","IMG_9606.jpg","IMG_9610.jpg","IMG_9613.jpg"
-    ];
-
     const track = document.getElementById('carouselTrack');
     const progressFill = document.getElementById('progressFill');
     const progressText = document.getElementById('progressText');
@@ -467,6 +416,12 @@
     const musicOff = document.getElementById('musicOff');
 
     let musicPlaying = false;
+    let photos = [];
+    let currentIndex = 0;
+    let isPlaying = true;
+    let slideInterval;
+    const SLIDE_DURATION = 4000;
+    let slides = [];
 
     // Music toggle
     musicBtn.addEventListener('click', () => {
@@ -491,33 +446,28 @@
         musicOn.style.display = 'block';
         musicOff.style.display = 'none';
       }).catch(() => {
-        // Autoplay blocked, user needs to click
         musicPlaying = false;
         musicOn.style.display = 'none';
         musicOff.style.display = 'block';
       });
     }
 
-    let currentIndex = 0;
-    let isPlaying = true;
-    let slideInterval;
-    const SLIDE_DURATION = 4000;
-
-    // Build slides
-    photos.forEach((photo, i) => {
-      const slide = document.createElement('div');
-      slide.className = 'carousel-slide';
-      slide.dataset.index = i;
-      slide.innerHTML = `<img src="Prenup/${photo}" alt="Photo ${i + 1}">`;
-      track.appendChild(slide);
-    });
-
-    const slides = document.querySelectorAll('.carousel-slide');
+    // Build slides from photo list
+    function buildSlides() {
+      track.innerHTML = '';
+      photos.forEach((photo, i) => {
+        const slide = document.createElement('div');
+        slide.className = 'carousel-slide';
+        slide.dataset.index = i;
+        slide.innerHTML = `<img src="Prenup/${photo}" alt="Photo ${i + 1}">`;
+        track.appendChild(slide);
+      });
+      slides = document.querySelectorAll('.carousel-slide');
+    }
 
     function updatePositions() {
       slides.forEach((slide, i) => {
         slide.classList.remove('active', 'prev', 'next', 'hidden');
-
         if (i === currentIndex) {
           slide.classList.add('active');
         } else if (i === (currentIndex - 1 + photos.length) % photos.length) {
@@ -569,36 +519,15 @@
 
     // Controls
     document.getElementById('playPauseBtn').addEventListener('click', () => {
-      if (isPlaying) {
-        stopAutoPlay();
-      } else {
-        startAutoPlay();
-      }
+      if (isPlaying) { stopAutoPlay(); } else { startAutoPlay(); }
     });
+    document.getElementById('nextBtn').addEventListener('click', () => { stopAutoPlay(); nextSlide(); });
+    document.getElementById('prevBtn').addEventListener('click', () => { stopAutoPlay(); prevSlide(); });
 
-    document.getElementById('nextBtn').addEventListener('click', () => {
-      stopAutoPlay();
-      nextSlide();
-    });
-
-    document.getElementById('prevBtn').addEventListener('click', () => {
-      stopAutoPlay();
-      prevSlide();
-    });
-
-    // Hero animation then preload images
-    gsap.fromTo('.hero-monogram',
-      { opacity: 0, scale: 0.8 },
-      { opacity: 1, scale: 1, duration: 1.2, delay: 0.3, ease: 'back.out(1.7)' }
-    );
-    gsap.fromTo('.hero-title',
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 1, delay: 0.6 }
-    );
-    gsap.fromTo('.hero-subtitle',
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 1, delay: 0.9 }
-    );
+    // Hero animation
+    gsap.fromTo('.hero-monogram', { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 1.2, delay: 0.3, ease: 'back.out(1.7)' });
+    gsap.fromTo('.hero-title', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1, delay: 0.6 });
+    gsap.fromTo('.hero-subtitle', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1, delay: 0.9 });
     gsap.to('.hero-loading', { opacity: 1, duration: 0.5, delay: 1.2 });
 
     // Preload all images
@@ -608,12 +537,7 @@
         const total = photos.length;
         const heroLoadingFill = document.getElementById('heroLoadingFill');
         const heroLoadingText = document.getElementById('heroLoadingText');
-
-        if (total === 0) {
-          resolve();
-          return;
-        }
-
+        if (total === 0) { resolve(); return; }
         photos.forEach((photo) => {
           const img = new Image();
           img.onload = img.onerror = () => {
@@ -621,42 +545,47 @@
             const percent = Math.round((loaded / total) * 100);
             heroLoadingFill.style.width = percent + '%';
             heroLoadingText.textContent = `Loading photos... ${percent}%`;
-
-            if (loaded === total) {
-              resolve();
-            }
+            if (loaded === total) { resolve(); }
           };
           img.src = `Prenup/${photo}`;
         });
       });
     }
 
-    // Wait for hero animation then preload
+    // Load photos.json then start
     setTimeout(() => {
-      preloadAllImages().then(() => {
-        document.getElementById('heroLoadingText').textContent = 'Ready!';
-
-        setTimeout(() => {
-          gsap.to('.hero', {
-            opacity: 0,
-            duration: 1,
-            onComplete: () => {
-              document.getElementById('hero').style.display = 'none';
-              document.getElementById('carouselSection').style.opacity = '1';
-              document.getElementById('carouselSection').style.visibility = 'visible';
-              document.getElementById('progressContainer').style.opacity = '1';
-              document.getElementById('navControls').style.opacity = '1';
-              document.getElementById('albumFooter').style.opacity = '1';
-              document.getElementById('musicBtn').style.opacity = '1';
-
-              updatePositions();
-              updateProgress();
-              startAutoPlay();
-              startMusic();
-            }
-          });
-        }, 500);
-      });
+      fetch('Prenup/photos.json')
+        .then(r => r.json())
+        .then(data => {
+          photos = data;
+          buildSlides();
+          return preloadAllImages();
+        })
+        .then(() => {
+          document.getElementById('heroLoadingText').textContent = 'Ready!';
+          setTimeout(() => {
+            gsap.to('.hero', {
+              opacity: 0, duration: 1,
+              onComplete: () => {
+                document.getElementById('hero').style.display = 'none';
+                document.getElementById('carouselSection').style.opacity = '1';
+                document.getElementById('carouselSection').style.visibility = 'visible';
+                document.getElementById('progressContainer').style.opacity = '1';
+                document.getElementById('navControls').style.opacity = '1';
+                document.getElementById('albumFooter').style.opacity = '1';
+                document.getElementById('musicBtn').style.opacity = '1';
+                updatePositions();
+                updateProgress();
+                startAutoPlay();
+                startMusic();
+              }
+            });
+          }, 500);
+        })
+        .catch(err => {
+          console.error('Failed to load photos:', err);
+          document.getElementById('heroLoadingText').textContent = 'Failed to load photos.';
+        });
     }, 1500);
   </script>
 </body>

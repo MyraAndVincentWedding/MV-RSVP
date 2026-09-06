@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vincent & Myra — Already Answered</title>
+  <title>Vincent & Myra — Invitation</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Great+Vibes&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
@@ -143,6 +143,19 @@
       animation: scaleIn 0.5s 0.2s ease-out both;
     }
 
+    .invitation-text {
+      font-family: var(--font-sans);
+      font-size: 0.5rem;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      color: var(--gray);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      line-height: 1.8;
+      opacity: 0;
+      animation: fadeUp 0.5s 0.35s ease-out both;
+    }
+
     .names {
       font-family: var(--font-serif);
       font-size: 3rem;
@@ -151,13 +164,25 @@
       line-height: 1.1;
       margin-bottom: 0.5rem;
       opacity: 0;
-      animation: fadeUp 0.5s 0.3s ease-out both;
+      animation: fadeUp 0.5s 0.4s ease-out both;
     }
     .names .amp {
       font-family: var(--font-script);
       font-size: 2.8rem;
       color: var(--dusty-blue);
       margin: 0 0.05em;
+    }
+
+    .married-text {
+      font-family: var(--font-sans);
+      font-size: 0.5rem;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      color: var(--gray);
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      animation: fadeUp 0.5s 0.5s ease-out both;
     }
 
     .date-info {
@@ -167,9 +192,20 @@
       letter-spacing: 0.15em;
       color: var(--dark-navy);
       text-transform: uppercase;
-      margin-bottom: 1rem;
+      margin-bottom: 0.2rem;
       opacity: 0;
-      animation: fadeUp 0.5s 0.4s ease-out both;
+      animation: fadeUp 0.5s 0.55s ease-out both;
+    }
+    .time-info {
+      font-family: var(--font-sans);
+      font-size: 0.5rem;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      color: var(--gray);
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      animation: fadeUp 0.5s 0.6s ease-out both;
     }
 
     .diamond-divider {
@@ -179,7 +215,7 @@
       gap: 0.8rem;
       margin-bottom: 1.2rem;
       opacity: 0;
-      animation: fadeIn 0.5s 0.5s ease-out both;
+      animation: fadeIn 0.5s 0.65s ease-out both;
     }
     .diamond-divider .line {
       width: 60px;
@@ -195,84 +231,61 @@
       opacity: 0.6;
     }
 
-    .already-title {
+    .dear-guest {
       font-family: var(--font-serif);
-      font-size: 1.1rem;
-      font-weight: 400;
+      font-size: 1rem;
       color: var(--dark-navy);
-      margin-bottom: 0.8rem;
-      opacity: 0;
-      animation: fadeUp 0.5s 0.55s ease-out both;
-    }
-
-    .already-response {
-      font-family: var(--font-sans);
-      font-size: 0.8rem;
-      color: var(--gray);
-      margin-bottom: 0.3rem;
-      opacity: 0;
-      animation: fadeUp 0.5s 0.6s ease-out both;
-    }
-    .already-response strong {
-      color: var(--dusty-blue);
-      font-weight: 600;
-    }
-
-    .already-message {
-      font-family: var(--font-script);
-      font-size: 1.1rem;
-      color: var(--dusty-blue);
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      animation: fadeUp 0.5s 0.65s ease-out both;
-    }
-
-    /* Buttons */
-    .buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 0.7rem;
+      margin-bottom: 0.5rem;
       opacity: 0;
       animation: fadeUp 0.5s 0.7s ease-out both;
     }
-    .btn {
+    .dear-guest .name {
+      font-family: var(--font-script);
+      font-size: 1.3rem;
+      color: var(--dusty-blue);
+    }
+
+    .message-text {
+      font-family: var(--font-serif);
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--gray);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+      opacity: 0;
+      animation: fadeUp 0.5s 0.75s ease-out both;
+    }
+
+    .question-text {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--dark-navy);
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      animation: fadeUp 0.5s 0.8s ease-out both;
+    }
+
+    .btn-continue {
       display: inline-block;
-      padding: 0.85rem 2.5rem;
+      padding: 0.9rem 3rem;
+      background: var(--dusty-blue);
+      color: white;
       border: none;
       font-family: var(--font-sans);
       font-size: 0.6rem;
       font-weight: 600;
-      letter-spacing: 0.15em;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
       cursor: pointer;
       transition: all 0.3s ease;
-      text-align: center;
-      min-width: 220px;
+      opacity: 0;
+      animation: fadeUp 0.5s 0.85s ease-out both;
     }
-    .btn-change {
-      background: var(--dusty-blue);
-      color: white;
-    }
-    .btn-change:hover {
+    .btn-continue:hover {
       background: var(--dusty-blue-dark);
       transform: translateY(-1px);
       box-shadow: 0 4px 20px rgba(123, 153, 171, 0.3);
-    }
-    .btn-album {
-      background: transparent;
-      color: var(--dusty-blue);
-      border: 1px solid var(--dusty-blue);
-    }
-    .btn-album:hover {
-      background: rgba(123, 153, 171, 0.08);
-    }
-    .btn-theme {
-      background: transparent;
-      color: var(--gray);
-      border: 1px solid var(--gray-light);
-    }
-    .btn-theme:hover {
-      background: rgba(107, 114, 128, 0.06);
     }
 
     .footer-text {
@@ -281,9 +294,9 @@
       font-weight: 300;
       color: var(--gray);
       line-height: 1.6;
-      margin-top: 1.5rem;
+      margin-top: 1.2rem;
       opacity: 0;
-      animation: fadeUp 0.5s 0.8s ease-out both;
+      animation: fadeUp 0.5s 0.95s ease-out both;
     }
 
     .same-journey {
@@ -292,7 +305,7 @@
       right: 1.5rem;
       text-align: right;
       opacity: 0;
-      animation: fadeIn 0.5s 0.9s ease-out both;
+      animation: fadeIn 0.5s 1s ease-out both;
     }
     .same-journey span {
       display: block;
@@ -410,6 +423,9 @@
         font-size: 0.5rem;
         letter-spacing: 0.15em;
       }
+      .same-journey span::after {
+        content: ' ';
+      }
     }
 
     @media (max-width: 480px) {
@@ -421,11 +437,14 @@
       .content-side { padding: 1.5rem 1rem 2.5rem; }
       .names { font-size: 2rem; }
       .names .amp { font-size: 1.8rem; }
+      .invitation-text { font-size: 0.45rem; margin-bottom: 1rem; }
+      .married-text { font-size: 0.45rem; }
       .date-info { font-size: 0.85rem; }
-      .already-title { font-size: 0.95rem; }
-      .already-response { font-size: 0.75rem; }
-      .already-message { font-size: 0.95rem; }
-      .btn { min-width: 180px; padding: 0.75rem 1.5rem; font-size: 0.55rem; }
+      .time-info { font-size: 0.45rem; }
+      .dear-guest { font-size: 0.9rem; }
+      .dear-guest .name { font-size: 1.1rem; }
+      .message-text { font-size: 0.8rem; }
+      .question-text { font-size: 0.9rem; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -504,9 +523,17 @@
       <div class="content-inner">
         <img src="MV.png" alt="MV" class="monogram">
 
+        <p class="invitation-text">
+          Together with our families<br>
+          We invite you to celebrate
+        </p>
+
         <h1 class="names">Vincent <span class="amp">&</span> Myra</h1>
 
+        <p class="married-text">Are getting married</p>
+
         <p class="date-info">October 28, 2026</p>
+        <p class="time-info">Two o'clock in the afternoon</p>
 
         <div class="diamond-divider">
           <div class="line"></div>
@@ -514,17 +541,15 @@
           <div class="line"></div>
         </div>
 
-        <p class="already-title">You have already submitted your answer!</p>
-        <p class="already-response" id="alreadyResponse"></p>
-        <p class="already-message" id="alreadyMessage"></p>
+        <p class="dear-guest">Dear <span class="name" id="guestName">Guest</span>,</p>
+        <p class="message-text">
+          You have already submitted your answer.<br>
+          Would you like to change it?
+        </p>
 
-        <div class="buttons">
-          <button class="btn btn-change" id="btnChange">Change my answer</button>
-          <button class="btn btn-album" id="btnAlbum">View Album</button>
-          <button class="btn btn-theme" id="btnTheme">View Event's theme</button>
-        </div>
+        <button class="btn-continue" id="btnContinue">Continue to RSVP</button>
 
-        <p class="footer-text">Thank you for your response!</p>
+        <p class="footer-text">With love,<br>Vincent & Myra</p>
       </div>
 
       <div class="same-journey">
@@ -535,24 +560,11 @@
 
   <script>
     const urlParams = new URLSearchParams(window.location.search);
-    const name = urlParams.get('name') || 'Guest';
-    const response = urlParams.get('response') || '';
-    const message = urlParams.get('message') || '';
+    const guestName = urlParams.get('name') || 'Guest';
+    document.getElementById('guestName').textContent = guestName;
 
-    const responseLabel = response === 'Accept' ? 'Accept' : 'Decline';
-    document.getElementById('alreadyResponse').innerHTML = `Your response: <strong>${responseLabel}</strong>`;
-    if (message) {
-      document.getElementById('alreadyMessage').textContent = `"${message}"`;
-    }
-
-    document.getElementById('btnChange').addEventListener('click', () => {
-      window.location.href = `invitation.html?name=${encodeURIComponent(name)}`;
-    });
-    document.getElementById('btnAlbum').addEventListener('click', () => {
-      window.location.href = 'album.html';
-    });
-    document.getElementById('btnTheme').addEventListener('click', () => {
-      window.location.href = 'index.html';
+    document.getElementById('btnContinue').addEventListener('click', () => {
+      window.location.href = `rsvp.html?name=${encodeURIComponent(guestName)}&skip=1`;
     });
   </script>
 </body>

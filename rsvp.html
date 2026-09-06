@@ -11,587 +11,254 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      /* Dusty Blue Palette */
       --dusty-blue: #6B8CAE;
       --dusty-blue-light: #8BAAC4;
       --dusty-blue-dark: #5A7A9A;
       --dusty-blue-muted: #A3BDD4;
-      
-      /* Silver Palette */
       --silver: #C0C0C0;
       --silver-light: #D8D8D8;
       --silver-dark: #A8A8A8;
-      
-      /* Gray Palette */
       --gray: #6B7280;
       --gray-light: #9CA3AF;
       --gray-dark: #4B5563;
       --gray-muted: #F3F4F6;
-      
-      /* Neutrals */
       --white: #FFFFFF;
-      --off-white: #FAFBFC;
-      --cream: #F8F9FA;
       --dark: #1F2937;
-      --dark-soft: #374151;
-      
-      /* Fonts */
       --font-script: 'Great Vibes', cursive;
       --font-serif: 'Cormorant Infant', Georgia, serif;
       --font-sans: 'Inter', -apple-system, sans-serif;
     }
 
-    body {
-      font-family: var(--font-sans);
-      background: linear-gradient(135deg, #E8EDF1 0%, #D6E0E8 50%, #C5D3DE 100%);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem 1rem;
-      color: var(--dark);
+    html, body { height: 100%; overflow: hidden; }
+    body { font-family: var(--font-sans); background: #D6E0E8; color: var(--dark); }
+
+    .page { display: flex; height: 100vh; width: 100vw; }
+
+    /* Photo Side */
+    .photo-side {
+      flex: 1;
+      position: relative;
       overflow: hidden;
     }
-
-    /* ===== PARTICLES ===== */
-    .particles {
-      position: fixed;
-      top: 0;
-      left: 0;
+    .photo-side img.photo {
       width: 100%;
       height: 100%;
-      pointer-events: none;
-      z-index: 1;
+      object-fit: cover;
     }
-
-    .particle {
+    .photo-overlay {
       position: absolute;
-      width: 3px;
-      height: 3px;
-      background: var(--dusty-blue);
-      border-radius: 50%;
-      opacity: 0;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(107,140,174,0.15) 0%, rgba(31,41,55,0.25) 100%);
+      pointer-events: none;
     }
-
-    /* ===== MAIN SCENE ===== */
-    .main-scene {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+    .photo-badge {
+      position: absolute;
+      bottom: 2rem;
+      left: 2rem;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.35);
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 100;
-    }
-
-    /* ===== ENVELOPE ===== */
-    .wrapper {
-      height: 240px;
-      width: 360px;
-      background-color: var(--dusty-blue);
-      position: relative;
-      display: flex;
-      justify-content: center;
-      z-index: 0;
-      cursor: pointer;
       opacity: 0;
-      clip-path: inset(0 100% 0 0);
-      filter: drop-shadow(0 15px 35px rgba(90, 122, 154, 0.35));
+      animation: fadeUp 0.6s 0.5s ease-out forwards;
+    }
+    .photo-badge img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
     }
 
-    .lid {
-      position: absolute;
-      height: 100%;
-      width: 100%;
-      top: 0;
-      left: 0;
-      border-right: 180px solid transparent;
-      border-bottom: 120px solid transparent;
-      border-left: 180px solid transparent;
-      transform-origin: top;
-    }
-
-    /* Lid when closed */
-    .lid.one {
-      border-top: 120px solid var(--dusty-blue-light);
-      transform: rotateX(0deg);
-      z-index: 3;
-    }
-
-    /* Lid when opened */
-    .lid.two {
-      border-top: 120px solid var(--dusty-blue-dark);
-      transform: rotateX(90deg);
-      z-index: 1;
-    }
-
-    .envelope {
-      position: absolute;
-      height: 100%;
-      width: 100%;
-      top: 0;
-      left: 0;
-      border-top: 120px solid transparent;
-      border-right: 180px solid var(--dusty-blue-muted);
-      border-bottom: 120px solid var(--dusty-blue-muted);
-      border-left: 180px solid var(--dusty-blue-light);
-      z-index: 3;
-    }
-
-    .letter {
-      position: absolute;
-      top: 8%;
-      width: 80%;
-      height: 85%;
-      background-color: var(--white);
-      border-radius: 8px;
-      z-index: 2;
+    /* Form Side */
+    .form-side {
+      width: 460px;
+      min-width: 400px;
+      background: rgba(255,255,255,0.65);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-left: 1px solid rgba(255,255,255,0.5);
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      background-image:
-        linear-gradient(var(--gray-muted) 1px, transparent 1px);
-      background-size: 100% 1.4rem;
-      background-position: 0 0.5rem;
-    }
-
-    .letter-logo {
-      width: 45px;
-      height: 45px;
-      object-fit: contain;
-      margin-bottom: 0.2rem;
-    }
-
-    .letter-names {
-      font-family: var(--font-serif);
-      font-size: 1.15rem;
-      font-weight: 500;
-      color: var(--dark);
-      text-align: center;
-      line-height: 1.2;
-      letter-spacing: 0.02em;
-    }
-
-    .letter-names .amp {
-      font-family: var(--font-script);
-      font-size: 1.05rem;
-      color: var(--dusty-blue);
-    }
-
-    .letter-date {
-      font-size: 0.6rem;
-      color: var(--gray);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-top: 0.2rem;
-    }
-
-    /* ===== WAX SEAL ===== */
-    .wax-seal {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 75px;
-      height: 75px;
-      background: radial-gradient(circle at 30% 30%, #E8E8E8 0%, var(--silver) 30%, var(--silver-dark) 60%, #808080 100%);
-      border-radius: 50%;
-      z-index: 20;
-      cursor: pointer;
-      box-shadow:
-        0 6px 20px rgba(150, 150, 150, 0.5),
-        0 3px 8px rgba(0,0,0,0.15),
-        inset 0 3px 5px rgba(255,255,255,0.5),
-        inset 0 -3px 8px rgba(0,0,0,0.15);
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .wax-seal:hover {
-      transform: translate(-50%, -50%) scale(1.1);
-    }
-
-    .wax-seal::before {
-      content: '';
-      position: absolute;
-      top: 6px;
-      left: 6px;
-      right: 6px;
-      bottom: 6px;
-      border: 2px solid rgba(255,255,255,0.5);
-      border-radius: 50%;
-    }
-
-    .wax-seal::after {
-      content: '';
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      right: 12px;
-      bottom: 12px;
-      border: 1.5px solid rgba(255,255,255,0.3);
-      border-radius: 50%;
-    }
-
-    .seal-logo {
-      width: 40px;
-      height: 40px;
-      object-fit: contain;
-      filter: brightness(1.1) contrast(1.05);
-      pointer-events: none;
-    }
-
-    /* ===== HINT ===== */
-    .hint {
-      position: absolute;
-      bottom: -60px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-family: var(--font-serif);
-      font-size: 1rem;
-      color: var(--gray);
-      animation: hintPulse 2.5s ease-in-out infinite;
-      opacity: 0;
-      white-space: nowrap;
-    }
-
-    @keyframes hintPulse {
-      0%, 100% { opacity: 0.4; }
-      50% { opacity: 0.9; }
-    }
-
-    /* ===== HOVER ANIMATIONS (GSAP WILL HANDLE THIS) ===== */
-
-    /* ===== CARD SCENE ===== */
-    .card-scene {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 50;
-      opacity: 0;
-      pointer-events: none;
-      padding: 1rem;
-    }
-
-    .card-scene.active {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .card {
-      background: var(--white);
-      border-radius: 16px;
-      box-shadow: 
-        0 25px 80px rgba(107, 140, 174, 0.2),
-        0 8px 24px rgba(0, 0, 0, 0.06);
-      max-width: 420px;
-      width: 100%;
-      text-align: center;
-      overflow: hidden;
-      max-height: 90vh;
+      padding: 2.5rem 3rem;
       overflow-y: auto;
-      opacity: 0;
-      transform: translateY(40px) scale(0.95);
     }
 
-    .hero {
-      width: 100%;
-      height: 160px;
-      background: linear-gradient(135deg, var(--dusty-blue-light) 0%, var(--dusty-blue) 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-
-    .hero .no-photo {
-      color: rgba(255,255,255,0.7);
-      font-style: italic;
-      font-size: 0.85rem;
-    }
-
-    .hero-overlay {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 50%;
-      background: linear-gradient(transparent, rgba(255,255,255,0.95));
-    }
-
-    .card-body {
-      padding: 1.5rem 1.5rem 1.75rem;
-    }
-
-    .monogram {
-      width: 60px;
-      height: 60px;
+    .form-header { text-align: center; margin-bottom: 1.5rem; }
+    .form-header .logo {
+      width: 44px;
+      height: 44px;
       object-fit: contain;
-      margin-bottom: 0.15rem;
-      opacity: 0;
-      transform: scale(0.7);
-    }
-
-    .names {
-      font-family: var(--font-serif);
-      font-size: 1.5rem;
-      font-weight: 500;
-      color: var(--dark);
-      margin-bottom: 0.15rem;
-      line-height: 1.2;
-      opacity: 0;
-    }
-
-    .names .amp {
-      font-family: var(--font-script);
-      font-size: 1.3rem;
-      color: var(--dusty-blue);
-      margin: 0 0.08em;
-    }
-
-    .date {
-      font-size: 0.7rem;
-      color: var(--gray);
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      margin-bottom: 0.15rem;
-      opacity: 0;
-    }
-
-    .hashtag {
-      font-size: 0.65rem;
-      font-weight: 500;
-      color: var(--dusty-blue);
       margin-bottom: 0.6rem;
       opacity: 0;
+      transform: scale(0.6);
+    }
+    .form-header .names {
+      font-family: var(--font-serif);
+      font-size: 1.75rem;
+      font-weight: 400;
+      color: var(--dark);
+      line-height: 1.2;
+      margin-bottom: 0.2rem;
+      opacity: 0;
+    }
+    .form-header .names .amp {
+      font-family: var(--font-script);
+      font-size: 1.5rem;
+      color: var(--dusty-blue);
+    }
+    .form-header .date {
+      font-size: 0.65rem;
+      color: var(--gray);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0;
+    }
+    .form-header .hashtag {
+      font-size: 0.6rem;
+      font-weight: 500;
+      color: var(--dusty-blue-muted);
+      margin-top: 0.15rem;
+      opacity: 0;
     }
 
-    .divider {
+    .sep {
       width: 40px;
       height: 1px;
-      background: linear-gradient(90deg, transparent, var(--dusty-blue), transparent);
-      margin: 0 auto 0.6rem;
+      background: linear-gradient(90deg, transparent, var(--dusty-blue-muted), transparent);
+      margin: 1.2rem auto;
       opacity: 0;
       transform: scaleX(0);
     }
 
     .greeting {
       font-family: var(--font-serif);
-      font-size: 0.85rem;
+      font-size: 0.95rem;
       color: var(--gray);
-      margin-bottom: 0.85rem;
-      line-height: 1.5;
+      text-align: center;
+      line-height: 1.6;
+      margin-bottom: 1.2rem;
       opacity: 0;
     }
+    .greeting strong { color: var(--dusty-blue-dark); font-weight: 600; }
 
-    .greeting strong {
+    /* Form */
+    .form-group { margin-bottom: 0.9rem; opacity: 0; transform: translateY(8px); }
+    .form-group label {
+      display: block;
+      font-size: 0.6rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gray);
+      margin-bottom: 0.4rem;
+    }
+
+    .radio-group { display: flex; gap: 0.6rem; }
+    .radio-opt { flex: 1; position: relative; }
+    .radio-opt input { position: absolute; opacity: 0; width: 0; height: 0; }
+    .radio-opt label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem;
+      border: 1.5px solid rgba(192,192,192,0.5);
+      border-radius: 10px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--gray);
+      background: rgba(255,255,255,0.4);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .radio-opt label:hover { border-color: var(--dusty-blue-muted); }
+    .radio-opt input:checked + label {
+      border-color: var(--dusty-blue);
+      background: rgba(107,140,174,0.1);
       color: var(--dusty-blue-dark);
       font-weight: 600;
     }
-
-    .form-group {
-      margin-bottom: 0.75rem;
-      text-align: left;
-      opacity: 0;
-      transform: translateY(8px);
-    }
-
-    label {
-      display: block;
-      font-size: 0.6rem;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--gray);
-      margin-bottom: 0.3rem;
+    .radio-opt input:focus-visible + label {
+      outline: 2px solid var(--dusty-blue);
+      outline-offset: 2px;
     }
 
     textarea {
       width: 100%;
-      padding: 0.65rem 0.8rem;
-      border: 1.5px solid var(--silver-light);
+      padding: 0.75rem 0.9rem;
+      border: 1.5px solid rgba(192,192,192,0.5);
       border-radius: 10px;
       font-family: var(--font-sans);
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       color: var(--dark);
-      background: var(--gray-muted);
+      background: rgba(255,255,255,0.4);
       transition: all 0.2s ease;
       outline: none;
       resize: vertical;
       min-height: 70px;
     }
-
+    textarea::placeholder { color: var(--gray-light); }
     textarea:focus {
       border-color: var(--dusty-blue);
-      box-shadow: 0 0 0 3px rgba(107, 140, 174, 0.1);
-      background: var(--white);
-    }
-
-    .radio-group {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    .radio-opt {
-      flex: 1;
-      position: relative;
-    }
-
-    .radio-opt input {
-      position: absolute;
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .radio-opt label {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.65rem 0.6rem;
-      border: 1.5px solid var(--silver-light);
-      border-radius: 10px;
-      font-size: 0.75rem;
-      color: var(--gray);
-      background: var(--gray-muted);
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .radio-opt input:checked + label {
-      border-color: var(--dusty-blue);
-      background: rgba(107, 140, 174, 0.08);
-      color: var(--dusty-blue-dark);
-      font-weight: 500;
-    }
-
-    .radio-opt label:hover {
-      border-color: var(--silver-dark);
+      box-shadow: 0 0 0 3px rgba(107,140,174,0.08);
+      background: rgba(255,255,255,0.6);
     }
 
     .btn-submit {
       width: 100%;
-      padding: 0.75rem;
-      background: linear-gradient(135deg, var(--dusty-blue), var(--dusty-blue-dark));
-      color: var(--white);
+      padding: 0.8rem;
+      background: rgba(107,140,174,0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: white;
       border: none;
       border-radius: 10px;
       font-family: var(--font-sans);
       font-size: 0.8rem;
-      font-weight: 500;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
-      margin-top: 0.3rem;
-      box-shadow: 0 4px 15px rgba(107, 140, 174, 0.3);
+      transition: all 0.25s ease;
+      margin-top: 0.4rem;
+      box-shadow: 0 4px 16px rgba(107,140,174,0.25);
+      letter-spacing: 0.04em;
       opacity: 0;
       transform: translateY(8px);
     }
-
     .btn-submit:hover {
+      background: rgba(90,122,154,0.95);
       transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(107, 140, 174, 0.4);
+      box-shadow: 0 6px 24px rgba(107,140,174,0.35);
     }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-    .btn-submit:active { transform: translateY(0); }
-    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+    .error-msg {
+      display: none;
+      font-size: 0.72rem;
+      color: #DC2626;
+      text-align: center;
+      margin-top: 0.4rem;
+    }
+    .error-msg.show { display: block; }
 
     .footer {
       font-family: var(--font-serif);
-      font-style: italic;
-      font-size: 0.75rem;
-      color: var(--gray);
-      margin-top: 0.85rem;
-      line-height: 1.4;
-      opacity: 0;
-    }
-
-    /* Confirmation */
-    .confirmation {
-      display: none;
-      padding: 2rem 1.5rem;
-    }
-
-    .confirmation.show {
-      display: block;
-      animation: fadeIn 0.5s ease;
-    }
-
-    .confirmation .checkmark {
-      width: 56px; height: 56px;
-      background: rgba(107, 140, 174, 0.1);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1rem;
-    }
-
-    .confirmation .checkmark svg {
-      width: 26px; height: 26px;
-      stroke: var(--dusty-blue);
-    }
-
-    .confirmation h2 {
-      font-family: var(--font-serif);
-      font-size: 1.4rem;
-      color: var(--dark);
-      margin-bottom: 0.4rem;
-    }
-
-    .confirmation p {
-      color: var(--gray);
-      font-size: 0.8rem;
-      line-height: 1.5;
-    }
-
-    .error-msg {
-      color: #DC2626;
       font-size: 0.7rem;
-      margin-top: 0.3rem;
-      display: none;
-    }
-
-    .error-msg.show { display: block; }
-
-    /* Loading Screen */
-    .loading-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: transparent;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      transition: opacity 0.6s ease, visibility 0.6s ease;
-    }
-
-    .loading-screen.hidden {
+      color: var(--gray-light);
+      text-align: center;
+      margin-top: 1.2rem;
+      line-height: 1.5;
       opacity: 0;
-      visibility: hidden;
     }
 
-    /* Initial Play Button */
+    /* Initial Play */
     .initial-play {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       background: linear-gradient(135deg, #EBF0F5 0%, #D4DFE8 50%, #C8D4E0 100%);
       display: flex;
       align-items: center;
@@ -599,236 +266,182 @@
       z-index: 99999;
       transition: opacity 0.5s ease;
     }
-
-    .initial-play.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
+    .initial-play.hidden { opacity: 0; pointer-events: none; }
     .big-play-btn {
-      width: 100px;
-      height: 100px;
+      width: 90px;
+      height: 90px;
       border-radius: 50%;
-      background: var(--dusty-blue);
-      border: none;
+      background: rgba(107,140,174,0.8);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.4);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all 0.3s;
-      box-shadow: 0 10px 40px rgba(107, 140, 174, 0.4);
+      box-shadow: 0 8px 32px rgba(107,140,174,0.35);
     }
-
     .big-play-btn:hover {
-      transform: scale(1.1);
-      background: var(--dusty-blue-dark);
+      transform: scale(1.08);
+      background: rgba(90,122,154,0.9);
     }
+    .big-play-btn svg { width: 36px; height: 36px; fill: white; margin-left: 4px; }
 
-    .big-play-btn svg {
-      width: 40px;
-      height: 40px;
-      fill: white;
-      margin-left: 5px;
+    /* Loading */
+    .loading-screen {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #EBF0F5 0%, #D4DFE8 50%, #C8D4E0 100%);
+      z-index: 99998;
+      transition: opacity 0.5s ease;
     }
-
-    .loading-text {
-      font-family: var(--font-serif);
-      font-size: 1rem;
-      color: var(--gray);
-      margin-bottom: 1.5rem;
-      letter-spacing: 0.05em;
-    }
-
+    .loading-screen.hidden { opacity: 0; pointer-events: none; }
     .loading-sprites {
       position: relative;
       width: 100vw;
       height: 600px;
       overflow: hidden;
-      background: linear-gradient(135deg, #EBF0F5 0%, #D4DFE8 50%, #C8D4E0 100%);
     }
-
     .sprite-img {
       position: absolute;
       bottom: 0;
       image-rendering: crisp-edges;
     }
+    .vincent-sprite { width: 165px; height: 322px; object-fit: contain; z-index: 3; left: -165px; }
+    .myra-sprite { width: 150px; height: 300px; object-fit: contain; z-index: 2; left: -180px; }
 
-    .vincent-sprite {
-      width: 165px;
-      height: 322px;
-      object-fit: contain;
-      z-index: 3;
-      left: -165px;
+    /* Confirmation */
+    .confirmation { display: none; text-align: center; padding: 1.5rem; }
+    .confirmation.show { display: block; }
+    .checkmark {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(107,140,174,0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.8rem;
     }
+    .checkmark svg { width: 28px; height: 28px; stroke: white; }
+    .confirmation h2 { font-family: var(--font-serif); font-size: 1.4rem; color: var(--dark); margin-bottom: 0.4rem; }
+    .confirmation p { font-size: 0.82rem; color: var(--gray); line-height: 1.5; }
 
-    .myra-sprite {
-      width: 150px;
-      height: 300px;
-      object-fit: contain;
-      z-index: 2;
-      left: -180px;
-    }
+    /* Particles */
+    .particles { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+    .particle { position: absolute; width: 3px; height: 3px; background: var(--dusty-blue); border-radius: 50%; opacity: 0; }
 
-    /* Responsive */
-    @media (max-width: 480px) {
-      .wrapper { width: 300px; height: 200px; }
-      .lid { border-right: 150px solid transparent; border-left: 150px solid transparent; }
-      .lid.one { border-top: 100px solid var(--dusty-blue-light); }
-      .lid.two { border-top: 100px solid var(--dusty-blue-dark); }
-      .envelope { border-top: 100px solid transparent; border-right: 150px solid var(--dusty-blue-muted); border-bottom: 100px solid var(--dusty-blue-muted); border-left: 150px solid var(--dusty-blue-light); }
-      .wax-seal { width: 55px; height: 55px; }
-      .seal-logo { width: 28px; height: 28px; }
-      .card-body { padding: 1.25rem 1rem 1.5rem; }
-      .names { font-size: 1.3rem; }
-      .monogram { width: 50px; height: 50px; }
-      .hero { height: 140px; }
-      .radio-group { flex-direction: column; gap: 0.4rem; }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        transition-duration: 0.01ms !important;
+    /* Responsive */
+    @media (max-width: 900px) {
+      .page { flex-direction: column; }
+      .photo-side { flex: none; height: 35vh; }
+      .form-side {
+        width: 100%; min-width: unset; flex: 1;
+        padding: 1.5rem;
+        border-radius: 20px 20px 0 0;
+        margin-top: -20px;
+        position: relative; z-index: 2;
+        border-left: none;
       }
+      .form-header .names { font-size: 1.5rem; }
+    }
+    @media (max-width: 480px) {
+      .photo-side { height: 28vh; }
+      .form-side { padding: 1.25rem 1rem; }
+      .form-header .names { font-size: 1.3rem; }
+      .radio-group { flex-direction: column; gap: 0.5rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Initial Play Button -->
   <div class="initial-play" id="initialPlay">
     <button class="big-play-btn" id="bigPlayBtn">
-      <svg viewBox="0 0 24 24" fill="currentColor">
-        <polygon points="5 3 19 12 5 21 5 3"/>
-      </svg>
+      <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
     </button>
   </div>
 
-  <!-- Loading Screen -->
   <div class="loading-screen hidden" id="loadingScreen">
     <div class="loading-sprites">
-      <img id="vincentSprite" src="tengwalk/tengwalk_00000.png" alt="Walking" class="sprite-img vincent-sprite">
-      <img id="myraSprite" src="myrawalk/myra_00000.png" alt="Walking" class="sprite-img myra-sprite">
+      <img id="vincentSprite" src="tengwalk/tengwalk_00000.png" class="sprite-img vincent-sprite">
+      <img id="myraSprite" src="myrawalk/myra_00000.png" class="sprite-img myra-sprite">
     </div>
   </div>
 
-  <!-- Walk Music -->
-  <audio id="walkMusic">
-    <source src="widding.mp3" type="audio/mpeg">
-  </audio>
-
-  <!-- Particles -->
+  <audio id="walkMusic"><source src="widding.mp3" type="audio/mpeg"></audio>
   <div class="particles" id="particles"></div>
 
-  <!-- Main Scene -->
-  <div class="main-scene" id="mainScene">
-    
-    <!-- Envelope -->
-    <div class="wrapper" id="envelopeWrapper">
-      <div class="lid one" id="lidOne"></div>
-      <div class="lid two" id="lidTwo"></div>
-      <div class="envelope"></div>
-      <div class="letter" id="envLetter">
-        <img src="MV.png" alt="MV Logo" class="letter-logo">
-        <div class="letter-names">Vincent <span class="amp">&</span> Myra</div>
-        <div class="letter-date">October 28, 2026</div>
-      </div>
+  <div class="page" id="mainPage" style="display:none;">
+    <div class="photo-side">
+      <img class="photo" src="Prenup/2S6A6918.jpg" alt="Vincent & Myra">
+      <div class="photo-overlay"></div>
+      <div class="photo-badge"><img src="MV.png" alt="MV"></div>
     </div>
-    
-    <!-- Wax seal (separate overlay) -->
-    <div class="wax-seal" id="waxSeal">
-      <img src="MV.png" alt="MV" class="seal-logo">
-    </div>
-    
-    <p class="hint" id="hint">Tap to open</p>
-  </div>
 
-  <!-- Card -->
-  <div class="card-scene" id="cardScene">
-    <div class="card" id="card">
+    <div class="form-side">
       <div id="rsvpForm">
-        <div class="hero">
-          <div class="no-photo">Your photo here</div>
-          <div class="hero-overlay"></div>
+        <div class="form-header">
+          <img src="MV.png" alt="MV" class="logo">
+          <h1 class="names">Vincent <span class="amp">&</span> Myra</h1>
+          <p class="date">October 28, 2026</p>
+          <p class="hashtag">#NaConVinceNaSiMyra</p>
         </div>
-        <div class="card-body">
-          <img src="MV.png" alt="MV Logo" class="monogram" id="monogram">
-          <h1 class="names" id="names">Vincent <span class="amp">&</span> Myra</h1>
-          <p class="date" id="date">October 28, 2026</p>
-          <p class="hashtag" id="hashtag">#NaConVinceNaSiMyra</p>
-          <div class="divider" id="divider"></div>
-          <p class="greeting" id="greeting">
-            Dear <strong id="guestName">Guest</strong>,<br>
-            Will you be celebrating with us?
-          </p>
-          <form id="form" novalidate>
-            <div class="form-group" id="formAttending">
-              <label>Your Response</label>
-              <div class="radio-group">
-                <div class="radio-opt">
-                  <input type="radio" id="yes" name="attending" value="Yes" required>
-                  <label for="yes">Accept</label>
-                </div>
-                <div class="radio-opt">
-                  <input type="radio" id="no" name="attending" value="No">
-                  <label for="no">Decline</label>
-                </div>
-              </div>
+        <div class="sep"></div>
+        <p class="greeting">Dear <strong id="guestName">Guest</strong>,<br>Will you be celebrating with us?</p>
+        <form id="form" novalidate>
+          <div class="form-group" id="formAttending">
+            <label>Your Response</label>
+            <div class="radio-group">
+              <div class="radio-opt"><input type="radio" id="yes" name="attending" value="Yes" required><label for="yes">Accept</label></div>
+              <div class="radio-opt"><input type="radio" id="no" name="attending" value="No"><label for="no">Decline</label></div>
             </div>
-            <div class="form-group" id="formMessage">
-              <label for="message">Message to the Couple</label>
-              <textarea id="message" placeholder="Share your well-wishes..."></textarea>
-            </div>
-            <div id="error" class="error-msg">Please select your response.</div>
-            <button type="submit" class="btn-submit" id="submitBtn">Send RSVP</button>
-          </form>
-          <p class="footer" id="footerMsg">With love,<br>Vincent & Myra</p>
-        </div>
+          </div>
+          <div class="form-group" id="formMessage">
+            <label for="message">Message to the Couple</label>
+            <textarea id="message" placeholder="Share your well-wishes..."></textarea>
+          </div>
+          <div id="error" class="error-msg">Please select your response.</div>
+          <button type="submit" class="btn-submit" id="submitBtn">Send RSVP</button>
+        </form>
+        <p class="footer" id="footerMsg">With love,<br>Vincent & Myra</p>
       </div>
+
       <div id="confirmation" class="confirmation">
-        <div class="checkmark">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-        </div>
+        <div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
         <h2 id="confirmTitle">Thank You!</h2>
         <p id="confirmMsg">Your RSVP has been received.<br>We can't wait to celebrate with you!</p>
-        <p class="hashtag" style="margin-top:1rem;">#NaConVinceNaSiMyra</p>
+        <p class="hashtag" style="margin-top:0.8rem;">#NaConVinceNaSiMyra</p>
         <p class="footer" style="opacity:1;">With love,<br>Vincent & Myra</p>
       </div>
+
       <div id="declineConfirmation" class="confirmation">
-        <div class="checkmark">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-        </div>
+        <div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
         <h2>Thank You!</h2>
         <p>We appreciate your answer.<br>Hope to see you soon in good health!</p>
-        <p class="hashtag" style="margin-top:1rem;">#NaConVinceNaSiMyra</p>
+        <p class="hashtag" style="margin-top:0.8rem;">#NaConVinceNaSiMyra</p>
         <p class="footer" style="opacity:1;">With love,<br>Vincent & Myra</p>
-        <p style="margin-top:1.5rem; font-size:0.85rem; color:var(--gray);">Redirecting you to our album...</p>
+        <p style="margin-top:1rem; font-size:0.82rem; color:var(--gray);">Redirecting you to our album...</p>
       </div>
     </div>
   </div>
 
   <script>
-    // Get guest name
     const urlParams = new URLSearchParams(window.location.search);
     const guestName = urlParams.get('name') || 'Guest';
     document.getElementById('guestName').textContent = guestName;
 
-    // Elements
-    const mainScene = document.getElementById('mainScene');
-    const envelopeWrapper = document.getElementById('envelopeWrapper');
-    const envLetter = document.getElementById('envLetter');
-    const waxSeal = document.getElementById('waxSeal');
-    const hint = document.getElementById('hint');
-    const cardScene = document.getElementById('cardScene');
+    const mainPage = document.getElementById('mainPage');
     const loadingScreen = document.getElementById('loadingScreen');
     const vincentSprite = document.getElementById('vincentSprite');
     const myraSprite = document.getElementById('myraSprite');
@@ -836,273 +449,74 @@
     const initialPlay = document.getElementById('initialPlay');
     const bigPlayBtn = document.getElementById('bigPlayBtn');
 
-    // Big play button - starts everything
+    const skipAnimation = urlParams.get('skip') === '1';
+    if (skipAnimation) {
+      initialPlay.style.display = 'none';
+      loadingScreen.style.display = 'none';
+      mainPage.style.display = 'flex';
+      gsap.set(['.logo','.form-header .names','.form-header .date','.form-header .hashtag','.sep','.greeting','.form-group','.btn-submit','.footer'], { opacity: 1, transform: 'none' });
+    }
+
     bigPlayBtn.addEventListener('click', () => {
       initialPlay.classList.add('hidden');
       loadingScreen.classList.remove('hidden');
-
-      // Play walk music
       walkMusic.currentTime = 10;
       walkMusic.play();
-
-      // Start walking animation
       startWalkingAnimation();
     });
 
-    // Walking sprite animation
-    let currentFrameVincent = 0;
-    let currentFrameMyra = 0;
-    const totalFramesVincent = 50;
-    const totalFramesMyra = 36;
-    const frameInterval = 42;
-
+    let currentFrameVincent = 0, currentFrameMyra = 0;
+    const totalFramesVincent = 50, totalFramesMyra = 36, frameInterval = 42;
     function animateSprites() {
-      vincentSprite.src = `tengwalk/tengwalk_${String(currentFrameVincent).padStart(5, '0')}.png`;
-      myraSprite.src = `myrawalk/myra_${String(currentFrameMyra * 2).padStart(5, '0')}.png`;
+      vincentSprite.src = `tengwalk/tengwalk_${String(currentFrameVincent).padStart(5,'0')}.png`;
+      myraSprite.src = `myrawalk/myra_${String(currentFrameMyra * 2).padStart(5,'0')}.png`;
       currentFrameVincent = (currentFrameVincent + 1) % totalFramesVincent;
       currentFrameMyra = (currentFrameMyra + 1) % totalFramesMyra;
     }
-
     const spriteInterval = setInterval(animateSprites, frameInterval);
 
-    // Walking animation - characters move left to right
     function startWalkingAnimation() {
-      const DURATION = 10;
-      const VINCENT_WIDTH = 165;
-      const MYRA_WIDTH = 150;
-      const GAP = 30; // Gap between characters
-
-      const vincentState = { x: -VINCENT_WIDTH };
-      const myraState = { x: -VINCENT_WIDTH - GAP - MYRA_WIDTH };
-
-      const vincentEndX = window.innerWidth + VINCENT_WIDTH;
-      const myraEndX = window.innerWidth + VINCENT_WIDTH + GAP + MYRA_WIDTH;
-
-      // Start sprite animation
-      setInterval(animateSprites, frameInterval);
-
-      // Animate characters walking
-      gsap.to(vincentState, {
-        x: vincentEndX,
-        duration: DURATION,
-        ease: 'none',
-        onUpdate: () => {
-          vincentSprite.style.left = vincentState.x + 'px';
-        }
-      });
-
-      gsap.to(myraState, {
-        x: myraEndX,
-        duration: DURATION,
-        ease: 'none',
-        onUpdate: () => {
-          myraSprite.style.left = myraState.x + 'px';
-        }
-      });
-
-      // Hide loading screen and stop music after animation
+      const DURATION = 10, VW = 165, MW = 150, GAP = 30;
+      const vs = { x: -VW }, ms = { x: -VW - GAP - MW };
+      const ve = window.innerWidth + VW, me = window.innerWidth + VW + GAP + MW;
+      gsap.to(vs, { x: ve, duration: DURATION, ease: 'none', onUpdate: () => { vincentSprite.style.left = vs.x + 'px'; } });
+      gsap.to(ms, { x: me, duration: DURATION, ease: 'none', onUpdate: () => { myraSprite.style.left = ms.x + 'px'; } });
       setTimeout(() => {
         loadingScreen.classList.add('hidden');
-        walkMusic.pause();
-        walkMusic.currentTime = 0;
+        walkMusic.pause(); walkMusic.currentTime = 0;
         clearInterval(spriteInterval);
-
-        // Fade in envelope
-        gsap.to('#envelopeWrapper', {
-          opacity: 1,
-          clipPath: 'inset(0 0% 0 0)',
-          duration: 1,
-          ease: 'power2.out'
-        });
+        mainPage.style.display = 'flex';
+        animatePageIn();
       }, DURATION * 750);
     }
 
-    // Preload all images
-    function preloadImages() {
-      return new Promise((resolve) => {
-        const images = document.querySelectorAll('img');
-        const totalImages = images.length;
-        let loadedImages = 0;
-
-        if (totalImages === 0) {
-          resolve();
-          return;
-        }
-
-        images.forEach((img) => {
-          if (img.complete) {
-            loadedImages++;
-          } else {
-            img.onload = () => {
-              loadedImages++;
-            };
-            img.onerror = () => {
-              loadedImages++;
-            };
-          }
-        });
-
-        // Fallback: resolve after 3 seconds even if images fail
-        setTimeout(resolve, 3000);
-      });
+    function animatePageIn() {
+      const tl = gsap.timeline({ delay: 0.15 });
+      tl.from('.photo-side .photo', { scale: 1.08, duration: 1, ease: 'power2.out' })
+        .to('.photo-badge', { opacity: 1, duration: 0.4 }, '-=0.4')
+        .to('.logo', { opacity: 1, scale: 1, duration: 0.35, ease: 'back.out(1.7)' }, '-=0.6')
+        .to('.form-header .names', { opacity: 1, duration: 0.3 }, '-=0.2')
+        .to('.form-header .date', { opacity: 1, duration: 0.2 }, '-=0.15')
+        .to('.form-header .hashtag', { opacity: 1, duration: 0.2 }, '-=0.1')
+        .to('.sep', { opacity: 1, scaleX: 1, duration: 0.35, ease: 'power2.out' }, '-=0.1')
+        .to('.greeting', { opacity: 1, duration: 0.3 }, '-=0.15')
+        .to('.form-group', { opacity: 1, y: 0, duration: 0.25, stagger: 0.08 }, '-=0.1')
+        .to('.btn-submit', { opacity: 1, y: 0, duration: 0.25 }, '-=0.08')
+        .to('.footer', { opacity: 1, duration: 0.2 }, '-=0.1');
     }
 
-    function hideLoadingScreen() {
-      if (!window._wiperTimeline) {
-        startWiperReveal();
-      }
-    }
-
-    // Start wiper reveal immediately
-    preloadImages().then(hideLoadingScreen);
-    
-    // Also start immediately if preload takes too long
-    setTimeout(() => {
-      if (!window._wiperTimeline) {
-        startWiperReveal();
-      }
-    }, 500);
-
-    // Create particles
-    function createParticles() {
-      const container = document.getElementById('particles');
-      for (let i = 0; i < 15; i++) {
+    // Particles
+    (function createParticles() {
+      const c = document.getElementById('particles');
+      for (let i = 0; i < 12; i++) {
         const p = document.createElement('div');
         p.className = 'particle';
         p.style.left = Math.random() * 100 + '%';
         p.style.top = Math.random() * 100 + '%';
-        container.appendChild(p);
-        gsap.to(p, {
-          opacity: Math.random() * 0.3 + 0.1,
-          y: -80 - Math.random() * 150,
-          x: (Math.random() - 0.5) * 60,
-          duration: 5 + Math.random() * 5,
-          repeat: -1,
-          delay: Math.random() * 3,
-          ease: 'none'
-        });
+        c.appendChild(p);
+        gsap.to(p, { opacity: Math.random() * 0.25 + 0.08, y: -80 - Math.random() * 120, x: (Math.random()-0.5)*50, duration: 5+Math.random()*5, repeat: -1, delay: Math.random()*3, ease: 'none' });
       }
-    }
-    createParticles();
-
-    // Open envelope animation
-    function openEnvelope() {
-      if (window._wiperTimeline && window._wiperTimeline.isActive()) {
-        window._wiperTimeline.kill();
-      }
-
-      waxSeal.style.pointerEvents = 'none';
-      hint.style.display = 'none';
-
-      // Check if guest has already answered
-      if (guestName) {
-        checkGuestAnswer(guestName);
-      } else {
-        showEnvelopeAnimation();
-      }
-    }
-
-    // Check if guest has already answered
-    async function checkGuestAnswer(name) {
-      try {
-        const response = await fetch(`${SCRIPT_URL}?action=checkGuest&name=${encodeURIComponent(name)}`);
-        const data = await response.json();
-        
-        if (data.success && data.found) {
-          // Guest has already answered - redirect to already-answered page
-          window.location.href = `already-answered.html?name=${encodeURIComponent(name)}&response=${encodeURIComponent(data.response)}&message=${encodeURIComponent(data.message)}`;
-        } else {
-          // Guest hasn't answered yet - show envelope animation
-          showEnvelopeAnimation();
-        }
-      } catch (error) {
-        // If error, show envelope animation anyway
-        showEnvelopeAnimation();
-      }
-    }
-
-    // Show envelope animation
-    function showEnvelopeAnimation() {
-      const tl = gsap.timeline();
-
-      // Step 1: Seal breaks
-      tl.to(waxSeal, {
-        scale: 1.5,
-        opacity: 0,
-        rotation: 20,
-        duration: 0.35,
-        ease: 'back.in(2)'
-      })
-      // Step 2: Front flap opens
-      .to('#lidOne', {
-        rotationX: 90,
-        duration: 0.5,
-        ease: 'power2.out'
-      }, '-=0.1')
-      // Step 3: Back flap opens
-      .to('#lidTwo', {
-        rotationX: 180,
-        duration: 0.5,
-        ease: 'power2.out'
-      }, '-=0.2')
-      // Step 4: Move flaps behind everything
-      .set('#lidOne', { zIndex: 0 })
-      .set('#lidTwo', { zIndex: 0 })
-      // Step 5: WAIT 0.3 seconds
-      .to({}, { duration: 0.3 })
-      // Step 6: Letter slides up
-      .to('#envLetter', {
-        y: -350,
-        duration: 0.8,
-        ease: 'power2.out'
-      })
-      // Step 7: Envelope fades
-      .to('#envelopeWrapper', {
-        opacity: 0,
-        duration: 0.4,
-        ease: 'power3.in'
-      }, '-=0.4')
-      // Step 10: Letter fades
-      .to('#envLetter', {
-        opacity: 0,
-        duration: 0.3,
-        ease: 'power2.in'
-      }, '-=0.3')
-      // Step 11: Scene fades, card appears
-      .to('#mainScene', {
-        opacity: 0,
-        duration: 0.25,
-        onComplete: () => {
-          mainScene.style.display = 'none';
-          cardScene.classList.add('active');
-          animateCard();
-        }
-      }, '-=0.15');
-    }
-
-    // Animate card in
-    function animateCard() {
-      const tl = gsap.timeline({ delay: 0.15 });
-
-      tl.to('#card', { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: 'back.out(1.4)' })
-        .to('#monogram', { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(1.7)' }, '-=0.25')
-        .to('#names', { opacity: 1, duration: 0.35 }, '-=0.2')
-        .to('#date', { opacity: 1, duration: 0.25 }, '-=0.15')
-        .to('#hashtag', { opacity: 1, duration: 0.25 }, '-=0.1')
-        .to('#divider', { opacity: 1, scaleX: 1, duration: 0.4, ease: 'power2.out' }, '-=0.1')
-        .to('#greeting', { opacity: 1, duration: 0.35 }, '-=0.2')
-        .to('#formAttending', { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }, '-=0.1')
-        .to('#formMessage', { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }, '-=0.12')
-        .to('#submitBtn', { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }, '-=0.1')
-        .to('#footerMsg', { opacity: 1, duration: 0.25 }, '-=0.1');
-    }
-
-    // Click handlers
-    envelopeWrapper.addEventListener('click', openEnvelope);
-    waxSeal.addEventListener('click', (e) => {
-      e.stopPropagation();
-      openEnvelope();
-    });
+    })();
 
     // Form
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyffN1G9drnWEmKcHWczRtcOzrIuRuFvCHL_BdJhOcXS8WSpBLPT80VKrZXPMqNA1k/exec';
@@ -1116,49 +530,18 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       errorEl.classList.remove('show');
-
       const attending = document.querySelector('input[name="attending"]:checked');
       const message = document.getElementById('message').value.trim();
-
-      if (!attending) {
-        errorEl.classList.add('show');
-        gsap.from(errorEl, { opacity: 0, y: -4, duration: 0.25 });
-        return;
-      }
-
+      if (!attending) { errorEl.classList.add('show'); return; }
       submitBtn.disabled = true;
       submitBtn.textContent = 'Sending...';
-
-      const data = {
-        name: guestName,
-        attending: attending.value,
-        message: message || '(no message)'
-      };
-
       try {
-        await fetch(SCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-
-        gsap.to(formSection, {
-          opacity: 0,
-          y: -8,
-          duration: 0.25,
-          onComplete: () => {
-            formSection.style.display = 'none';
-            if (attending.value === 'No') {
-              declineConfirmation.classList.add('show');
-              setTimeout(() => {
-                window.location.href = 'album.html';
-              }, 5000);
-            } else {
-              confirmationSection.classList.add('show');
-            }
-          }
-        });
+        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: guestName, attending: attending.value, message: message || '(no message)' }) });
+        gsap.to(formSection, { opacity: 0, y: -8, duration: 0.25, onComplete: () => {
+          formSection.style.display = 'none';
+          if (attending.value === 'No') { declineConfirmation.classList.add('show'); setTimeout(() => { window.location.href = 'album.html'; }, 5000); }
+          else { confirmationSection.classList.add('show'); }
+        }});
       } catch (err) {
         errorEl.textContent = 'Something went wrong. Please try again.';
         errorEl.classList.add('show');
