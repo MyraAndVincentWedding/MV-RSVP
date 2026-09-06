@@ -669,6 +669,81 @@
       left: -180px;
     }
 
+    /* ===== ALREADY ANSWERED STYLES ===== */
+    .already-answered-text {
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      color: var(--dusty-blue-dark);
+      margin-bottom: 1rem;
+    }
+
+    .already-answered-response {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: var(--gray);
+      margin-bottom: 0.5rem;
+    }
+
+    .already-answered-message {
+      font-family: var(--font-script);
+      font-size: 1.1rem;
+      color: var(--dusty-blue);
+      font-style: italic;
+      margin-bottom: 1.5rem;
+    }
+
+    .already-answered-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn-change-answer,
+    .btn-view-album,
+    .btn-view-theme {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 25px;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-change-answer {
+      background: var(--dusty-blue);
+      color: white;
+    }
+
+    .btn-change-answer:hover {
+      background: var(--dusty-blue-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn-view-album {
+      background: transparent;
+      color: var(--dusty-blue);
+      border: 2px solid var(--dusty-blue);
+    }
+
+    .btn-view-album:hover {
+      background: var(--dusty-blue);
+      color: white;
+    }
+
+    .btn-view-theme {
+      background: var(--silver);
+      color: var(--dusty-blue-dark);
+    }
+
+    .btn-view-theme:hover {
+      background: var(--dusty-blue-muted);
+    }
+
     /* Responsive */
     @media (max-width: 480px) {
       .wrapper { width: 300px; height: 200px; }
@@ -853,12 +928,12 @@
     let currentFrameVincent = 0;
     let currentFrameMyra = 0;
     const totalFramesVincent = 50;
-    const totalFramesMyra = 71;
+    const totalFramesMyra = 36;
     const frameInterval = 42;
 
     function animateSprites() {
       vincentSprite.src = `tengwalk/tengwalk_${String(currentFrameVincent).padStart(5, '0')}.png`;
-      myraSprite.src = `myrawalk/myra_${String(currentFrameMyra).padStart(5, '0')}.png`;
+      myraSprite.src = `myrawalk/myra_${String(currentFrameMyra * 2).padStart(5, '0')}.png`;
       currentFrameVincent = (currentFrameVincent + 1) % totalFramesVincent;
       currentFrameMyra = (currentFrameMyra + 1) % totalFramesMyra;
     }
@@ -994,6 +1069,86 @@
       waxSeal.style.pointerEvents = 'none';
       hint.style.display = 'none';
 
+      // Check if guest has already answered
+      const guestName = getGuestName();
+      if (guestName) {
+        checkGuestAnswer(guestName);
+      } else {
+        showEnvelopeAnimation();
+      }
+    }
+
+    // Check if guest has already answered
+    async function checkGuestAnswer(name) {
+      try {
+        const response = await fetch(`${API_URL}?action=checkGuest&name=${encodeURIComponent(name)}`);
+        const data = await response.json();
+        
+        if (data.success && data.found) {
+          // Guest has already answered - show already answered screen
+          showAlreadyAnswered(data.response, data.message);
+        } else {
+          // Guest hasn't answered yet - show envelope animation
+          showEnvelopeAnimation();
+        }
+      } catch (error) {
+        // If error, show envelope animation anyway
+        showEnvelopeAnimation();
+      }
+    }
+
+    // Show already answered screen
+    function showAlreadyAnswered(response, message) {
+      mainScene.style.display = 'none';
+      cardScene.classList.add('active');
+      
+      // Hide form elements
+      document.getElementById('formAttending').style.display = 'none';
+      document.getElementById('formMessage').style.display = 'none';
+      document.getElementById('submitBtn').style.display = 'none';
+      document.getElementById('footerMsg').style.display = 'none';
+      
+      // Update card content
+      document.getElementById('greeting').innerHTML = `
+        <p class="already-answered-text">You have already submitted your answer!</p>
+        <p class="already-answered-response">Your response: <strong>${response === 'Accept' ? 'Accept' : 'Decline'}</strong></p>
+        ${message ? `<p class="already-answered-message">"${message}"</p>` : ''}
+        <div class="already-answered-buttons">
+          <button class="btn-change-answer" onclick="changeAnswer()">Change my answer</button>
+          <button class="btn-view-album" onclick="window.location.href='album.html'">View Album</button>
+          <button class="btn-view-theme" onclick="window.location.href='index.html'">View Event's theme</button>
+        </div>
+      `;
+      
+      // Animate card
+      const tl = gsap.timeline({ delay: 0.15 });
+      tl.to('#card', { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: 'back.out(1.4)' })
+        .to('#monogram', { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(1.7)' }, '-=0.25')
+        .to('#names', { opacity: 1, duration: 0.35 }, '-=0.2')
+        .to('#date', { opacity: 1, duration: 0.25 }, '-=0.15')
+        .to('#hashtag', { opacity: 1, duration: 0.25 }, '-=0.1')
+        .to('#divider', { opacity: 1, scaleX: 1, duration: 0.4, ease: 'power2.out' }, '-=0.1')
+        .to('#greeting', { opacity: 1, duration: 0.35 }, '-=0.2');
+    }
+
+    // Change answer - show form again
+    function changeAnswer() {
+      document.getElementById('formAttending').style.display = 'block';
+      document.getElementById('formMessage').style.display = 'block';
+      document.getElementById('submitBtn').style.display = 'block';
+      document.getElementById('footerMsg').style.display = 'block';
+      document.getElementById('greeting').innerHTML = '<p>We would be honored by your presence at our wedding</p>';
+      
+      // Re-animate form elements
+      const tl = gsap.timeline();
+      tl.to('#formAttending', { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' })
+        .to('#formMessage', { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }, '-=0.12')
+        .to('#submitBtn', { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }, '-=0.1')
+        .to('#footerMsg', { opacity: 1, duration: 0.25 }, '-=0.1');
+    }
+
+    // Show envelope animation
+    function showEnvelopeAnimation() {
       const tl = gsap.timeline();
 
       // Step 1: Seal breaks
