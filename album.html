@@ -452,6 +452,16 @@
       });
     }
 
+    // Get image URL from photo object
+    function getPhotoUrl(photo) {
+      // Support both formats: string (local) or object with id (Google Drive)
+      if (typeof photo === 'string') {
+        return `Prenup/${photo}`;
+      }
+      // Google Drive direct link
+      return `https://drive.google.com/uc?export=view&id=${photo.id}`;
+    }
+
     // Build slides from photo list
     function buildSlides() {
       track.innerHTML = '';
@@ -459,7 +469,8 @@
         const slide = document.createElement('div');
         slide.className = 'carousel-slide';
         slide.dataset.index = i;
-        slide.innerHTML = `<img src="Prenup/${photo}" alt="Photo ${i + 1}">`;
+        const imgSrc = getPhotoUrl(photo);
+        slide.innerHTML = `<img src="${imgSrc}" alt="Photo ${i + 1}">`;
         track.appendChild(slide);
       });
       slides = document.querySelectorAll('.carousel-slide');
@@ -547,7 +558,7 @@
             heroLoadingText.textContent = `Loading photos... ${percent}%`;
             if (loaded === total) { resolve(); }
           };
-          img.src = `Prenup/${photo}`;
+          img.src = getPhotoUrl(photo);
         });
       });
     }
