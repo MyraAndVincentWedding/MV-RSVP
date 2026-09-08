@@ -9,18 +9,12 @@
   <style>
     :root {
       --dusty-blue: #6B8CAE;
-      --dusty-blue-light: #8BAAC4;
-      --dusty-blue-dark: #5A7A9A;
       --cream: #FAF8F5;
       --dark: #2D3748;
       --gray: #6B7280;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Inter', sans-serif;
@@ -28,9 +22,10 @@
       color: var(--dark);
       overflow: hidden;
       height: 100vh;
+      user-select: none;
     }
 
-    /* Hero Section */
+    /* Hero */
     .hero {
       height: 100vh;
       display: flex;
@@ -38,20 +33,16 @@
       align-items: center;
       justify-content: center;
       background: linear-gradient(135deg, #EBF0F5 0%, #D4DFE8 50%, #C8D4E0 100%);
-      position: absolute;
-      top: 0;
-      left: 0;
+      position: fixed;
+      top: 0; left: 0;
       width: 100%;
-      z-index: 10;
+      z-index: 100;
     }
 
-    .hero-content {
-      text-align: center;
-    }
+    .hero-content { text-align: center; }
 
     .hero-monogram {
-      width: 150px;
-      height: 150px;
+      width: 150px; height: 150px;
       object-fit: contain;
       margin-bottom: 1.5rem;
       opacity: 0;
@@ -74,23 +65,18 @@
       opacity: 0;
     }
 
-    .hero-loading {
-      margin-top: 2rem;
-      opacity: 0;
-    }
+    .hero-loading { margin-top: 2rem; opacity: 0; }
 
     .hero-loading-bar {
-      width: 150px;
-      height: 3px;
-      background: rgba(107, 140, 174, 0.2);
+      width: 150px; height: 3px;
+      background: rgba(107,140,174,0.2);
       border-radius: 2px;
       overflow: hidden;
       margin: 0 auto 0.5rem;
     }
 
     .hero-loading-fill {
-      width: 0%;
-      height: 100%;
+      width: 0%; height: 100%;
       background: var(--dusty-blue);
       border-radius: 2px;
       transition: width 0.3s ease;
@@ -98,234 +84,523 @@
 
     .hero-loading-text {
       font-size: 0.75rem;
-      color: var(--gray-light);
+      color: var(--gray);
     }
 
-    /* Carousel Section */
-    .carousel-section {
+    /* Coverflow Section */
+    .coverflow-section {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100vh;
-      display: flex;
+      top: 0; left: 0;
+      width: 100%; height: 100vh;
+      display: none;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       background: var(--cream);
-      opacity: 0;
-      visibility: hidden;
     }
 
-    .carousel-container {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      perspective: 1000px;
+    .coverflow-section.visible { display: flex; }
+
+    .coverflow-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      z-index: 10;
     }
 
-    .carousel-track {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .carousel-slide {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.5);
-      opacity: 0;
-      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .carousel-slide img {
-      max-width: 55vw;
-      max-height: 65vh;
+    .coverflow-header img {
+      width: 60px; height: 60px;
       object-fit: contain;
-      border-radius: 8px;
-      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+      margin-bottom: 0.5rem;
     }
 
-    .carousel-slide.active {
-      z-index: 3;
-      transform: translate(-50%, -50%) scale(1);
-      opacity: 1;
+    .coverflow-header h1 {
+      font-family: 'Cormorant Infant', serif;
+      font-size: 1.8rem;
+      font-weight: 300;
+      color: var(--dark);
     }
 
-    .carousel-slide.active img {
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    .coverflow-header p {
+      font-size: 0.7rem;
+      color: var(--gray);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
     }
 
-    .carousel-slide.prev {
-      z-index: 2;
-      transform: translate(-115%, -50%) scale(0.75);
-      opacity: 0.6;
+    /* Coverflow Stage */
+    .coverflow-stage {
+      position: relative;
+      width: 100%;
+      height: 55vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1200px;
+      cursor: grab;
+      overflow: hidden;
     }
 
-    .carousel-slide.prev img {
-      filter: brightness(0.7);
+    .coverflow-stage:active { cursor: grabbing; }
+
+    .coverflow-track {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .carousel-slide.next {
-      z-index: 2;
-      transform: translate(15%, -50%) scale(0.75);
-      opacity: 0.6;
+    .coverflow-card {
+      position: absolute;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+      cursor: pointer;
+      will-change: transform, opacity;
     }
 
-    .carousel-slide.next img {
-      filter: brightness(0.7);
-    }
-
-    .carousel-slide.hidden {
-      z-index: 0;
-      transform: translate(-50%, -50%) scale(0.5);
-      opacity: 0;
+    .coverflow-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
       pointer-events: none;
     }
 
-    /* Progress Bar */
-    .progress-container {
-      position: fixed;
+    .coverflow-card.center {
+      z-index: 5;
+      box-shadow: 0 16px 60px rgba(0,0,0,0.3);
+    }
+
+    .coverflow-card.above,
+    .coverflow-card.below {
+      opacity: 0.7;
+    }
+
+    /* Footer */
+    .coverflow-footer {
+      position: absolute;
       bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      z-index: 20;
-      opacity: 0;
+      left: 0; right: 0;
+      text-align: center;
+      z-index: 10;
     }
 
-    .progress-bar {
-      width: 200px;
-      height: 3px;
-      background: rgba(107, 140, 174, 0.2);
-      border-radius: 2px;
-      overflow: hidden;
+    .coverflow-footer p {
+      font-family: 'Great Vibes', cursive;
+      font-size: 1.3rem;
+      color: var(--dusty-blue);
     }
 
-    .progress-fill {
-      width: 0%;
-      height: 100%;
-      background: var(--dusty-blue);
-      border-radius: 2px;
-      transition: width 0.3s ease;
-    }
-
-    .progress-text {
-      font-size: 0.75rem;
+    .coverflow-footer .footer-date {
+      font-family: 'Cormorant Infant', serif;
+      font-size: 0.85rem;
       color: var(--gray);
-      min-width: 60px;
+      margin-top: 0.2rem;
+      letter-spacing: 0.15em;
     }
 
-    /* Navigation */
-    .nav-controls {
+    /* Hide mobile-only elements on desktop */
+    .flipbook-counter,
+    .flipbook-hint,
+    .flipbook-crank,
+    .fb-half,
+    .fb-flap-down,
+    .fb-flap-up,
+    .fb-divider {
+      display: none;
+    }
+
+    /* Flipbook viewport on desktop - no overflow, no background */
+    .flipbook-viewport {
+      overflow: visible;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    /* Mobile Flipbook with Split-Flap Animation */
+    @media (max-width: 768px) {
+      .coverflow-section {
+        flex-direction: column;
+        background: linear-gradient(180deg, #e8e4df 0%, #d4cfc9 100%);
+        padding-top: 1rem;
+      }
+
+      .coverflow-header {
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      .coverflow-header img {
+        width: 60px; height: 60px;
+        margin-bottom: 0.3rem;
+      }
+
+      .coverflow-header h1 {
+        font-size: 1.4rem;
+        margin-bottom: 0.1rem;
+      }
+
+      .coverflow-header p {
+        font-size: 0.65rem;
+      }
+
+      .coverflow-stage {
+        height: auto;
+        perspective: 1400px;
+        padding: 0;
+        margin-bottom: 0.5rem;
+      }
+
+      /* Rotation Frame */
+      .flipbook-frame {
+        position: relative;
+        width: 80vw;
+        max-width: 340px;
+        aspect-ratio: 4 / 3;
+        background: linear-gradient(145deg, #4a4a52 0%, #2d2d35 30%, #1a1a22 100%);
+        border-radius: 10px;
+        padding: 14px;
+        box-shadow:
+          0 20px 60px rgba(0,0,0,0.4),
+          0 8px 20px rgba(0,0,0,0.3),
+          inset 0 1px 0 rgba(255,255,255,0.08),
+          inset 0 -1px 0 rgba(0,0,0,0.3);
+      }
+
+      .flipbook-viewport {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        border-radius: 4px;
+        background: #111;
+        box-shadow: inset 0 2px 8px rgba(0,0,0,0.6);
+      }
+
+      /* Static halves */
+      .fb-half {
+        position: absolute;
+        left: 0; right: 0;
+        height: 50%;
+        overflow: hidden;
+      }
+
+      .fb-half img {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 200%;
+        object-fit: cover;
+      }
+
+      .fb-half.top { top: 0; }
+      .fb-half.top img { top: 0; }
+      .fb-half.bottom { bottom: 0; }
+      .fb-half.bottom img { top: -100%; }
+
+      /* Crease line */
+      .fb-divider {
+        position: absolute;
+        left: 0; right: 0; top: 50%;
+        height: 2px;
+        background: rgba(0,0,0,0.55);
+        z-index: 20;
+        transform: translateY(-1px);
+        pointer-events: none;
+      }
+
+      /* Flap face common */
+      .fb-flap-face {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        backface-visibility: hidden;
+        background: #222;
+      }
+
+      .fb-flap-face img {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 200%;
+        object-fit: cover;
+      }
+
+      .fb-flap-face.back {
+        transform: rotateX(180deg);
+      }
+
+      .fb-flap-face::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      /* Flap DOWN (next) - folds from top hinge */
+      .fb-flap-down {
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 50%;
+        transform-style: preserve-3d;
+        transform-origin: bottom;
+        transition: transform 0.65s cubic-bezier(.45,.05,.35,1);
+        z-index: 10;
+      }
+
+      .fb-flap-down.flipped {
+        transform: rotateX(-180deg);
+      }
+
+      .fb-flap-down .fb-flap-face.front img { top: 0; }
+      .fb-flap-down .fb-flap-face.back img { top: -100%; }
+
+      .fb-flap-down .fb-flap-face.front::after {
+        background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.25) 100%);
+      }
+
+      .fb-flap-down .fb-flap-face.back::after {
+        background: linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0) 100%);
+      }
+
+      /* Flap UP (prev) - folds from bottom hinge */
+      .fb-flap-up {
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        height: 50%;
+        transform-style: preserve-3d;
+        transform-origin: top;
+        transition: transform 0.65s cubic-bezier(.45,.05,.35,1);
+        z-index: 11;
+      }
+
+      .fb-flap-up.flipped {
+        transform: rotateX(180deg);
+      }
+
+      .fb-flap-up .fb-flap-face.front img { top: -100%; }
+      .fb-flap-up .fb-flap-face.back img { top: 0; }
+
+      .fb-flap-up .fb-flap-face.front::after {
+        background: linear-gradient(to top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.25) 100%);
+      }
+
+      .fb-flap-up .fb-flap-face.back::after {
+        background: linear-gradient(to top, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0) 100%);
+      }
+
+      /* Hide coverflow cards on mobile */
+      .flipbook-viewport .coverflow-card {
+        display: none !important;
+      }
+
+      /* Crank Handle - below flipbook */
+      .flipbook-crank {
+        position: relative;
+        width: 100%;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 0.5rem;
+        z-index: 20;
+      }
+
+      .crank-arm {
+        position: relative;
+        width: 100px;
+        height: 6px;
+        background: linear-gradient(180deg, #8a8a8a, #c0c0c0, #a0a0a0);
+        border-radius: 3px;
+        transform-origin: center center;
+        cursor: grab;
+        transition: transform 0.1s ease;
+      }
+
+      .crank-arm:active {
+        cursor: grabbing;
+      }
+
+      .crank-knob {
+        position: absolute;
+        left: -11px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 22px;
+        height: 22px;
+        background: linear-gradient(145deg, #d4d4d4, #909090);
+        border-radius: 50%;
+        box-shadow:
+          2px 2px 6px rgba(0,0,0,0.3),
+          inset 1px 1px 2px rgba(255,255,255,0.4);
+        cursor: grab;
+      }
+
+      .crank-knob:active {
+        cursor: grabbing;
+      }
+
+      .crank-base {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 18px;
+        height: 18px;
+        background: linear-gradient(145deg, #5a5a5a, #3a3a3a);
+        border-radius: 50%;
+        box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5);
+      }
+
+      .crank-spin .crank-arm {
+        animation: crankSpin 0.65s ease-in-out;
+      }
+
+      .crank-spin-reverse .crank-arm {
+        animation: crankSpinReverse 0.65s ease-in-out;
+      }
+
+      @keyframes crankSpin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      @keyframes crankSpinReverse {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(-360deg); }
+      }
+
+      /* Show mobile-only elements */
+      .flipbook-counter,
+      .flipbook-hint,
+      .flipbook-crank {
+        display: block;
+      }
+
+      /* Photo Counter */
+      .flipbook-counter {
+        text-align: center;
+        margin-top: 1rem;
+        font-size: 0.8rem;
+        color: var(--gray);
+        letter-spacing: 0.15em;
+      }
+
+      /* Swipe hint */
+      .flipbook-hint {
+        text-align: center;
+        margin-top: 0.5rem;
+        font-size: 0.65rem;
+        color: rgba(107,114,128,0.6);
+        letter-spacing: 0.1em;
+      }
+
+      .coverflow-footer {
+        bottom: 1rem;
+      }
+
+      .coverflow-footer p {
+        font-size: 1rem;
+      }
+    }
+
+    /* Lightbox */
+    .lightbox {
       position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      display: flex;
-      gap: 0.5rem;
-      z-index: 20;
-      opacity: 0;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.92);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
     }
 
-    .nav-btn {
-      width: 40px;
-      height: 40px;
+    .lightbox.active { display: flex; }
+
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 20px 80px rgba(0,0,0,0.4);
+      cursor: default;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 1.5rem; right: 1.5rem;
+      width: 44px; height: 44px;
       border: none;
       border-radius: 50%;
-      background: rgba(107, 140, 174, 0.1);
+      background: rgba(255,255,255,0.15);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.3s;
+      transition: background 0.3s;
     }
 
-    .nav-btn:hover {
-      background: rgba(107, 140, 174, 0.2);
+    .lightbox-close:hover { background: rgba(255,255,255,0.3); }
+    .lightbox-close svg { width: 20px; height: 20px; stroke: white; }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 50px; height: 50px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s;
     }
 
-    .nav-btn svg {
-      width: 18px;
-      height: 18px;
-      stroke: var(--dusty-blue);
-    }
+    .lightbox-nav:hover { background: rgba(255,255,255,0.25); }
+    .lightbox-nav svg { width: 22px; height: 22px; stroke: white; }
+    .lightbox-prev { left: 1.5rem; }
+    .lightbox-next { right: 1.5rem; }
 
-    .nav-btn.active {
-      background: var(--dusty-blue);
-    }
-
-    .nav-btn.active svg {
-      stroke: white;
-    }
-
-    /* Footer */
-    .album-footer {
-      position: fixed;
-      bottom: 2rem;
-      left: 2rem;
-      z-index: 20;
-      opacity: 0;
-    }
-
-    .footer-monogram {
-      width: 40px;
-      height: 40px;
-      object-fit: contain;
-      opacity: 0.6;
+    .lightbox-counter {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 0.1em;
     }
 
     /* Music Button */
     .music-btn {
       position: fixed;
-      top: 2rem;
-      right: 2rem;
-      width: 44px;
-      height: 44px;
+      top: 2rem; right: 2rem;
+      width: 44px; height: 44px;
       border: none;
       border-radius: 50%;
-      background: rgba(107, 140, 174, 0.1);
+      background: rgba(107,140,174,0.12);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 100;
+      z-index: 150;
       opacity: 0;
-      transition: all 0.3s;
+      transition: background 0.3s;
+      backdrop-filter: blur(10px);
     }
 
-    .music-btn:hover {
-      background: rgba(107, 140, 174, 0.2);
-    }
-
-    .music-btn svg {
-      width: 20px;
-      height: 20px;
-      stroke: var(--dusty-blue);
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .hero-monogram { width: 100px; height: 100px; }
-      .hero-title { font-size: 1.8rem; }
-      .carousel-slide img { max-width: 75vw; max-height: 55vh; }
-      .carousel-slide.prev { transform: translate(-105%, -50%) scale(0.7); }
-      .carousel-slide.next { transform: translate(5%, -50%) scale(0.7); }
-      .nav-controls { right: 1rem; bottom: 5rem; }
-      .album-footer { left: 1rem; bottom: 5rem; }
-      .progress-container { bottom: 5rem; }
-    }
+    .music-btn:hover { background: rgba(107,140,174,0.25); }
+    .music-btn svg { width: 20px; height: 20px; stroke: var(--dusty-blue); }
   </style>
 </head>
 <body>
+
   <!-- Hero -->
   <section class="hero" id="hero">
     <div class="hero-content">
@@ -341,89 +616,148 @@
     </div>
   </section>
 
-  <!-- Carousel -->
-  <section class="carousel-section" id="carouselSection">
-    <div class="carousel-container">
-      <div class="carousel-track" id="carouselTrack"></div>
+  <!-- Coverflow -->
+  <section class="coverflow-section" id="coverflowSection">
+    <div class="coverflow-header">
+      <img src="MV.png" alt="MV">
+      <h1>Vincent & Myra</h1>
+      <p>Prenup Album</p>
+    </div>
+
+    <div class="coverflow-stage" id="coverflowStage">
+      <div class="flipbook-frame" id="flipbookFrame">
+        <div class="flipbook-viewport" id="flipbookViewport">
+          <!-- Desktop: coverflow cards rendered here -->
+          <div class="coverflow-track" id="coverflowTrack"></div>
+
+          <!-- Mobile: split-flap elements -->
+          <div class="fb-half top"><img id="fbTopImg" src="" alt=""></div>
+          <div class="fb-half bottom"><img id="fbBottomImg" src="" alt=""></div>
+
+          <div class="fb-flap-down" id="fbFlapDown">
+            <div class="fb-flap-face front"><img id="fbFlapDownFrontImg" src="" alt=""></div>
+            <div class="fb-flap-face back"><img id="fbFlapDownBackImg" src="" alt=""></div>
+          </div>
+
+          <div class="fb-flap-up" id="fbFlapUp">
+            <div class="fb-flap-face front"><img id="fbFlapUpFrontImg" src="" alt=""></div>
+            <div class="fb-flap-face back"><img id="fbFlapUpBackImg" src="" alt=""></div>
+          </div>
+
+          <div class="fb-divider"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Crank Handle - below flipbook -->
+    <div class="flipbook-crank" id="flipbookCrank">
+      <div class="crank-arm" id="crankArm">
+        <div class="crank-knob" id="crankKnob"></div>
+      </div>
+      <div class="crank-base"></div>
+    </div>
+
+    <div class="flipbook-counter" id="flipbookCounter">1 / 75</div>
+    <div class="flipbook-hint" id="flipbookHint">rotate handle or swipe to flip</div>
+
+    <div class="coverflow-footer">
+      <p>A Greater Story Together</p>
+      <div class="footer-date">October 28, 2026</div>
     </div>
   </section>
 
-  <!-- Progress -->
-  <div class="progress-container" id="progressContainer">
-    <div class="progress-bar">
-      <div class="progress-fill" id="progressFill"></div>
-    </div>
-    <span class="progress-text" id="progressText">1 / --</span>
-  </div>
-
-  <!-- Navigation -->
-  <div class="nav-controls" id="navControls">
-    <button class="nav-btn" id="prevBtn">
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+    <button class="lightbox-nav lightbox-prev" id="lightboxPrev">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M15 18l-6-6 6-6"/>
       </svg>
     </button>
-    <button class="nav-btn active" id="playPauseBtn">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="pauseIcon">
-        <rect x="6" y="4" width="4" height="16"/>
-        <rect x="14" y="4" width="4" height="16"/>
-      </svg>
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="playIcon" style="display:none">
-        <polygon points="5 3 19 12 5 21 5 3"/>
-      </svg>
-    </button>
-    <button class="nav-btn" id="nextBtn">
+    <img id="lightboxImg" src="" alt="">
+    <button class="lightbox-nav lightbox-next" id="lightboxNext">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M9 18l6-6-6-6"/>
       </svg>
     </button>
+    <div class="lightbox-counter" id="lightboxCounter">1 / 75</div>
   </div>
 
-  <!-- Footer -->
-  <div class="album-footer" id="albumFooter">
-    <img src="MV.png" alt="MV" class="footer-monogram">
-  </div>
-
-  <!-- Background Music -->
+  <!-- Music -->
   <audio id="bgMusic" loop>
     <source src="cc.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- Music Toggle -->
   <button class="music-btn" id="musicBtn">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="musicOn">
-      <path d="M9 18V5l12-2v13"/>
-      <circle cx="6" cy="18" r="3"/>
-      <circle cx="18" cy="16" r="3"/>
+      <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
     </svg>
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="musicOff" style="display:none">
-      <path d="M9 18V5l12-2v13"/>
-      <circle cx="6" cy="18" r="3"/>
-      <circle cx="18" cy="16" r="3"/>
+      <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
       <line x1="1" y1="1" x2="23" y2="23"/>
     </svg>
   </button>
 
   <script>
-    const track = document.getElementById('carouselTrack');
-    const progressFill = document.getElementById('progressFill');
-    const progressText = document.getElementById('progressText');
-    const pauseIcon = document.getElementById('pauseIcon');
-    const playIcon = document.getElementById('playIcon');
+    const track = document.getElementById('coverflowTrack');
+    const stage = document.getElementById('coverflowStage');
+    const flipbookFrame = document.getElementById('flipbookFrame');
+    const flipbookViewport = document.getElementById('flipbookViewport');
+    const flipbookCounter = document.getElementById('flipbookCounter');
+    const flipbookHint = document.getElementById('flipbookHint');
+    const flipbookCrank = document.getElementById('flipbookCrank');
+
+    // Mobile split-flap elements
+    const fbTopImg = document.getElementById('fbTopImg');
+    const fbBottomImg = document.getElementById('fbBottomImg');
+
+    const fbFlapDown = document.getElementById('fbFlapDown');
+    const fbFlapDownFrontImg = document.getElementById('fbFlapDownFrontImg');
+    const fbFlapDownBackImg = document.getElementById('fbFlapDownBackImg');
+
+    const fbFlapUp = document.getElementById('fbFlapUp');
+    const fbFlapUpFrontImg = document.getElementById('fbFlapUpFrontImg');
+    const fbFlapUpBackImg = document.getElementById('fbFlapUpBackImg');
+
     const bgMusic = document.getElementById('bgMusic');
     const musicBtn = document.getElementById('musicBtn');
     const musicOn = document.getElementById('musicOn');
     const musicOff = document.getElementById('musicOff');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxCounter = document.getElementById('lightboxCounter');
 
-    let musicPlaying = false;
     let photos = [];
+    let musicPlaying = false;
     let currentIndex = 0;
-    let isPlaying = true;
-    let slideInterval;
-    const SLIDE_DURATION = 4000;
-    let slides = [];
+    let lightboxIndex = 0;
+    const FLIP_MS = 650;
 
-    // Music toggle
+    // Sizing
+    let isMobile = window.innerWidth <= 768;
+    let frontW, frontH, sideW, sideH, gap;
+
+    function updateSizes() {
+      isMobile = window.innerWidth <= 768;
+      if (isMobile) {
+        frontW = '100%';
+        frontH = '100%';
+        sideW = 0; sideH = 0;
+        gap = 0;
+      } else {
+        frontW = 520; frontH = 320;
+        sideW = 260; sideH = 160;
+        gap = 60;
+      }
+    }
+    updateSizes();
+    window.addEventListener('resize', () => { updateSizes(); updatePositions(); });
+
+    // Music
     musicBtn.addEventListener('click', () => {
       if (musicPlaying) {
         bgMusic.pause();
@@ -438,7 +772,6 @@
       musicPlaying = !musicPlaying;
     });
 
-    // Start music after preload
     function startMusic() {
       bgMusic.currentTime = 8;
       bgMusic.play().then(() => {
@@ -452,88 +785,528 @@
       });
     }
 
-    // Get image URL from photo object
     function getPhotoUrl(photo) {
-      // Support both formats: string (local) or object with id (Google Drive)
-      if (typeof photo === 'string') {
-        return `Prenup/${photo}`;
-      }
-      // Google Drive direct link
-      return `https://drive.google.com/uc?export=view&id=${photo.id}`;
+      if (typeof photo === 'string') return `Prenup/${photo}`;
+      return `https://drive.google.com/thumbnail?id=${photo.id}&sz=s800`;
     }
 
-    // Build slides from photo list
-    function buildSlides() {
+    function getFullUrl(photo) {
+      if (typeof photo === 'string') return `Prenup/${photo}`;
+      return `https://drive.google.com/thumbnail?id=${photo.id}&sz=s1600`;
+    }
+
+    // Build coverflow cards
+    function buildCoverflow() {
       track.innerHTML = '';
       photos.forEach((photo, i) => {
-        const slide = document.createElement('div');
-        slide.className = 'carousel-slide';
-        slide.dataset.index = i;
-        const imgSrc = getPhotoUrl(photo);
-        slide.innerHTML = `<img src="${imgSrc}" alt="Photo ${i + 1}">`;
-        track.appendChild(slide);
+        const card = document.createElement('div');
+        card.className = 'coverflow-card' + (isMobile ? ' flipbook-card' : '');
+        card.dataset.index = i;
+
+        const img = document.createElement('img');
+        img.src = getPhotoUrl(photo);
+        img.alt = `Photo ${i + 1}`;
+        img.loading = 'lazy';
+        img.draggable = false;
+
+        card.appendChild(img);
+        track.appendChild(card);
+
+        card.addEventListener('click', () => {
+          if (i === currentIndex) openLightbox(i);
+        });
       });
-      slides = document.querySelectorAll('.carousel-slide');
-    }
-
-    function updatePositions() {
-      slides.forEach((slide, i) => {
-        slide.classList.remove('active', 'prev', 'next', 'hidden');
-        if (i === currentIndex) {
-          slide.classList.add('active');
-        } else if (i === (currentIndex - 1 + photos.length) % photos.length) {
-          slide.classList.add('prev');
-        } else if (i === (currentIndex + 1) % photos.length) {
-          slide.classList.add('next');
-        } else {
-          slide.classList.add('hidden');
-        }
-      });
-    }
-
-    function updateProgress() {
-      const percent = ((currentIndex + 1) / photos.length) * 100;
-      progressFill.style.width = percent + '%';
-      progressText.textContent = `${currentIndex + 1} / ${photos.length}`;
-    }
-
-    function showSlide(index) {
-      currentIndex = index;
       updatePositions();
-      updateProgress();
     }
 
-    function nextSlide() {
-      const next = (currentIndex + 1) % photos.length;
-      showSlide(next, 'next');
+    // Update card positions
+    function updatePositions() {
+      const cards = track.querySelectorAll('.coverflow-card');
+
+      // Update counter
+      if (flipbookCounter) {
+        flipbookCounter.textContent = `${currentIndex + 1} / ${photos.length}`;
+      }
+
+      if (isMobile) {
+        // Mobile: update split-flap static halves
+        const url = getPhotoUrl(photos[currentIndex]);
+        fbTopImg.src = url;
+        fbBottomImg.src = url;
+        fbFlapDownFrontImg.src = url;
+        fbFlapUpFrontImg.src = url;
+
+        // Hide coverflow cards on mobile
+        cards.forEach(card => { card.style.display = 'none'; });
+      } else {
+        // Desktop: horizontal coverflow
+        cards.forEach(card => { card.style.display = ''; });
+
+        cards.forEach((card, i) => {
+          const offset = i - currentIndex;
+          const absOffset = Math.abs(offset);
+
+          card.classList.remove('center', 'left', 'right');
+
+          if (offset === 0) {
+            card.classList.add('center');
+            gsap.to(card, {
+              width: frontW, height: frontH,
+              x: 0, y: 0,
+              rotateX: 0, rotateY: 0,
+              scale: 1,
+              opacity: 1,
+              zIndex: 5,
+              duration: 0.4,
+              ease: 'power2.out'
+            });
+          } else {
+            const side = offset < 0 ? 'left' : 'right';
+            card.classList.add(side);
+            const direction = offset < 0 ? -1 : 1;
+            const rotateY = direction * Math.min(absOffset * 15, 40);
+            const translateX = direction * (frontW / 2 + gap + (absOffset - 1) * (sideW * 0.35));
+            const scale = Math.max(1 - absOffset * 0.18, 0.4);
+            const opacity = Math.max(1 - absOffset * 0.25, 0.2);
+            const zIndex = 4 - Math.min(absOffset, 4);
+
+            gsap.to(card, {
+              width: sideW, height: sideH,
+              x: translateX, y: 0,
+              rotateX: 0, rotateY: rotateY,
+              scale: scale,
+              opacity: opacity,
+              zIndex: zIndex,
+              duration: 0.4,
+              ease: 'power2.out'
+            });
+          }
+        });
+      }
     }
 
-    function prevSlide() {
-      const prev = (currentIndex - 1 + photos.length) % photos.length;
-      showSlide(prev, 'prev');
+    // Navigate with split-flap animation on mobile
+    let isFlipping = false;
+
+    function triggerCrank(direction) {
+      if (!flipbookCrank) return;
+      flipbookCrank.classList.remove('crank-spin', 'crank-spin-reverse');
+      void flipbookCrank.offsetWidth;
+      flipbookCrank.classList.add(direction === 'next' ? 'crank-spin' : 'crank-spin-reverse');
     }
 
-    function startAutoPlay() {
-      clearInterval(slideInterval);
-      slideInterval = setInterval(nextSlide, SLIDE_DURATION);
-      isPlaying = true;
-      pauseIcon.style.display = 'block';
-      playIcon.style.display = 'none';
+    function goTo(index, skipAnimation) {
+      const newIndex = Math.max(0, Math.min(index, photos.length - 1));
+      if (newIndex === currentIndex) return;
+
+      if (isMobile && !skipAnimation && !isFlipping) {
+        isFlipping = true;
+        const direction = newIndex > currentIndex ? 'next' : 'prev';
+        const incoming = getPhotoUrl(photos[newIndex]);
+
+        // Spin the crank
+        triggerCrank(direction);
+
+        if (direction === 'next') {
+          // NEXT: flap-down folds from top hinge
+          fbFlapDownFrontImg.src = getPhotoUrl(photos[currentIndex]);
+          fbFlapDownBackImg.src = incoming;
+          fbTopImg.src = incoming;
+
+          fbFlapDown.classList.add('flipped');
+
+          setTimeout(() => {
+            fbBottomImg.src = incoming;
+          }, FLIP_MS * 0.5);
+
+          const onDone = () => {
+            fbFlapDown.removeEventListener('transitionend', onDone);
+            fbFlapDown.style.transition = 'none';
+            fbFlapDown.classList.remove('flipped');
+            fbFlapDownFrontImg.src = incoming;
+            void fbFlapDown.offsetWidth;
+            fbFlapDown.style.transition = '';
+            fbFlapUpFrontImg.src = incoming;
+            currentIndex = newIndex;
+            isFlipping = false;
+            updatePositions();
+          };
+          fbFlapDown.addEventListener('transitionend', onDone);
+
+        } else {
+          // PREV: flap-up folds from bottom hinge
+          fbFlapUpFrontImg.src = getPhotoUrl(photos[currentIndex]);
+          fbFlapUpBackImg.src = incoming;
+          fbBottomImg.src = incoming;
+
+          fbFlapUp.classList.add('flipped');
+
+          setTimeout(() => {
+            fbTopImg.src = incoming;
+          }, FLIP_MS * 0.5);
+
+          const onDone = () => {
+            fbFlapUp.removeEventListener('transitionend', onDone);
+            fbFlapUp.style.transition = 'none';
+            fbFlapUp.classList.remove('flipped');
+            fbFlapUpFrontImg.src = incoming;
+            void fbFlapUp.offsetWidth;
+            fbFlapUp.style.transition = '';
+            fbFlapDownFrontImg.src = incoming;
+            currentIndex = newIndex;
+            isFlipping = false;
+            updatePositions();
+          };
+          fbFlapUp.addEventListener('transitionend', onDone);
+        }
+      } else {
+        currentIndex = newIndex;
+        updatePositions();
+      }
     }
 
-    function stopAutoPlay() {
-      clearInterval(slideInterval);
-      isPlaying = false;
-      pauseIcon.style.display = 'none';
-      playIcon.style.display = 'block';
+    function goNext() {
+      if (currentIndex < photos.length - 1) goTo(currentIndex + 1);
     }
 
-    // Controls
-    document.getElementById('playPauseBtn').addEventListener('click', () => {
-      if (isPlaying) { stopAutoPlay(); } else { startAutoPlay(); }
+    function goPrev() {
+      if (currentIndex > 0) goTo(currentIndex - 1);
+    }
+
+    // Auto-advance
+    let autoAdvanceInterval;
+    const AUTO_ADVANCE_DELAY = 3000;
+
+    function startAutoAdvance() {
+      clearInterval(autoAdvanceInterval);
+      autoAdvanceInterval = setInterval(() => {
+        if (currentIndex < photos.length - 1) {
+          goTo(currentIndex + 1);
+        } else {
+          goTo(0);
+        }
+      }, AUTO_ADVANCE_DELAY);
+    }
+
+    function stopAutoAdvance() {
+      clearInterval(autoAdvanceInterval);
+    }
+
+    let inactivityTimer;
+    function resetInactivityTimer() {
+      stopAutoAdvance();
+      clearTimeout(inactivityTimer);
+      inactivityTimer = setTimeout(startAutoAdvance, 8000);
+    }
+
+    // Keyboard
+    document.addEventListener('keydown', (e) => {
+      if (lightbox.classList.contains('active')) {
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextLightbox();
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevLightbox();
+        return;
+      }
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { goNext(); resetInactivityTimer(); }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { goPrev(); resetInactivityTimer(); }
     });
-    document.getElementById('nextBtn').addEventListener('click', () => { stopAutoPlay(); nextSlide(); });
-    document.getElementById('prevBtn').addEventListener('click', () => { stopAutoPlay(); prevSlide(); });
+
+    // Drag - mouse (desktop horizontal)
+    let isDragging = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let dragStartIndex = 0;
+    let dragOffset = 0;
+
+    stage.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      isDragging = true;
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      dragStartIndex = currentIndex;
+      dragOffset = 0;
+      stopAutoAdvance();
+      stage.style.cursor = 'grabbing';
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const dx = e.clientX - dragStartX;
+      const cardWidth = frontW + gap;
+      dragOffset = -dx / cardWidth;
+      const rawIndex = dragStartIndex + dragOffset;
+      const clampedIndex = Math.max(-0.5, Math.min(rawIndex, photos.length - 0.5));
+      applyDragPosition(clampedIndex);
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (!isDragging) return;
+      isDragging = false;
+      stage.style.cursor = 'grab';
+      const rawIndex = dragStartIndex + dragOffset;
+      const snapped = Math.round(rawIndex);
+      const clamped = Math.max(0, Math.min(snapped, photos.length - 1));
+      currentIndex = clamped;
+      updatePositions();
+      resetInactivityTimer();
+    });
+
+    // Touch - swipe for flipbook on mobile
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
+
+    stage.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      touchStartTime = Date.now();
+      stopAutoAdvance();
+    }, { passive: true });
+
+    stage.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const touchEndY = e.changedTouches[0].clientY;
+      const dx = touchEndX - touchStartX;
+      const dy = touchEndY - touchStartY;
+      const elapsed = Date.now() - touchStartTime;
+
+      // Swipe up/down for rotation frame flipbook
+      if (isMobile) {
+        if (Math.abs(dy) > 30 && Math.abs(dy) > Math.abs(dx) && elapsed < 500) {
+          if (dy < 0) {
+            goNext(); // Swipe up = next (flip down)
+          } else {
+            goPrev(); // Swipe down = prev (flip up)
+          }
+          resetInactivityTimer();
+        }
+      } else {
+        // Horizontal swipe for desktop
+        if (Math.abs(dx) > 30 && Math.abs(dx) > Math.abs(dy) && elapsed < 500) {
+          if (dx < 0) {
+            goNext(); // Swipe left = next
+          } else {
+            goPrev(); // Swipe right = prev
+          }
+          resetInactivityTimer();
+        }
+      }
+    });
+
+    // Interactive Crank Handle - rotate to navigate
+    const crankArm = document.getElementById('crankArm');
+    const crankKnob = document.getElementById('crankKnob');
+    let isDraggingCrank = false;
+    let crankStartAngle = 0;
+    let crankRotation = 0;
+    let lastCrankAngle = 0;
+    let accumulatedRotation = 0;
+
+    function getAngle(cx, cy, ex, ey) {
+      const dy = ey - cy;
+      const dx = ex - cx;
+      return Math.atan2(dy, dx) * (180 / Math.PI);
+    }
+
+    function getCenter() {
+      const rect = crankArm.getBoundingClientRect();
+      return {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2
+      };
+    }
+
+    function startCrankDrag(e) {
+      if (!isMobile) return;
+      e.preventDefault();
+      e.stopPropagation();
+      isDraggingCrank = true;
+      stopAutoAdvance();
+
+      const center = getCenter();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      crankStartAngle = getAngle(center.x, center.y, clientX, clientY);
+      lastCrankAngle = crankStartAngle;
+      accumulatedRotation = 0;
+
+      crankArm.style.transition = 'none';
+    }
+
+    function moveCrankDrag(e) {
+      if (!isDraggingCrank) return;
+      e.preventDefault();
+
+      const center = getCenter();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const currentAngle = getAngle(center.x, center.y, clientX, clientY);
+
+      let delta = currentAngle - lastCrankAngle;
+      // Handle angle wrapping
+      if (delta > 180) delta -= 360;
+      if (delta < -180) delta += 360;
+
+      accumulatedRotation += delta;
+      crankRotation += delta;
+      lastCrankAngle = currentAngle;
+
+      crankArm.style.transform = `rotate(${crankRotation}deg)`;
+
+      // Trigger flip after 60 degrees of rotation (more responsive)
+      if (Math.abs(accumulatedRotation) >= 60) {
+        if (accumulatedRotation > 0) {
+          goNext(); // Clockwise = next
+        } else {
+          goPrev(); // Counter-clockwise = prev
+        }
+        accumulatedRotation = 0;
+        resetInactivityTimer();
+      }
+    }
+
+    function endCrankDrag() {
+      if (!isDraggingCrank) return;
+      isDraggingCrank = false;
+    }
+
+    if (crankKnob) {
+      crankKnob.addEventListener('touchstart', startCrankDrag, { passive: false });
+      crankArm.addEventListener('touchstart', startCrankDrag, { passive: false });
+    }
+
+    window.addEventListener('touchmove', moveCrankDrag, { passive: false });
+    window.addEventListener('touchend', endCrankDrag);
+
+    function applyDragPosition(pos) {
+      if (isMobile) return; // No drag preview on flipbook
+
+      const cards = track.querySelectorAll('.coverflow-card');
+
+      cards.forEach((card, i) => {
+        const offset = i - pos;
+        const absOffset = Math.abs(offset);
+
+        card.classList.remove('center', 'left', 'right');
+
+        let w, h, x, rotateY, scale, opacity, zIndex;
+
+        if (absOffset < 0.5) {
+          card.classList.add('center');
+          w = frontW; h = frontH;
+          x = offset * (frontW * 0.45);
+          rotateY = offset * -10;
+          scale = 1 - absOffset * 0.3;
+          opacity = 1 - absOffset * 0.3;
+          zIndex = 5;
+        } else {
+          const side = offset < 0 ? 'left' : 'right';
+          card.classList.add(side);
+          const dir = offset < 0 ? -1 : 1;
+          w = sideW; h = sideH;
+          rotateY = dir * Math.min(absOffset * 15, 40);
+          x = dir * (frontW / 2 + gap + (absOffset - 1) * (sideW * 0.35));
+          scale = Math.max(1 - absOffset * 0.18, 0.4);
+          opacity = Math.max(1 - absOffset * 0.25, 0.2);
+          zIndex = 4 - Math.min(Math.floor(absOffset), 4);
+        }
+
+        card.style.width = w + 'px';
+        card.style.height = h + 'px';
+        card.style.transform = 'translateX(' + x + 'px) rotateY(' + rotateY + 'deg) scale(' + scale + ')';
+        card.style.opacity = opacity;
+        card.style.zIndex = zIndex;
+        card.style.transition = 'none';
+      });
+    }
+
+    // Click center card to open lightbox
+    let mouseDownX = 0;
+    let mouseDownY = 0;
+    stage.addEventListener('mousedown', (e) => { mouseDownX = e.clientX; mouseDownY = e.clientY; });
+    stage.addEventListener('touchstart', (e) => { mouseDownX = e.touches[0].clientX; mouseDownY = e.touches[0].clientY; }, { passive: true });
+    stage.addEventListener('click', (e) => {
+      const dx = Math.abs(e.clientX - mouseDownX);
+      const dy = Math.abs(e.clientY - mouseDownY);
+      if (dx > 5 || dy > 5) return;
+      const card = e.target.closest('.coverflow-card');
+      if (card && card.classList.contains('center')) {
+        openLightbox(parseInt(card.dataset.index));
+      }
+    });
+
+    // Lightbox
+    function openLightbox(index) {
+      lightboxIndex = index;
+      updateLightbox();
+      lightbox.classList.add('active');
+      gsap.fromTo(lightboxImg, { scale: 0.85, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: 'power2.out' });
+    }
+
+    function closeLightbox() {
+      gsap.to(lightboxImg, {
+        scale: 0.85, opacity: 0, duration: 0.3,
+        onComplete: () => { lightbox.classList.remove('active'); }
+      });
+    }
+
+    function updateLightbox() {
+      lightboxImg.src = getFullUrl(photos[lightboxIndex]);
+      lightboxCounter.textContent = `${lightboxIndex + 1} / ${photos.length}`;
+    }
+
+    function nextLightbox() {
+      lightboxIndex = (lightboxIndex + 1) % photos.length;
+      updateLightbox();
+      if (isMobile) {
+        gsap.fromTo(lightboxImg, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' });
+      } else {
+        gsap.fromTo(lightboxImg, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.35, ease: 'power2.out' });
+      }
+    }
+
+    function prevLightbox() {
+      lightboxIndex = (lightboxIndex - 1 + photos.length) % photos.length;
+      updateLightbox();
+      if (isMobile) {
+        gsap.fromTo(lightboxImg, { opacity: 0, y: -40 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' });
+      } else {
+        gsap.fromTo(lightboxImg, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.35, ease: 'power2.out' });
+      }
+    }
+
+    document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+    document.getElementById('lightboxPrev').addEventListener('click', (e) => { e.stopPropagation(); prevLightbox(); });
+    document.getElementById('lightboxNext').addEventListener('click', (e) => { e.stopPropagation(); nextLightbox(); });
+    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+
+    // Lightbox touch swipe
+    let lightboxTouchStartX = 0;
+    let lightboxTouchStartY = 0;
+
+    lightbox.addEventListener('touchstart', (e) => {
+      lightboxTouchStartX = e.touches[0].clientX;
+      lightboxTouchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    lightbox.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - lightboxTouchStartX;
+      const dy = e.changedTouches[0].clientY - lightboxTouchStartY;
+
+      if (isMobile) {
+        // Vertical swipe in lightbox on mobile
+        if (Math.abs(dy) > 30 && Math.abs(dy) > Math.abs(dx)) {
+          if (dy < 0) nextLightbox();
+          else prevLightbox();
+        }
+      } else {
+        // Horizontal swipe on desktop
+        if (Math.abs(dx) > 30 && Math.abs(dx) > Math.abs(dy)) {
+          if (dx < 0) nextLightbox();
+          else prevLightbox();
+        }
+      }
+    });
 
     // Hero animation
     gsap.fromTo('.hero-monogram', { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 1.2, delay: 0.3, ease: 'back.out(1.7)' });
@@ -541,7 +1314,7 @@
     gsap.fromTo('.hero-subtitle', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1, delay: 0.9 });
     gsap.to('.hero-loading', { opacity: 1, duration: 0.5, delay: 1.2 });
 
-    // Preload all images
+    // Preload
     function preloadAllImages() {
       return new Promise((resolve) => {
         let loaded = 0;
@@ -556,47 +1329,108 @@
             const percent = Math.round((loaded / total) * 100);
             heroLoadingFill.style.width = percent + '%';
             heroLoadingText.textContent = `Loading photos... ${percent}%`;
-            if (loaded === total) { resolve(); }
+            if (loaded === total) resolve();
           };
           img.src = getPhotoUrl(photo);
         });
       });
     }
 
-    // Load photos.json then start
+    // Embedded photos
+    photos = [
+      {"id":"1sOigdz87q8hGqYrmFx0CZZHQNsjFjx5r","name":"2S6A6918.jpg"},
+      {"id":"1JzDeutzfJnE13-oSqjKnTeybVjXH07c-","name":"2S6A7712.jpg"},
+      {"id":"1f1x7ja6LnPJjy3qxjp8LNKiU16oAKssQ","name":"2S6A7730.jpg"},
+      {"id":"1TLM9yky5xHOL-E-62F5KH-O6y2oHFpQ4","name":"2S6A7734.jpg"},
+      {"id":"1N8RLKSNZraMMKWeRl9H1n4FGAYKwkkPs","name":"2S6A7742.jpg"},
+      {"id":"1u9tK-c0tDPuAn1dkzRr_wiTsWU6gwpgo","name":"2S6A7746.jpg"},
+      {"id":"1p5AxAPD2g-LZ3j6qsm6BmyI78F17Tktm","name":"2S6A7753.jpg"},
+      {"id":"1LxSUd3oq9r9VHuoeBrJHJA2w9_gCZXac","name":"2S6A7763.jpg"},
+      {"id":"1CWHITykPxidQ7jVr4Pwke5-YQQeg4aIp","name":"2S6A7785.jpg"},
+      {"id":"18BeDNmJC5gMU3qp1YZKZbvWjrlt5OdY6","name":"2S6A7788.jpg"},
+      {"id":"1ZD3bgpCKqg-Txr_6_giow9oIpXjjlaBc","name":"2S6A7797.jpg"},
+      {"id":"1WSLZ_5GZ550VFpKJxFwMtRG_7LrNkUmK","name":"IMG_9188.jpg"},
+      {"id":"1AnHZ6mCfPeMT5IzphiU64ONOn_7m7qNe","name":"IMG_9189.jpg"},
+      {"id":"1nlv17a32ewlkJUdRtg6M6omxGGh2MtK3","name":"IMG_9192.jpg"},
+      {"id":"1RDNirH_j7B4WwTs7PbAHytYwc9VghpDC","name":"IMG_9195.jpg"},
+      {"id":"188GYkUkdUQPJ5oXwkZRvnwo9O_0b0hxB","name":"IMG_9204.jpg"},
+      {"id":"1JNATDHaK13LUIJ0f7E5zn8VAGemn_waC","name":"IMG_9205.jpg"},
+      {"id":"1Ys_bMVBfZLxHbX_ReaS0PFNS7kr5IBvm","name":"IMG_9213.jpg"},
+      {"id":"1u8R1h5lld_CHXHUB4MozWQdLTwkjBlEJ","name":"IMG_9218.jpg"},
+      {"id":"1XMVIgkekKH6u-_hC6VKEJQy1gSmlLIgf","name":"IMG_9230.jpg"},
+      {"id":"1Q1OrsZVvOmXfbyPNa4ivWXCGL_U7vc6Y","name":"IMG_9243.jpg"},
+      {"id":"1avBp_4cL0WD5g7dM7wqY7t9lLhdj0YI7","name":"IMG_9249.jpg"},
+      {"id":"1k4Qy8dhOV2M18B_eBtOf208vOHTwN_sa","name":"IMG_9253.jpg"},
+      {"id":"1UVP1YIGAD3A8wwHdtBhnATI7nsrt54Kc","name":"IMG_9260.jpg"},
+      {"id":"1XThIgCkfUgVLYaVm12fUlXbOCh2kcboe","name":"IMG_9261.jpg"},
+      {"id":"1yRO76B3Q4C6wjfgP4FjX49XgxeOs7ZuA","name":"IMG_9263.jpg"},
+      {"id":"16dXCUEdZK9C1Rfw9LXnYdpb0dUOabwzw","name":"IMG_9264.jpg"},
+      {"id":"1135f3kgq6r_SR80JzmgExelYH4PyHMoe","name":"IMG_9265.jpg"},
+      {"id":"1YZHeAm26AelZmszaTcamaHOoYl0t5Dvx","name":"IMG_9280.jpg"},
+      {"id":"1BGRRBky2CCCdqwcUjWPXbmuZmH2u5vaF","name":"IMG_9284.jpg"},
+      {"id":"1odm3f7gw95W-aLUJ0gPA5yBFn4PIMg-6","name":"IMG_9288.jpg"},
+      {"id":"1Zi9mvox4DujKU_xd8P0fi_dHxqojO772","name":"IMG_9289.jpg"},
+      {"id":"1376THsSFZsYXPRkocdIFSCZIuW0fG_VV","name":"IMG_9291.jpg"},
+      {"id":"1tmN0zA_gzGdtUFJxpZoRY0gXD4Ib4LCE","name":"IMG_9301.jpg"},
+      {"id":"1JoFHk0l7yOL21PoEHDLHfAWn26z4H_EZ","name":"IMG_9305.jpg"},
+      {"id":"1FHkYd4wzMzTKw5YKy2aXlnUlLMZv1EdA","name":"IMG_9312.jpg"},
+      {"id":"18uUGWDb684Bu00ZkZe5BoF-aj_bMpYw0","name":"IMG_9317.jpg"},
+      {"id":"14Oemtn3S1-MVARawRWQkcu72f0gubs1X","name":"IMG_9322.jpg"},
+      {"id":"1t2O8kab3hoavMCoSy0X4Mi0buk15i_rP","name":"IMG_9326.jpg"},
+      {"id":"19786cnwyOK9CSCCJDI1zoMwaKo3jlnsy","name":"IMG_9329.jpg"},
+      {"id":"1Z5eEOl3I5GUWeoWnf2SJqWP6KGvEAQUX","name":"IMG_9350.jpg"},
+      {"id":"1PtkNX9CJleZ4Ef40v6sJY3hLbmQAigAq","name":"IMG_9351.jpg"},
+      {"id":"11GqbYATZmKAHLIg96-kmK0vvyFd-AbA1","name":"IMG_9359.jpg"},
+      {"id":"1o2f5cfkSbEGZIHwNf0wLQ-pgE9se9k8B","name":"IMG_9362.jpg"},
+      {"id":"1CTAmXsrqHSLjmevOM3dRaGGcv5Zh5ECw","name":"IMG_9364.jpg"},
+      {"id":"1xLezg7tk088RbATmE_A4ho5c7_7gwJ_j","name":"IMG_9370.jpg"},
+      {"id":"1piZlapt9J3YpP8oQUDxvOx3a2m7I0BiJ","name":"IMG_9377.jpg"},
+      {"id":"1csvlCm4c_JppfWvNjf0W6YBU8RegLOlm","name":"IMG_9380.jpg"},
+      {"id":"144Qhcxg69Zxq8VfsxGQ6xlzbLLrwIcKJ","name":"IMG_9386.jpg"},
+      {"id":"1MwVZMujIVyKluFYZa_SPFWJS4_Z8oiwN","name":"IMG_9392.jpg"},
+      {"id":"15MWr9j9tavBI5KUX4HbgHp9w_Us1t9w8","name":"IMG_9397.jpg"},
+      {"id":"1-zYU3TMsVkrCHPfGNhis8ySv5PpnQJJj","name":"IMG_9400.jpg"},
+      {"id":"18FaiRudwLaxxLPsILElaLvpUQyqNDGiU","name":"IMG_9410.jpg"},
+      {"id":"1hbkItzeFoFGev_RaC-wGGhV_7SjTL--Y","name":"IMG_9445.jpg"},
+      {"id":"1KqveW6Uww4Y1VcvQ4Fp8f3k5VDpTEpPe","name":"IMG_9451.jpg"},
+      {"id":"1DpCgc8tq0odINTNmCtL3yytiup59eTPa","name":"IMG_9461.jpg"},
+      {"id":"1RvnqrFtao_JsYssm5dJu6SLb8_wCS0Hb","name":"IMG_9465.jpg"},
+      {"id":"1jz2-NaZlKmVAuo0_imjBehEIA177ZOpl","name":"IMG_9472.jpg"},
+      {"id":"14zzWVoNMzNP4vKLm0mCG5gEZLqIMn5zh","name":"IMG_9476.jpg"},
+      {"id":"1rQTV_JvA4s2370kEmEiNdp2O5NvciMUo","name":"IMG_9479.jpg"},
+      {"id":"1S3aONHP4fXlsPsM8awkWCq3GVFNC8jg5","name":"IMG_9482.jpg"},
+      {"id":"1Cq3ZylljD_TpNu2i_tVV5RnZNOwMIvwX","name":"IMG_9484.jpg"},
+      {"id":"1CC61z7_dM0EE2kkrQpR2yBIhAPEKcIyr","name":"IMG_9488.jpg"},
+      {"id":"108JHCM2e8os1GJ-3YUfGX3XurBuKa3eJ","name":"IMG_9489.jpg"},
+      {"id":"1dzMnFErnse5h3Wurx9qd_D5VhMeuWMPY","name":"IMG_9492.jpg"},
+      {"id":"1V20L3ZYBehzEF8SoYMXP9GbAC_HdcDXt","name":"IMG_9498.jpg"},
+      {"id":"1bueyU-2wWz7pN6WAci6XtR1PQ-222i0S","name":"IMG_9508.jpg"},
+      {"id":"1mr0HAaAxI8BZQBrPxd7RzkiuEDtQYxiH","name":"IMG_9538.jpg"},
+      {"id":"1N2aI1-q2dnV7C-FF_PHCBkmAtvQn7Zjw","name":"IMG_9539.jpg"},
+      {"id":"1L4LV5zlnnN88HHvPgL8yN_kHzF3pmteD","name":"IMG_9595.jpg"},
+      {"id":"1UawMoxgIAVvsS00lHDddbjXGq3AavQCR","name":"IMG_9606.jpg"},
+      {"id":"1dx8F72biQhz-FBpkebqSrBoQyNtQq7YN","name":"IMG_9610.jpg"},
+      {"id":"1gMwsFVd0ohBJm1zVVfd62F5KezR4GHls","name":"IMG_9613.jpg"}
+    ];
+
+    // Start
     setTimeout(() => {
-      fetch('Prenup/photos.json')
-        .then(r => r.json())
-        .then(data => {
-          photos = data;
-          buildSlides();
-          return preloadAllImages();
-        })
-        .then(() => {
-          document.getElementById('heroLoadingText').textContent = 'Ready!';
-          setTimeout(() => {
-            gsap.to('.hero', {
-              opacity: 0, duration: 1,
-              onComplete: () => {
-                document.getElementById('hero').style.display = 'none';
-                document.getElementById('carouselSection').style.opacity = '1';
-                document.getElementById('carouselSection').style.visibility = 'visible';
-                document.getElementById('progressContainer').style.opacity = '1';
-                document.getElementById('navControls').style.opacity = '1';
-                document.getElementById('albumFooter').style.opacity = '1';
-                document.getElementById('musicBtn').style.opacity = '1';
-                updatePositions();
-                updateProgress();
-                startAutoPlay();
-                startMusic();
-              }
-            });
-          }, 500);
-        })
-        .catch(err => {
-          console.error('Failed to load photos:', err);
-          document.getElementById('heroLoadingText').textContent = 'Failed to load photos.';
-        });
+      buildCoverflow();
+      preloadAllImages().then(() => {
+        document.getElementById('heroLoadingText').textContent = 'Ready!';
+        setTimeout(() => {
+          gsap.to('.hero', {
+            opacity: 0, duration: 1,
+            onComplete: () => {
+              document.getElementById('hero').style.display = 'none';
+              document.getElementById('coverflowSection').classList.add('visible');
+              musicBtn.style.opacity = '1';
+              startMusic();
+              startAutoAdvance();
+            }
+          });
+        }, 500);
+      });
     }, 1500);
   </script>
 </body>
