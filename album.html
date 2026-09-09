@@ -204,19 +204,20 @@
     /* Hide mobile-only elements on desktop */
     .flipbook-counter,
     .flipbook-hint,
-    .flipbook-crank,
-    .fb-half,
-    .fb-flap-down,
-    .fb-flap-up,
+    .half,
+    .flap-down,
+    .flap-up,
     .fb-divider {
       display: none;
     }
 
     /* Flipbook viewport on desktop - no overflow, no background */
-    .flipbook-viewport {
-      overflow: visible;
-      background: transparent;
-      box-shadow: none;
+    @media (min-width: 769px) {
+      .flipbook-viewport {
+        overflow: visible;
+        background: transparent;
+        box-shadow: none;
+      }
     }
 
     /* Mobile Flipbook with Split-Flap Animation */
@@ -251,17 +252,28 @@
         perspective: 1400px;
         padding: 0;
         margin-bottom: 0.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: visible;
+      }
+
+      .flipbook-wrapper {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
       }
 
       /* Rotation Frame */
       .flipbook-frame {
         position: relative;
-        width: 80vw;
-        max-width: 340px;
+        width: 75vw;
+        max-width: 320px;
         aspect-ratio: 4 / 3;
         background: linear-gradient(145deg, #4a4a52 0%, #2d2d35 30%, #1a1a22 100%);
         border-radius: 10px;
         padding: 14px;
+        margin-right: 0;
         box-shadow:
           0 20px 60px rgba(0,0,0,0.4),
           0 8px 20px rgba(0,0,0,0.3),
@@ -279,15 +291,15 @@
         box-shadow: inset 0 2px 8px rgba(0,0,0,0.6);
       }
 
-      /* Static halves */
-      .fb-half {
+      /* Static halves — always showing the currently-settled state */
+      .half {
         position: absolute;
         left: 0; right: 0;
         height: 50%;
         overflow: hidden;
       }
 
-      .fb-half img {
+      .half img {
         position: absolute;
         left: 0;
         width: 100%;
@@ -295,10 +307,10 @@
         object-fit: cover;
       }
 
-      .fb-half.top { top: 0; }
-      .fb-half.top img { top: 0; }
-      .fb-half.bottom { bottom: 0; }
-      .fb-half.bottom img { top: -100%; }
+      .half.top { top: 0; }
+      .half.top img { top: 0; }
+      .half.bottom { bottom: 0; }
+      .half.bottom img { top: -100%; }
 
       /* Crease line */
       .fb-divider {
@@ -312,7 +324,7 @@
       }
 
       /* Flap face common */
-      .fb-flap-face {
+      .flap-face {
         position: absolute;
         inset: 0;
         overflow: hidden;
@@ -320,7 +332,7 @@
         background: #222;
       }
 
-      .fb-flap-face img {
+      .flap-face img {
         position: absolute;
         left: 0;
         width: 100%;
@@ -328,19 +340,12 @@
         object-fit: cover;
       }
 
-      .fb-flap-face.back {
+      .flap-face.back {
         transform: rotateX(180deg);
       }
 
-      .fb-flap-face::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-      }
-
-      /* Flap DOWN (next) - folds from top hinge */
-      .fb-flap-down {
+      /* Flap DOWN (next) — folds from top hinge */
+      .flap-down {
         position: absolute;
         top: 0; left: 0; right: 0;
         height: 50%;
@@ -350,23 +355,12 @@
         z-index: 10;
       }
 
-      .fb-flap-down.flipped {
-        transform: rotateX(-180deg);
-      }
+      .flap-down.flipped { transform: rotateX(-180deg); }
+      .flap-down .flap-face.front img { top: 0; }
+      .flap-down .flap-face.back img { top: -100%; }
 
-      .fb-flap-down .fb-flap-face.front img { top: 0; }
-      .fb-flap-down .fb-flap-face.back img { top: -100%; }
-
-      .fb-flap-down .fb-flap-face.front::after {
-        background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.25) 100%);
-      }
-
-      .fb-flap-down .fb-flap-face.back::after {
-        background: linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0) 100%);
-      }
-
-      /* Flap UP (prev) - folds from bottom hinge */
-      .fb-flap-up {
+      /* Flap UP (prev) — folds from bottom hinge */
+      .flap-up {
         position: absolute;
         bottom: 0; left: 0; right: 0;
         height: 50%;
@@ -376,106 +370,22 @@
         z-index: 11;
       }
 
-      .fb-flap-up.flipped {
-        transform: rotateX(180deg);
-      }
-
-      .fb-flap-up .fb-flap-face.front img { top: -100%; }
-      .fb-flap-up .fb-flap-face.back img { top: 0; }
-
-      .fb-flap-up .fb-flap-face.front::after {
-        background: linear-gradient(to top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.25) 100%);
-      }
-
-      .fb-flap-up .fb-flap-face.back::after {
-        background: linear-gradient(to top, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0) 100%);
-      }
+      .flap-up.flipped { transform: rotateX(180deg); }
+      .flap-up .flap-face.front img { top: -100%; }
+      .flap-up .flap-face.back img { top: 0; }
 
       /* Hide coverflow cards on mobile */
       .flipbook-viewport .coverflow-card {
         display: none !important;
       }
 
-      /* Crank Handle - below flipbook */
-      .flipbook-crank {
-        position: relative;
-        width: 100%;
-        height: 60px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-top: 0.5rem;
-        z-index: 20;
-      }
-
-      .crank-arm {
-        position: relative;
-        width: 100px;
-        height: 6px;
-        background: linear-gradient(180deg, #8a8a8a, #c0c0c0, #a0a0a0);
-        border-radius: 3px;
-        transform-origin: center center;
-        cursor: grab;
-        transition: transform 0.1s ease;
-      }
-
-      .crank-arm:active {
-        cursor: grabbing;
-      }
-
-      .crank-knob {
-        position: absolute;
-        left: -11px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 22px;
-        height: 22px;
-        background: linear-gradient(145deg, #d4d4d4, #909090);
-        border-radius: 50%;
-        box-shadow:
-          2px 2px 6px rgba(0,0,0,0.3),
-          inset 1px 1px 2px rgba(255,255,255,0.4);
-        cursor: grab;
-      }
-
-      .crank-knob:active {
-        cursor: grabbing;
-      }
-
-      .crank-base {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        width: 18px;
-        height: 18px;
-        background: linear-gradient(145deg, #5a5a5a, #3a3a3a);
-        border-radius: 50%;
-        box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5);
-      }
-
-      .crank-spin .crank-arm {
-        animation: crankSpin 0.65s ease-in-out;
-      }
-
-      .crank-spin-reverse .crank-arm {
-        animation: crankSpinReverse 0.65s ease-in-out;
-      }
-
-      @keyframes crankSpin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-
-      @keyframes crankSpinReverse {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(-360deg); }
-      }
-
       /* Show mobile-only elements */
       .flipbook-counter,
       .flipbook-hint,
-      .flipbook-crank {
+      .half,
+      .flap-down,
+      .flap-up,
+      .fb-divider {
         display: block;
       }
 
@@ -625,40 +535,36 @@
     </div>
 
     <div class="coverflow-stage" id="coverflowStage">
-      <div class="flipbook-frame" id="flipbookFrame">
-        <div class="flipbook-viewport" id="flipbookViewport">
-          <!-- Desktop: coverflow cards rendered here -->
-          <div class="coverflow-track" id="coverflowTrack"></div>
+      <div class="flipbook-wrapper">
+        <div class="flipbook-frame" id="flipbookFrame">
+          <div class="flipbook-viewport" id="flipbookViewport">
+            <!-- Desktop: coverflow cards rendered here -->
+            <div class="coverflow-track" id="coverflowTrack"></div>
 
-          <!-- Mobile: split-flap elements -->
-          <div class="fb-half top"><img id="fbTopImg" src="" alt=""></div>
-          <div class="fb-half bottom"><img id="fbBottomImg" src="" alt=""></div>
+          <!-- Mobile: split-flap animation -->
+          <div class="half top"><img id="topStaticImg" src="" alt=""></div>
+          <div class="half bottom"><img id="bottomStaticImg" src="" alt=""></div>
 
-          <div class="fb-flap-down" id="fbFlapDown">
-            <div class="fb-flap-face front"><img id="fbFlapDownFrontImg" src="" alt=""></div>
-            <div class="fb-flap-face back"><img id="fbFlapDownBackImg" src="" alt=""></div>
+          <div class="flap-down" id="flapDown">
+            <div class="flap-face front"><img id="flapDownFrontImg" src="" alt=""></div>
+            <div class="flap-face back"><img id="flapDownBackImg" src="" alt=""></div>
           </div>
 
-          <div class="fb-flap-up" id="fbFlapUp">
-            <div class="fb-flap-face front"><img id="fbFlapUpFrontImg" src="" alt=""></div>
-            <div class="fb-flap-face back"><img id="fbFlapUpBackImg" src="" alt=""></div>
+          <div class="flap-up" id="flapUp">
+            <div class="flap-face front"><img id="flapUpFrontImg" src="" alt=""></div>
+            <div class="flap-face back"><img id="flapUpBackImg" src="" alt=""></div>
           </div>
 
           <div class="fb-divider"></div>
+          </div>
+        </div>
+
         </div>
       </div>
     </div>
 
-    <!-- Crank Handle - below flipbook -->
-    <div class="flipbook-crank" id="flipbookCrank">
-      <div class="crank-arm" id="crankArm">
-        <div class="crank-knob" id="crankKnob"></div>
-      </div>
-      <div class="crank-base"></div>
-    </div>
-
     <div class="flipbook-counter" id="flipbookCounter">1 / 75</div>
-    <div class="flipbook-hint" id="flipbookHint">rotate handle or swipe to flip</div>
+    <div class="flipbook-hint" id="flipbookHint">swipe to flip</div>
 
     <div class="coverflow-footer">
       <p>A Greater Story Together</p>
@@ -709,19 +615,16 @@
     const flipbookViewport = document.getElementById('flipbookViewport');
     const flipbookCounter = document.getElementById('flipbookCounter');
     const flipbookHint = document.getElementById('flipbookHint');
-    const flipbookCrank = document.getElementById('flipbookCrank');
 
-    // Mobile split-flap elements
-    const fbTopImg = document.getElementById('fbTopImg');
-    const fbBottomImg = document.getElementById('fbBottomImg');
-
-    const fbFlapDown = document.getElementById('fbFlapDown');
-    const fbFlapDownFrontImg = document.getElementById('fbFlapDownFrontImg');
-    const fbFlapDownBackImg = document.getElementById('fbFlapDownBackImg');
-
-    const fbFlapUp = document.getElementById('fbFlapUp');
-    const fbFlapUpFrontImg = document.getElementById('fbFlapUpFrontImg');
-    const fbFlapUpBackImg = document.getElementById('fbFlapUpBackImg');
+    // Mobile flip elements
+    const topStaticImg = document.getElementById('topStaticImg');
+    const bottomStaticImg = document.getElementById('bottomStaticImg');
+    const flapDown = document.getElementById('flapDown');
+    const flapDownFrontImg = document.getElementById('flapDownFrontImg');
+    const flapDownBackImg = document.getElementById('flapDownBackImg');
+    const flapUp = document.getElementById('flapUp');
+    const flapUpFrontImg = document.getElementById('flapUpFrontImg');
+    const flapUpBackImg = document.getElementById('flapUpBackImg');
 
     const bgMusic = document.getElementById('bgMusic');
     const musicBtn = document.getElementById('musicBtn');
@@ -831,10 +734,10 @@
       if (isMobile) {
         // Mobile: update split-flap static halves
         const url = getPhotoUrl(photos[currentIndex]);
-        fbTopImg.src = url;
-        fbBottomImg.src = url;
-        fbFlapDownFrontImg.src = url;
-        fbFlapUpFrontImg.src = url;
+        topStaticImg.src = url;
+        bottomStaticImg.src = url;
+        flapDownFrontImg.src = url;
+        flapUpFrontImg.src = url;
 
         // Hide coverflow cards on mobile
         cards.forEach(card => { card.style.display = 'none'; });
@@ -888,13 +791,6 @@
     // Navigate with split-flap animation on mobile
     let isFlipping = false;
 
-    function triggerCrank(direction) {
-      if (!flipbookCrank) return;
-      flipbookCrank.classList.remove('crank-spin', 'crank-spin-reverse');
-      void flipbookCrank.offsetWidth;
-      flipbookCrank.classList.add(direction === 'next' ? 'crank-spin' : 'crank-spin-reverse');
-    }
-
     function goTo(index, skipAnimation) {
       const newIndex = Math.max(0, Math.min(index, photos.length - 1));
       if (newIndex === currentIndex) return;
@@ -904,60 +800,59 @@
         const direction = newIndex > currentIndex ? 'next' : 'prev';
         const incoming = getPhotoUrl(photos[newIndex]);
 
-        // Spin the crank
-        triggerCrank(direction);
-
         if (direction === 'next') {
-          // NEXT: flap-down folds from top hinge
-          fbFlapDownFrontImg.src = getPhotoUrl(photos[currentIndex]);
-          fbFlapDownBackImg.src = incoming;
-          fbTopImg.src = incoming;
+          flapDown.style.zIndex = 12;
+          flapUp.style.zIndex = 10;
 
-          fbFlapDown.classList.add('flipped');
+          flapDownFrontImg.src = getPhotoUrl(photos[currentIndex]);
+          flapDownBackImg.src = incoming;
+          topStaticImg.src = incoming;
+          flapDown.classList.add('flipped');
 
-          setTimeout(() => {
-            fbBottomImg.src = incoming;
-          }, FLIP_MS * 0.5);
+          clearTimeout(flapDown._swapT);
+          flapDown._swapT = setTimeout(() => { bottomStaticImg.src = incoming; }, 325);
 
-          const onDone = () => {
-            fbFlapDown.removeEventListener('transitionend', onDone);
-            fbFlapDown.style.transition = 'none';
-            fbFlapDown.classList.remove('flipped');
-            fbFlapDownFrontImg.src = incoming;
-            void fbFlapDown.offsetWidth;
-            fbFlapDown.style.transition = '';
-            fbFlapUpFrontImg.src = incoming;
+          const onDone = (e) => {
+            if (e.propertyName !== 'transform') return;
+            flapDown.removeEventListener('transitionend', onDone);
+            flapDown.style.transition = 'none';
+            flapDown.classList.remove('flipped');
+            flapDownFrontImg.src = incoming;
+            void flapDown.offsetWidth;
+            flapDown.style.transition = '';
+            flapUpFrontImg.src = incoming;
             currentIndex = newIndex;
             isFlipping = false;
             updatePositions();
           };
-          fbFlapDown.addEventListener('transitionend', onDone);
+          flapDown.addEventListener('transitionend', onDone);
 
         } else {
-          // PREV: flap-up folds from bottom hinge
-          fbFlapUpFrontImg.src = getPhotoUrl(photos[currentIndex]);
-          fbFlapUpBackImg.src = incoming;
-          fbBottomImg.src = incoming;
+          flapUp.style.zIndex = 12;
+          flapDown.style.zIndex = 10;
 
-          fbFlapUp.classList.add('flipped');
+          flapUpFrontImg.src = getPhotoUrl(photos[currentIndex]);
+          flapUpBackImg.src = incoming;
+          bottomStaticImg.src = incoming;
+          flapUp.classList.add('flipped');
 
-          setTimeout(() => {
-            fbTopImg.src = incoming;
-          }, FLIP_MS * 0.5);
+          clearTimeout(flapUp._swapT);
+          flapUp._swapT = setTimeout(() => { topStaticImg.src = incoming; }, 325);
 
-          const onDone = () => {
-            fbFlapUp.removeEventListener('transitionend', onDone);
-            fbFlapUp.style.transition = 'none';
-            fbFlapUp.classList.remove('flipped');
-            fbFlapUpFrontImg.src = incoming;
-            void fbFlapUp.offsetWidth;
-            fbFlapUp.style.transition = '';
-            fbFlapDownFrontImg.src = incoming;
+          const onDone = (e) => {
+            if (e.propertyName !== 'transform') return;
+            flapUp.removeEventListener('transitionend', onDone);
+            flapUp.style.transition = 'none';
+            flapUp.classList.remove('flipped');
+            flapUpFrontImg.src = incoming;
+            void flapUp.offsetWidth;
+            flapUp.style.transition = '';
+            flapDownFrontImg.src = incoming;
             currentIndex = newIndex;
             isFlipping = false;
             updatePositions();
           };
-          fbFlapUp.addEventListener('transitionend', onDone);
+          flapUp.addEventListener('transitionend', onDone);
         }
       } else {
         currentIndex = newIndex;
@@ -1092,91 +987,6 @@
         }
       }
     });
-
-    // Interactive Crank Handle - rotate to navigate
-    const crankArm = document.getElementById('crankArm');
-    const crankKnob = document.getElementById('crankKnob');
-    let isDraggingCrank = false;
-    let crankStartAngle = 0;
-    let crankRotation = 0;
-    let lastCrankAngle = 0;
-    let accumulatedRotation = 0;
-
-    function getAngle(cx, cy, ex, ey) {
-      const dy = ey - cy;
-      const dx = ex - cx;
-      return Math.atan2(dy, dx) * (180 / Math.PI);
-    }
-
-    function getCenter() {
-      const rect = crankArm.getBoundingClientRect();
-      return {
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2
-      };
-    }
-
-    function startCrankDrag(e) {
-      if (!isMobile) return;
-      e.preventDefault();
-      e.stopPropagation();
-      isDraggingCrank = true;
-      stopAutoAdvance();
-
-      const center = getCenter();
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-      crankStartAngle = getAngle(center.x, center.y, clientX, clientY);
-      lastCrankAngle = crankStartAngle;
-      accumulatedRotation = 0;
-
-      crankArm.style.transition = 'none';
-    }
-
-    function moveCrankDrag(e) {
-      if (!isDraggingCrank) return;
-      e.preventDefault();
-
-      const center = getCenter();
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-      const currentAngle = getAngle(center.x, center.y, clientX, clientY);
-
-      let delta = currentAngle - lastCrankAngle;
-      // Handle angle wrapping
-      if (delta > 180) delta -= 360;
-      if (delta < -180) delta += 360;
-
-      accumulatedRotation += delta;
-      crankRotation += delta;
-      lastCrankAngle = currentAngle;
-
-      crankArm.style.transform = `rotate(${crankRotation}deg)`;
-
-      // Trigger flip after 60 degrees of rotation (more responsive)
-      if (Math.abs(accumulatedRotation) >= 60) {
-        if (accumulatedRotation > 0) {
-          goNext(); // Clockwise = next
-        } else {
-          goPrev(); // Counter-clockwise = prev
-        }
-        accumulatedRotation = 0;
-        resetInactivityTimer();
-      }
-    }
-
-    function endCrankDrag() {
-      if (!isDraggingCrank) return;
-      isDraggingCrank = false;
-    }
-
-    if (crankKnob) {
-      crankKnob.addEventListener('touchstart', startCrankDrag, { passive: false });
-      crankArm.addEventListener('touchstart', startCrankDrag, { passive: false });
-    }
-
-    window.addEventListener('touchmove', moveCrankDrag, { passive: false });
-    window.addEventListener('touchend', endCrankDrag);
 
     function applyDragPosition(pos) {
       if (isMobile) return; // No drag preview on flipbook
