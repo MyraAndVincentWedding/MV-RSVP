@@ -437,6 +437,18 @@
       transition: opacity 0.5s ease;
     }
     .loading-screen.hidden { opacity: 0; pointer-events: none; }
+    .loading-text {
+      position: absolute;
+      bottom: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--dusty-blue-dark);
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
     .loading-sprites {
       position: relative;
       width: 100vw;
@@ -585,6 +597,7 @@
       <img id="vincentSprite" src="tengwalk/tengwalk_00000.png" class="sprite-img vincent-sprite">
       <img id="myraSprite" src="myrawalk/myra_00000.png" class="sprite-img myra-sprite">
     </div>
+    <div class="loading-text" id="loadingText">Loading animation...</div>
   </div>
 
   <audio id="walkMusic"><source src="widding.mp3" type="audio/mpeg"></audio>
@@ -689,6 +702,25 @@
     const guestName = urlParams.get('name') || 'Guest';
     document.getElementById('guestName').textContent = guestName;
 
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyffN1G9drnWEmKcHWczRtcOzrIuRuFvCHL_BdJhOcXS8WSpBLPT80VKrZXPMqNA1k/exec';
+
+    let guestAlreadyAnswered = false;
+
+    async function checkGuestStatus() {
+      try {
+        const res = await fetch(`${SCRIPT_URL}?action=checkGuest&name=${encodeURIComponent(guestName)}`);
+        const data = await res.json();
+        if (data.found) {
+          guestAlreadyAnswered = true;
+          window.location.href = `already-answered.html?name=${encodeURIComponent(guestName)}`;
+          return true;
+        }
+      } catch (e) {
+        // Continue to RSVP form if check fails
+      }
+      return false;
+    }
+
     const mainPage = document.getElementById('mainPage');
     const loadingScreen = document.getElementById('loadingScreen');
     const vincentSprite = document.getElementById('vincentSprite');
@@ -708,10 +740,34 @@
     bigPlayBtn.addEventListener('click', () => {
       initialPlay.classList.add('hidden');
       loadingScreen.classList.remove('hidden');
-      walkMusic.currentTime = 10;
-      walkMusic.play();
-      startWalkingAnimation();
+      preloadFrames().then(() => {
+        walkMusic.currentTime = 10;
+        walkMusic.play();
+        startWalkingAnimation();
+      });
     });
+
+    function preloadFrames() {
+      const totalVincent = 50, totalMyra = 36;
+      let loaded = 0;
+      const total = totalVincent + totalMyra;
+      return new Promise(resolve => {
+        function checkDone() {
+          loaded++;
+          if (loaded >= total) resolve();
+        }
+        for (let i = 0; i < totalVincent; i++) {
+          const img = new Image();
+          img.onload = img.onerror = checkDone;
+          img.src = `tengwalk/tengwalk_${String(i).padStart(5,'0')}.png`;
+        }
+        for (let i = 0; i < totalMyra; i++) {
+          const img = new Image();
+          img.onload = img.onerror = checkDone;
+          img.src = `myrawalk/myra_${String(i * 2).padStart(5,'0')}.png`;
+        }
+      });
+    }
 
     let currentFrameVincent = 0, currentFrameMyra = 0;
     const totalFramesVincent = 50, totalFramesMyra = 36, frameInterval = 42;
@@ -729,11 +785,16 @@
       const ve = window.innerWidth + VW, me = window.innerWidth + VW + GAP + MW;
       gsap.to(vs, { x: ve, duration: DURATION, ease: 'none', onUpdate: () => { vincentSprite.style.left = vs.x + 'px'; } });
       gsap.to(ms, { x: me, duration: DURATION, ease: 'none', onUpdate: () => { myraSprite.style.left = ms.x + 'px'; } });
-      setTimeout(() => {
+      setTimeout(async () => {
         loadingScreen.classList.add('hidden');
         walkMusic.pause(); walkMusic.currentTime = 0;
         clearInterval(spriteInterval);
         mainPage.style.display = 'flex';
+
+        // Check again after animation — guest may have answered while walking
+        const already = await checkGuestStatus();
+        if (already) return;
+
         animatePageIn();
       }, DURATION * 750);
     }
@@ -772,7 +833,6 @@
     })();
 
     // Form
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyffN1G9drnWEmKcHWczRtcOzrIuRuFvCHL_BdJhOcXS8WSpBLPT80VKrZXPMqNA1k/exec';
     const form = document.getElementById('form');
     const errorEl = document.getElementById('error');
     const submitBtn = document.getElementById('submitBtn');
