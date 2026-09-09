@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vincent & Myra — RSVP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --dusty-blue: #7B99AB;
+      --dusty-blue-dark: #6A8899;
+      --cream: #FAF8F5;
+    }
+
+    html, body { height: 100%; overflow: hidden; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--cream); }
+
+    /* Play Button Screen */
+    .initial-play {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #EBF0F5 0%, #D4DFE8 50%, #C8D4E0 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+      transition: opacity 0.5s ease;
+    }
+    .initial-play.hidden { opacity: 0; pointer-events: none; }
+
+    .big-play-btn {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: rgba(123, 153, 171, 0.8);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.4);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      box-shadow: 0 8px 32px rgba(123, 153, 171, 0.35);
+    }
+    .big-play-btn:hover {
+      transform: scale(1.08);
+      background: rgba(106, 136, 153, 0.9);
+    }
+    .big-play-btn svg { width: 36px; height: 36px; fill: white; margin-left: 4px; }
+
+    /* Loading Screen */
+    .loading-screen {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #EBF0F5 0%, #D4DFE8 50%, #C8D4E0 100%);
+      z-index: 99998;
+      transition: opacity 0.5s ease;
+    }
+    .loading-screen.hidden { opacity: 0; pointer-events: none; }
+
+    .loading-spinner {
+      position: absolute;
+      bottom: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 28px;
+      height: 28px;
+      border: 2.5px solid rgba(123, 153, 171, 0.25);
+      border-top-color: var(--dusty-blue-dark);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: translateX(-50%) rotate(360deg); }
+    }
+
+    .loading-sprites {
+      position: relative;
+      width: 100vw;
+      height: 600px;
+      overflow: hidden;
+    }
+
+    .sprite-img {
+      position: absolute;
+      bottom: 0;
+      image-rendering: crisp-edges;
+    }
+    .vincent-sprite { width: 165px; height: 322px; object-fit: contain; z-index: 3; left: -165px; }
+    .myra-sprite { width: 150px; height: 300px; object-fit: contain; z-index: 2; left: -180px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="initial-play" id="initialPlay">
+    <button class="big-play-btn" id="bigPlayBtn">
+      <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    </button>
+  </div>
+
+  <div class="loading-screen hidden" id="loadingScreen">
+    <div class="loading-sprites">
+      <img id="vincentSprite" src="tengwalk/tengwalk_00000.png" class="sprite-img vincent-sprite">
+      <img id="myraSprite" src="myrawalk/myra_00000.png" class="sprite-img myra-sprite">
+    </div>
+    <div class="loading-spinner"></div>
+  </div>
+
+  <audio id="walkMusic"><source src="widding.mp3" type="audio/mpeg"></audio>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const guestName = urlParams.get('name') || 'Guest';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyffN1G9drnWEmKcHWczRtcOzrIuRuFvCHL_BdJhOcXS8WSpBLPT80VKrZXPMqNA1k/exec';
+
+    const initialPlay = document.getElementById('initialPlay');
+    const bigPlayBtn = document.getElementById('bigPlayBtn');
+    const loadingScreen = document.getElementById('loadingScreen');
+    const vincentSprite = document.getElementById('vincentSprite');
+    const myraSprite = document.getElementById('myraSprite');
+    const walkMusic = document.getElementById('walkMusic');
+
+    // Album photos - first 20 to preload during walk
+    const albumPhotosFirst20 = [
+      "1sOigdz87q8hGqYrmFx0CZZHQNsjFjx5r",
+      "1JzDeutzfJnE13-oSqjKnTeybVjXH07c-",
+      "1f1x7ja6LnPJjy3qxjp8LNKiU16oAKssQ",
+      "1TLM9yky5xHOL-E-62F5KH-O6y2oHFpQ4",
+      "1N8RLKSNZraMMKWeRl9H1n4FGAYKwkkPs",
+      "1u9tK-c0tDPuAn1dkzRr_wiTsWU6gwpgo",
+      "1p5AxAPD2g-LZ3j6qsm6BmyI78F17Tktm",
+      "1LxSUd3oq9r9VHuoeBrJHJA2w9_gCZXac",
+      "1CWHITykPxidQ7jVr4Pwke5-YQQeg4aIp",
+      "18BeDNmJC5gMU3qp1YZKZbvWjrlt5OdY6",
+      "1ZD3bgpCKqg-Txr_6_giow9oIpXjjlaBc",
+      "1WSLZ_5GZ550VFpKJxFwMtRG_7LrNkUmK",
+      "1AnHZ6mCfPeMT5IzphiU64ONOn_7m7qNe",
+      "1nlv17a32ewlkJUdRtg6M6omxGGh2MtK3",
+      "1RDNirH_j7B4WwTs7PbAHytYwc9VghpDC",
+      "188GYkUkdUQPJ5oXwkZRvnwo9O_0b0hxB",
+      "1JNATDHaK13LUIJ0f7E5zn8VAGemn_waC",
+      "1Ys_bMVBfZLxHbX_ReaS0PFNS7kr5IBvm",
+      "1u8R1h5lld_CHXHUB4MozWQdLTwkjBlEJ",
+      "1XMVIgkekKH6u-_hC6VKEJQy1gSmlLIgf"
+    ];
+
+    function preloadAlbumImages(ids) {
+      ids.forEach(id => {
+        const img = new Image();
+        img.src = `https://drive.google.com/thumbnail?id=${id}&sz=s800`;
+      });
+    }
+
+    // Preload frames then start walk
+    bigPlayBtn.addEventListener('click', () => {
+      initialPlay.classList.add('hidden');
+      loadingScreen.classList.remove('hidden');
+      preloadAlbumImages(albumPhotosFirst20);
+      preloadFrames().then(() => {
+        walkMusic.currentTime = 10;
+        walkMusic.play();
+        startWalkingAnimation();
+      });
+    });
+
+    function preloadFrames() {
+      const totalVincent = 50, totalMyra = 36;
+      let loaded = 0;
+      const total = totalVincent + totalMyra;
+      return new Promise(resolve => {
+        function checkDone() {
+          loaded++;
+          if (loaded >= total) resolve();
+        }
+        for (let i = 0; i < totalVincent; i++) {
+          const img = new Image();
+          img.onload = img.onerror = checkDone;
+          img.src = `tengwalk/tengwalk_${String(i).padStart(5,'0')}.png`;
+        }
+        for (let i = 0; i < totalMyra; i++) {
+          const img = new Image();
+          img.onload = img.onerror = checkDone;
+          img.src = `myrawalk/myra_${String(i * 2).padStart(5,'0')}.png`;
+        }
+      });
+    }
+
+    let currentFrameVincent = 0, currentFrameMyra = 0;
+    const totalFramesVincent = 50, totalFramesMyra = 36, frameInterval = 42;
+
+    function animateSprites() {
+      vincentSprite.src = `tengwalk/tengwalk_${String(currentFrameVincent).padStart(5,'0')}.png`;
+      myraSprite.src = `myrawalk/myra_${String(currentFrameMyra * 2).padStart(5,'0')}.png`;
+      currentFrameVincent = (currentFrameVincent + 1) % totalFramesVincent;
+      currentFrameMyra = (currentFrameMyra + 1) % totalFramesMyra;
+    }
+
+    const spriteInterval = setInterval(animateSprites, frameInterval);
+
+    function startWalkingAnimation() {
+      const DURATION = 10, VW = 165, MW = 150, GAP = 30;
+      const vs = { x: -VW }, ms = { x: -VW - GAP - MW };
+      const ve = window.innerWidth + VW, me = window.innerWidth + VW + GAP + MW;
+
+      gsap.to(vs, { x: ve, duration: DURATION, ease: 'none', onUpdate: () => { vincentSprite.style.left = vs.x + 'px'; } });
+      gsap.to(ms, { x: me, duration: DURATION, ease: 'none', onUpdate: () => { myraSprite.style.left = ms.x + 'px'; } });
+
+      setTimeout(async () => {
+        walkMusic.pause();
+        walkMusic.currentTime = 0;
+        clearInterval(spriteInterval);
+
+        // Check if guest already answered
+        try {
+          const res = await fetch(`${SCRIPT_URL}?action=checkGuest&name=${encodeURIComponent(guestName)}`);
+          const data = await res.json();
+          if (data.found) {
+            window.location.href = `already-answered.html?name=${encodeURIComponent(guestName)}`;
+            return;
+          }
+        } catch (e) {
+          // Continue to RSVP if check fails
+        }
+
+        // Not answered — go to RSVP form
+        window.location.href = `rsvp.html?name=${encodeURIComponent(guestName)}`;
+      }, DURATION * 750);
+    }
+  </script>
+</body>
+</html>

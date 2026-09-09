@@ -1205,10 +1205,10 @@
           <div class="field">
             <label>Your RSVP Link</label>
             <div style="display: flex; gap: 0.5rem;">
-              <input type="text" id="guestLink" value="rsvp.html?name=Guest" readonly style="flex: 1; background: var(--white);">
+              <input type="text" id="guestLink" value="intro.html?name=Guest" readonly style="flex: 1; background: var(--white);">
               <button onclick="copyLink()" style="padding: 0.75rem 1rem; background: var(--primary); color: white; border: none; border-radius: var(--radius); cursor: pointer; font-size: 0.8rem;">Copy</button>
             </div>
-            <p class="hint">Example: rsvp.html?name=John+Smith</p>
+            <p class="hint">Example: intro.html?name=John+Smith</p>
           </div>
         </div>
       </div>
@@ -1576,7 +1576,7 @@
           </tr>`;
       } else {
         tbody.innerHTML = filteredGuests.map(guest => {
-          const rsvpLink = guest.link || (window.location.origin + window.location.pathname.replace('index.html', '') + 'rsvp.html?name=' + encodeURIComponent(guest.name));
+          const rsvpLink = guest.link || (window.location.origin + window.location.pathname.replace('index.html', '') + 'intro.html?name=' + encodeURIComponent(guest.name));
           return `
           <tr>
             <td>
@@ -1604,7 +1604,7 @@
     // Copy RSVP link to clipboard
     async function copyRsvpLink(name, button) {
       const guest = guestData.find(g => g.name === name);
-      const rsvpLink = guest?.link || (window.location.origin + window.location.pathname.replace('index.html', '') + 'rsvp.html?name=' + encodeURIComponent(name));
+      const rsvpLink = guest?.link || (window.location.origin + window.location.pathname.replace('index.html', '') + 'intro.html?name=' + encodeURIComponent(name));
       
       try {
         await navigator.clipboard.writeText(rsvpLink);
@@ -2011,7 +2011,7 @@
         <p class="hashtag" id="hashtag">${hashtag}</p>
         <div class="divider" id="divider"></div>
         <p class="message" id="message">${message}</p>
-        <a href="rsvp.html" class="btn-open" id="btnOpen">
+        <a href="intro.html" class="btn-open" id="btnOpen">
           Open Invitation
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
@@ -2407,7 +2407,7 @@
 </body>
 </html>`;
 
-      downloadFile(html, 'rsvp.html');
+      downloadFile(html, 'intro.html');
       showToast('RSVP page downloaded!', 'success');
     }
 
