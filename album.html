@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vincent & Myra - Our Album</title>
+  <title>Myra & Vincent - Our Album</title>
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Infant:wght@300;400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <style>
@@ -170,8 +170,43 @@
 
     .coverflow-card.center {
       z-index: 5;
-      box-shadow: 0 16px 60px rgba(0,0,0,0.3);
+      box-shadow: 0 16px 50px rgba(0,0,0,0.35);
     }
+
+    /* Arc/fan slider — desktop & tablet only */
+    @media (min-width: 769px) {
+      .coverflow-header {
+        position: absolute;
+        top: 1.5rem;
+        left: 0; right: 0;
+        margin-bottom: 0;
+      }
+      .coverflow-header img {
+        width: 44px; height: 44px;
+        margin-bottom: 0.2rem;
+      }
+      .coverflow-header h1 {
+        font-size: 1.3rem;
+      }
+      .coverflow-header p {
+        font-size: 0.6rem;
+      }
+      .coverflow-stage {
+        overflow: visible;
+        height: 78vh;
+      }
+      .coverflow-track {
+        overflow: visible;
+      }
+      .coverflow-card {
+        border-radius: 8px;
+        transition: box-shadow 0.25s ease;
+      }
+      .coverflow-card:hover {
+        box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+      }
+    }
+
 
     .coverflow-card.above,
     .coverflow-card.below {
@@ -204,6 +239,7 @@
     /* Hide mobile-only elements on desktop */
     .flipbook-counter,
     .flipbook-hint,
+    .flipbook-nav,
     .half,
     .flap-down,
     .flap-up,
@@ -312,9 +348,15 @@
       .half.bottom { bottom: 0; }
       .half.bottom img { top: -100%; }
 
-      /* Crease line - removed */
+      /* Crease line */
       .fb-divider {
-        display: none;
+        position: absolute;
+        left: 0; right: 0; top: 50%;
+        height: 2px;
+        background: rgba(0,0,0,0.55);
+        z-index: 20;
+        transform: translateY(-1px);
+        pointer-events: none;
       }
 
       /* Flap face common */
@@ -373,9 +415,90 @@
         display: none !important;
       }
 
+      /* Navigation lever */
+      .flipbook-nav {
+        position: absolute;
+        right: -50px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 30;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        user-select: none;
+      }
+
+      .lever-arrow-label {
+        font-size: 0.6rem;
+        color: var(--gray);
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        pointer-events: none;
+      }
+
+      .lever-track {
+        position: relative;
+        width: 36px;
+        height: 150px;
+        border-radius: 18px;
+        background: linear-gradient(to bottom, #1a1e24, #2a2f38 50%, #1a1e24);
+        box-shadow:
+          inset 0 3px 7px rgba(0,0,0,0.5),
+          inset 0 -3px 7px rgba(0,0,0,0.5),
+          0 2px 6px rgba(0,0,0,0.25);
+        border: 1px solid rgba(255,255,255,0.06);
+      }
+
+      .lever-center-mark {
+        position: absolute;
+        left: 6px; right: 6px;
+        top: 50%;
+        height: 1px;
+        background: rgba(255,255,255,0.1);
+        transform: translateY(-0.5px);
+      }
+
+      .lever-handle {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 30px;
+        height: 30px;
+        margin-left: -15px;
+        margin-top: -15px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 35% 30%, #B7CCE0, var(--dusty-blue) 60%, #4d6a86 100%);
+        box-shadow:
+          0 4px 9px rgba(0,0,0,0.4),
+          inset 0 1px 2px rgba(255,255,255,0.55),
+          inset 0 -3px 6px rgba(0,0,0,0.2);
+        cursor: grab;
+        touch-action: none;
+        will-change: transform;
+        transition: box-shadow 0.15s ease;
+      }
+
+      .lever-handle.dragging {
+        cursor: grabbing;
+        box-shadow:
+          0 6px 13px rgba(0,0,0,0.5),
+          inset 0 1px 2px rgba(255,255,255,0.55),
+          inset 0 -3px 6px rgba(0,0,0,0.2);
+      }
+
+      .lever-handle::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 1px solid rgba(0,0,0,0.2);
+      }
+
       /* Show mobile-only elements */
       .flipbook-counter,
       .flipbook-hint,
+      .flipbook-nav,
       .half,
       .flap-down,
       .flap-up,
@@ -524,7 +647,7 @@
   <section class="coverflow-section" id="coverflowSection">
     <div class="coverflow-header">
       <img src="MV.png" alt="MV">
-      <h1>Vincent & Myra</h1>
+      <h1>Myra & Vincent</h1>
       <p>Prenup Album</p>
     </div>
 
@@ -553,12 +676,20 @@
           </div>
         </div>
 
+        <!-- Navigation lever -->
+        <div class="flipbook-nav" id="flipbookNav">
+          <span class="lever-arrow-label">Prev</span>
+          <div class="lever-track" id="leverTrack" role="slider" aria-label="Photo navigation lever" aria-valuemin="-1" aria-valuemax="1" aria-valuenow="0">
+            <div class="lever-center-mark"></div>
+            <div class="lever-handle" id="leverHandle"></div>
+          </div>
+          <span class="lever-arrow-label">Next</span>
         </div>
       </div>
     </div>
 
     <div class="flipbook-counter" id="flipbookCounter">1 / 75</div>
-    <div class="flipbook-hint" id="flipbookHint">swipe to flip</div>
+    <div class="flipbook-hint" id="flipbookHint">drag lever or swipe to flip</div>
 
     <div class="coverflow-footer">
       <p>A Greater Story Together</p>
@@ -637,6 +768,7 @@
     // Sizing
     let isMobile = window.innerWidth <= 768;
     let frontW, frontH, sideW, sideH, gap;
+    let ARC_CARD_W, ARC_CARD_H, ARC_SPACING, ARC_ANGLE_STEP, ARC_CURVE, ARC_SCALE_STEP, ARC_VISIBLE_RANGE;
 
     function updateSizes() {
       isMobile = window.innerWidth <= 768;
@@ -646,9 +778,20 @@
         sideW = 0; sideH = 0;
         gap = 0;
       } else {
-        frontW = 520; frontH = 320;
-        sideW = 260; sideH = 160;
-        gap = 60;
+        const w = window.innerWidth;
+        if (w < 1024) {
+          // tablet
+          ARC_CARD_W = 220; ARC_CARD_H = 285; ARC_SPACING = 150;
+        } else {
+          // desktop
+          ARC_CARD_W = 310; ARC_CARD_H = 400; ARC_SPACING = 205;
+        }
+        ARC_ANGLE_STEP = 6;    // degrees of rotation per card, away from center
+        ARC_CURVE = 8;         // px of downward arc per step (center stays highest)
+        ARC_SCALE_STEP = 0.045; // how much smaller each card gets moving outward
+        ARC_VISIBLE_RANGE = 7; // cards rendered on each side before being hidden
+        // kept for compatibility with the drag-speed calculation below
+        frontW = ARC_CARD_W; gap = ARC_SPACING;
       }
     }
     updateSizes();
@@ -710,7 +853,23 @@
         track.appendChild(card);
 
         card.addEventListener('click', () => {
-          if (i === currentIndex) openLightbox(i);
+          if (i === currentIndex) {
+            openLightbox(i);
+          } else if (!isMobile) {
+            currentIndex = i;
+            updatePositions();
+            resetInactivityTimer();
+          }
+        });
+
+        // Desktop/tablet: lift the hovered card, settle back on leave
+        card.addEventListener('mouseenter', () => {
+          if (isMobile || isDragging) return;
+          gsap.to(card, { y: '-=16', scale: '*=1.07', duration: 0.25, ease: 'power2.out', overwrite: 'auto' });
+        });
+        card.addEventListener('mouseleave', () => {
+          if (isMobile || isDragging) return;
+          updatePositions();
         });
       });
       updatePositions();
@@ -736,48 +895,37 @@
         // Hide coverflow cards on mobile
         cards.forEach(card => { card.style.display = 'none'; });
       } else {
-        // Desktop: horizontal coverflow
-        cards.forEach(card => { card.style.display = ''; });
-
+        // Desktop/tablet: arc / fan slider — uniform cards curving
+        // gently upward toward the center, fanned out by rotation
         cards.forEach((card, i) => {
           const offset = i - currentIndex;
           const absOffset = Math.abs(offset);
 
-          card.classList.remove('center', 'left', 'right');
+          card.classList.toggle('center', offset === 0);
 
-          if (offset === 0) {
-            card.classList.add('center');
-            gsap.to(card, {
-              width: frontW, height: frontH,
-              x: 0, y: 0,
-              rotateX: 0, rotateY: 0,
-              scale: 1,
-              opacity: 1,
-              zIndex: 5,
-              duration: 0.4,
-              ease: 'power2.out'
-            });
-          } else {
-            const side = offset < 0 ? 'left' : 'right';
-            card.classList.add(side);
-            const direction = offset < 0 ? -1 : 1;
-            const rotateY = direction * Math.min(absOffset * 15, 40);
-            const translateX = direction * (frontW / 2 + gap + (absOffset - 1) * (sideW * 0.35));
-            const scale = Math.max(1 - absOffset * 0.18, 0.4);
-            const opacity = Math.max(1 - absOffset * 0.25, 0.2);
-            const zIndex = 4 - Math.min(absOffset, 4);
-
-            gsap.to(card, {
-              width: sideW, height: sideH,
-              x: translateX, y: 0,
-              rotateX: 0, rotateY: rotateY,
-              scale: scale,
-              opacity: opacity,
-              zIndex: zIndex,
-              duration: 0.4,
-              ease: 'power2.out'
-            });
+          if (absOffset > ARC_VISIBLE_RANGE) {
+            card.style.display = 'none';
+            return;
           }
+          card.style.display = '';
+
+          const x = offset * ARC_SPACING;
+          const y = Math.pow(absOffset, 1.4) * ARC_CURVE;
+          const rotate = Math.max(-60, Math.min(60, offset * ARC_ANGLE_STEP));
+          const scale = Math.max(1 - absOffset * ARC_SCALE_STEP, 0.55);
+          const zIndex = 100 - Math.round(absOffset);
+
+          gsap.to(card, {
+            width: ARC_CARD_W, height: ARC_CARD_H,
+            x: x, y: y,
+            rotation: rotate,
+            rotateY: 0,
+            scale: scale,
+            opacity: 1,
+            zIndex: zIndex,
+            duration: 0.5,
+            ease: 'power2.out'
+          });
         });
       }
     }
@@ -921,7 +1069,7 @@
     window.addEventListener('mousemove', (e) => {
       if (!isDragging) return;
       const dx = e.clientX - dragStartX;
-      const cardWidth = frontW + gap;
+      const cardWidth = ARC_SPACING;
       dragOffset = -dx / cardWidth;
       const rawIndex = dragStartIndex + dragOffset;
       const clampedIndex = Math.max(-0.5, Math.min(rawIndex, photos.length - 0.5));
@@ -982,6 +1130,72 @@
       }
     });
 
+    // Navigation lever - drag down for next, up for prev
+    const leverTrack = document.getElementById('leverTrack');
+    const leverHandle = document.getElementById('leverHandle');
+
+    if (leverTrack && leverHandle) {
+      let leverDragging = false;
+      let leverMaxOffset = 0;
+      let leverThreshold = 0;
+      let leverStartY = 0;
+      let leverTriggered = false;
+
+      function measureLever() {
+        const trackH = leverTrack.clientHeight;
+        const handleH = leverHandle.clientHeight;
+        leverMaxOffset = (trackH - handleH) / 2 - 4;
+        leverThreshold = leverMaxOffset * 0.55;
+      }
+      measureLever();
+      window.addEventListener('resize', measureLever);
+
+      function setLeverOffset(offset, animated) {
+        leverHandle.style.transition = animated ? 'transform 0.4s cubic-bezier(.34,1.56,.64,1)' : 'none';
+        leverHandle.style.transform = `translateY(${offset}px)`;
+      }
+
+      leverHandle.addEventListener('pointerdown', (e) => {
+        leverDragging = true;
+        leverTriggered = false;
+        leverStartY = e.clientY;
+        leverHandle.classList.add('dragging');
+        leverHandle.setPointerCapture(e.pointerId);
+        stopAutoAdvance();
+      });
+
+      leverHandle.addEventListener('pointermove', (e) => {
+        if (!leverDragging) return;
+        let delta = e.clientY - leverStartY;
+        delta = Math.max(-leverMaxOffset, Math.min(leverMaxOffset, delta));
+        setLeverOffset(delta, false);
+        leverTrack.setAttribute('aria-valuenow', (delta / leverMaxOffset).toFixed(2));
+
+        if (!leverTriggered) {
+          if (delta >= leverThreshold) {
+            leverTriggered = true;
+            goNext();
+          } else if (delta <= -leverThreshold) {
+            leverTriggered = true;
+            goPrev();
+          }
+        }
+      });
+
+      function endLeverDrag(e) {
+        if (!leverDragging) return;
+        leverDragging = false;
+        leverHandle.classList.remove('dragging');
+        try { leverHandle.releasePointerCapture(e.pointerId); } catch (err) {}
+        setLeverOffset(0, true);
+        leverTrack.setAttribute('aria-valuenow', '0');
+        resetInactivityTimer();
+      }
+
+      leverHandle.addEventListener('pointerup', endLeverDrag);
+      leverHandle.addEventListener('pointercancel', endLeverDrag);
+    }
+
     function applyDragPosition(pos) {
       if (isMobile) return; // No drag preview on flipbook
 
@@ -991,34 +1205,24 @@
         const offset = i - pos;
         const absOffset = Math.abs(offset);
 
-        card.classList.remove('center', 'left', 'right');
+        card.classList.toggle('center', absOffset < 0.5);
 
-        let w, h, x, rotateY, scale, opacity, zIndex;
-
-        if (absOffset < 0.5) {
-          card.classList.add('center');
-          w = frontW; h = frontH;
-          x = offset * (frontW * 0.45);
-          rotateY = offset * -10;
-          scale = 1 - absOffset * 0.3;
-          opacity = 1 - absOffset * 0.3;
-          zIndex = 5;
-        } else {
-          const side = offset < 0 ? 'left' : 'right';
-          card.classList.add(side);
-          const dir = offset < 0 ? -1 : 1;
-          w = sideW; h = sideH;
-          rotateY = dir * Math.min(absOffset * 15, 40);
-          x = dir * (frontW / 2 + gap + (absOffset - 1) * (sideW * 0.35));
-          scale = Math.max(1 - absOffset * 0.18, 0.4);
-          opacity = Math.max(1 - absOffset * 0.25, 0.2);
-          zIndex = 4 - Math.min(Math.floor(absOffset), 4);
+        if (absOffset > ARC_VISIBLE_RANGE) {
+          card.style.display = 'none';
+          return;
         }
+        card.style.display = '';
 
-        card.style.width = w + 'px';
-        card.style.height = h + 'px';
-        card.style.transform = 'translateX(' + x + 'px) rotateY(' + rotateY + 'deg) scale(' + scale + ')';
-        card.style.opacity = opacity;
+        const x = offset * ARC_SPACING;
+        const y = Math.pow(absOffset, 1.4) * ARC_CURVE;
+        const rotate = Math.max(-60, Math.min(60, offset * ARC_ANGLE_STEP));
+        const scale = Math.max(1 - absOffset * ARC_SCALE_STEP, 0.55);
+        const zIndex = 100 - Math.round(absOffset);
+
+        card.style.width = ARC_CARD_W + 'px';
+        card.style.height = ARC_CARD_H + 'px';
+        card.style.transform = `translate(${x}px, ${y}px) rotate(${rotate}deg) scale(${scale})`;
+        card.style.opacity = 1;
         card.style.zIndex = zIndex;
         card.style.transition = 'none';
       });
