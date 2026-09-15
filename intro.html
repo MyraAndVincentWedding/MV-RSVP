@@ -3,16 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vincent & Myra — RSVP</title>
+  <title>Myra & Vincent — RSVP</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
       --dusty-blue: #7B99AB;
-      --dusty-blue-dark: #6A8899;
+      --dusty-blue-dark: #5E8399;
+      --dusty-blue-deep: #4A6E8A;
+      --dusty-blue-light: #A8C0CF;
       --cream: #FAF8F5;
     }
 
@@ -23,8 +25,9 @@
     .initial-play {
       position: fixed;
       inset: 0;
-      background: linear-gradient(135deg, #EBF0F5 0%, #D4DFE8 50%, #C8D4E0 100%);
+      background: linear-gradient(165deg, var(--dusty-blue-deep) 0%, var(--dusty-blue) 50%, var(--dusty-blue-dark) 100%);
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 99999;
@@ -32,37 +35,106 @@
     }
     .initial-play.hidden { opacity: 0; pointer-events: none; }
 
+    /* Decorative corners for play screen */
+    .initial-play::before,
+    .initial-play::after {
+      content: '';
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .initial-play::before {
+      top: 2rem;
+      left: 2rem;
+      border-right: none;
+      border-bottom: none;
+    }
+    .initial-play::after {
+      bottom: 2rem;
+      right: 2rem;
+      border-left: none;
+      border-top: none;
+    }
+
+    .play-monogram {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+      margin-bottom: 2rem;
+      filter: brightness(0) invert(1);
+      opacity: 0;
+      animation: fadeInUp 0.6s 0.1s ease-out forwards;
+    }
+
+    .play-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.35em;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      opacity: 0;
+      animation: fadeInUp 0.6s 0.2s ease-out forwards;
+    }
+
+    .play-names {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2.5rem;
+      color: white;
+      letter-spacing: 0.02em;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeInUp 0.6s 0.3s ease-out forwards;
+    }
+
     .big-play-btn {
-      width: 90px;
-      height: 90px;
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
-      background: rgba(123, 153, 171, 0.8);
+      background: rgba(255,255,255,0.15);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.4);
+      border: 1px solid rgba(255,255,255,0.25);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all 0.3s;
-      box-shadow: 0 8px 32px rgba(123, 153, 171, 0.35);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+      opacity: 0;
+      animation: fadeInUp 0.6s 0.4s ease-out forwards;
     }
     .big-play-btn:hover {
       transform: scale(1.08);
-      background: rgba(106, 136, 153, 0.9);
+      background: rgba(255,255,255,0.25);
     }
-    .big-play-btn svg { width: 36px; height: 36px; fill: white; margin-left: 4px; }
+    .big-play-btn svg { width: 32px; height: 32px; fill: white; margin-left: 4px; }
+
+    .play-date {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.55rem;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      margin-top: 2rem;
+      opacity: 0;
+      animation: fadeInUp 0.6s 0.5s ease-out forwards;
+    }
 
     /* Loading Screen */
     .loading-screen {
       position: fixed;
       inset: 0;
-      background: linear-gradient(135deg, #EBF0F5 0%, #D4DFE8 50%, #C8D4E0 100%);
+      background: linear-gradient(165deg, var(--dusty-blue-deep) 0%, var(--dusty-blue) 50%, var(--dusty-blue-dark) 100%);
       z-index: 99998;
       transition: opacity 0.5s ease;
     }
     .loading-screen.hidden { opacity: 0; pointer-events: none; }
 
+    /* Loading spinner — only visible while frames preload */
     .loading-spinner {
       position: absolute;
       bottom: 15%;
@@ -70,11 +142,13 @@
       transform: translateX(-50%);
       width: 28px;
       height: 28px;
-      border: 2.5px solid rgba(123, 153, 171, 0.25);
-      border-top-color: var(--dusty-blue-dark);
+      border: 2.5px solid rgba(255,255,255,0.2);
+      border-top-color: white;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
+      transition: opacity 0.4s ease;
     }
+    .loading-spinner.hidden { opacity: 0; pointer-events: none; }
 
     @keyframes spin {
       to { transform: translateX(-50%) rotate(360deg); }
@@ -95,6 +169,120 @@
     .vincent-sprite { width: 165px; height: 322px; object-fit: contain; z-index: 3; left: -165px; }
     .myra-sprite { width: 150px; height: 300px; object-fit: contain; z-index: 2; left: -180px; }
 
+    /* Background decorations */
+    .bg-decor {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .ground {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 20%, rgba(255,255,255,0.15) 80%, transparent 100%);
+    }
+
+    .ground-shadow {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: linear-gradient(to top, rgba(0,0,0,0.08), transparent);
+    }
+
+    /* Floating particles */
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      animation: floatParticle linear infinite;
+    }
+
+    @keyframes floatParticle {
+      0% { transform: translateY(0) translateX(0); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-100vh) translateX(30px); opacity: 0; }
+    }
+
+    /* Floral decorations */
+    .floral-tl, .floral-tr, .floral-bl, .floral-br {
+      position: absolute;
+      opacity: 0.15;
+    }
+    .floral-tl { top: -20px; left: -20px; transform: rotate(0deg); }
+    .floral-tr { top: -20px; right: -20px; transform: rotate(90deg); }
+    .floral-bl { bottom: 40px; left: -20px; transform: rotate(-90deg); }
+    .floral-br { bottom: 40px; right: -20px; transform: rotate(180deg); }
+
+    /* Text overlay during walk */
+    .walk-text {
+      position: absolute;
+      top: 8%;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+    .walk-text.visible { opacity: 1; }
+
+    .walk-text .names {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2.8rem;
+      color: white;
+      text-shadow: 0 4px 30px rgba(0,0,0,0.15);
+      margin-bottom: 0.3rem;
+    }
+
+    .walk-text .subtitle {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.55rem;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+    }
+
+    .walk-text .date {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.5);
+      margin-top: 0.5rem;
+    }
+
+    /* Bottom tagline */
+    .walk-tagline {
+      position: absolute;
+      bottom: 8%;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+    .walk-tagline.visible { opacity: 1; }
+
+    .walk-tagline p {
+      font-family: 'Great Vibes', cursive;
+      font-size: 1.3rem;
+      color: rgba(255,255,255,0.5);
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
     }
@@ -103,17 +291,76 @@
 <body>
 
   <div class="initial-play" id="initialPlay">
+    <img src="MV.png" alt="MV" class="play-monogram">
+    <p class="play-title">You're Invited</p>
+    <p class="play-names">Myra & Vincent</p>
     <button class="big-play-btn" id="bigPlayBtn">
       <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
     </button>
+    <p class="play-date">October 28, 2026</p>
   </div>
 
   <div class="loading-screen hidden" id="loadingScreen">
+    <!-- Background decorations -->
+    <div class="bg-decor">
+      <div class="ground"></div>
+      <div class="ground-shadow"></div>
+
+      <!-- Floral corners -->
+      <svg class="floral-tl" width="140" height="140" viewBox="0 0 140 140" fill="none">
+        <path d="M0 0C20 30 40 60 50 90C55 105 58 120 60 140" stroke="white" stroke-width="0.8"/>
+        <path d="M10 0C25 25 45 55 55 85C58 100 60 115 62 135" stroke="white" stroke-width="0.6"/>
+        <ellipse cx="50" cy="80" rx="10" ry="14" transform="rotate(-15 50 80)" stroke="white" stroke-width="0.5"/>
+        <ellipse cx="42" cy="95" rx="7" ry="11" transform="rotate(-30 42 95)" stroke="white" stroke-width="0.5"/>
+        <circle cx="55" cy="65" r="3" stroke="white" stroke-width="0.4"/>
+        <circle cx="45" cy="85" r="2" stroke="white" stroke-width="0.4"/>
+      </svg>
+      <svg class="floral-tr" width="140" height="140" viewBox="0 0 140 140" fill="none">
+        <path d="M0 0C20 30 40 60 50 90C55 105 58 120 60 140" stroke="white" stroke-width="0.8"/>
+        <path d="M10 0C25 25 45 55 55 85C58 100 60 115 62 135" stroke="white" stroke-width="0.6"/>
+        <ellipse cx="50" cy="80" rx="10" ry="14" transform="rotate(-15 50 80)" stroke="white" stroke-width="0.5"/>
+        <ellipse cx="42" cy="95" rx="7" ry="11" transform="rotate(-30 42 95)" stroke="white" stroke-width="0.5"/>
+        <circle cx="55" cy="65" r="3" stroke="white" stroke-width="0.4"/>
+        <circle cx="45" cy="85" r="2" stroke="white" stroke-width="0.4"/>
+      </svg>
+      <svg class="floral-bl" width="140" height="140" viewBox="0 0 140 140" fill="none">
+        <path d="M0 0C20 30 40 60 50 90C55 105 58 120 60 140" stroke="white" stroke-width="0.8"/>
+        <path d="M10 0C25 25 45 55 55 85C58 100 60 115 62 135" stroke="white" stroke-width="0.6"/>
+        <ellipse cx="50" cy="80" rx="10" ry="14" transform="rotate(-15 50 80)" stroke="white" stroke-width="0.5"/>
+        <ellipse cx="42" cy="95" rx="7" ry="11" transform="rotate(-30 42 95)" stroke="white" stroke-width="0.5"/>
+        <circle cx="55" cy="65" r="3" stroke="white" stroke-width="0.4"/>
+        <circle cx="45" cy="85" r="2" stroke="white" stroke-width="0.4"/>
+      </svg>
+      <svg class="floral-br" width="140" height="140" viewBox="0 0 140 140" fill="none">
+        <path d="M0 0C20 30 40 60 50 90C55 105 58 120 60 140" stroke="white" stroke-width="0.8"/>
+        <path d="M10 0C25 25 45 55 55 85C58 100 60 115 62 135" stroke="white" stroke-width="0.6"/>
+        <ellipse cx="50" cy="80" rx="10" ry="14" transform="rotate(-15 50 80)" stroke="white" stroke-width="0.5"/>
+        <ellipse cx="42" cy="95" rx="7" ry="11" transform="rotate(-30 42 95)" stroke="white" stroke-width="0.5"/>
+        <circle cx="55" cy="65" r="3" stroke="white" stroke-width="0.4"/>
+        <circle cx="45" cy="85" r="2" stroke="white" stroke-width="0.4"/>
+      </svg>
+
+      <!-- Particles container -->
+      <div id="particles"></div>
+    </div>
+
+    <!-- Text during walk -->
+    <div class="walk-text" id="walkText">
+      <div class="names">Myra & Vincent</div>
+      <div class="subtitle">Are getting married</div>
+      <div class="date">October 28, 2026</div>
+    </div>
+
     <div class="loading-sprites">
       <img id="vincentSprite" src="tengwalk/tengwalk_00000.png" class="sprite-img vincent-sprite">
       <img id="myraSprite" src="myrawalk/myra_00000.png" class="sprite-img myra-sprite">
     </div>
-    <div class="loading-spinner"></div>
+
+    <div class="walk-tagline" id="walkTagline">
+      <p>A greater story together...</p>
+    </div>
+
+    <div class="loading-spinner" id="loadingSpinner"></div>
   </div>
 
   <audio id="walkMusic"><source src="widding.mp3" type="audio/mpeg"></audio>
@@ -126,11 +373,14 @@
     const initialPlay = document.getElementById('initialPlay');
     const bigPlayBtn = document.getElementById('bigPlayBtn');
     const loadingScreen = document.getElementById('loadingScreen');
+    const loadingSpinner = document.getElementById('loadingSpinner');
     const vincentSprite = document.getElementById('vincentSprite');
     const myraSprite = document.getElementById('myraSprite');
     const walkMusic = document.getElementById('walkMusic');
+    const walkText = document.getElementById('walkText');
+    const walkTagline = document.getElementById('walkTagline');
+    const particlesContainer = document.getElementById('particles');
 
-    // Album photos - first 20 to preload during walk
     const albumPhotosFirst20 = [
       "1sOigdz87q8hGqYrmFx0CZZHQNsjFjx5r",
       "1JzDeutzfJnE13-oSqjKnTeybVjXH07c-",
@@ -161,12 +411,33 @@
       });
     }
 
-    // Preload frames then start walk
+    // Create floating particles
+    function createParticles() {
+      for (let i = 0; i < 15; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = Math.random() * 4 + 2;
+        p.style.width = size + 'px';
+        p.style.height = size + 'px';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.bottom = '-10px';
+        p.style.animationDuration = (Math.random() * 8 + 6) + 's';
+        p.style.animationDelay = (Math.random() * 5) + 's';
+        particlesContainer.appendChild(p);
+      }
+    }
+
     bigPlayBtn.addEventListener('click', () => {
       initialPlay.classList.add('hidden');
       loadingScreen.classList.remove('hidden');
       preloadAlbumImages(albumPhotosFirst20);
+      createParticles();
       preloadFrames().then(() => {
+        // Hide spinner once frames are loaded
+        loadingSpinner.classList.add('hidden');
+        // Show text overlays
+        walkText.classList.add('visible');
+        walkTagline.classList.add('visible');
         walkMusic.currentTime = 10;
         walkMusic.play();
         startWalkingAnimation();
@@ -220,7 +491,6 @@
         walkMusic.currentTime = 0;
         clearInterval(spriteInterval);
 
-        // Check if guest already answered
         try {
           const res = await fetch(`${SCRIPT_URL}?action=checkGuest&name=${encodeURIComponent(guestName)}`);
           const data = await res.json();
@@ -232,7 +502,6 @@
           // Continue to RSVP if check fails
         }
 
-        // Not answered — go to RSVP form
         window.location.href = `rsvp.html?name=${encodeURIComponent(guestName)}`;
       }, DURATION * 750);
     }

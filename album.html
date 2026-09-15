@@ -8,7 +8,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <style>
     :root {
-      --dusty-blue: #6B8CAE;
+      --dusty-blue: #7B99AB;
+      --dusty-blue-dark: #5E8399;
+      --dusty-blue-deep: #4A6E8A;
+      --dusty-blue-light: #A8C0CF;
       --cream: #FAF8F5;
       --dark: #2D3748;
       --gray: #6B7280;
@@ -32,7 +35,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #EBF0F5 0%, #D4DFE8 50%, #C8D4E0 100%);
+      background: linear-gradient(165deg, var(--dusty-blue-deep) 0%, var(--dusty-blue) 50%, var(--dusty-blue-light) 100%);
       position: fixed;
       top: 0; left: 0;
       width: 100%;
@@ -45,6 +48,7 @@
       width: 150px; height: 150px;
       object-fit: contain;
       margin-bottom: 1.5rem;
+      filter: brightness(0) invert(1);
       opacity: 0;
     }
 
@@ -52,14 +56,14 @@
       font-family: 'Cormorant Infant', serif;
       font-size: 2.5rem;
       font-weight: 300;
-      color: var(--dark);
+      color: white;
       margin-bottom: 0.5rem;
       opacity: 0;
     }
 
     .hero-subtitle {
       font-size: 0.9rem;
-      color: var(--gray);
+      color: rgba(255,255,255,0.7);
       letter-spacing: 0.3em;
       text-transform: uppercase;
       opacity: 0;
@@ -69,7 +73,7 @@
 
     .hero-loading-bar {
       width: 150px; height: 3px;
-      background: rgba(107,140,174,0.2);
+      background: rgba(255,255,255,0.2);
       border-radius: 2px;
       overflow: hidden;
       margin: 0 auto 0.5rem;
@@ -77,14 +81,14 @@
 
     .hero-loading-fill {
       width: 0%; height: 100%;
-      background: var(--dusty-blue);
+      background: white;
       border-radius: 2px;
       transition: width 0.3s ease;
     }
 
     .hero-loading-text {
       font-size: 0.75rem;
-      color: var(--gray);
+      color: rgba(255,255,255,0.6);
     }
 
     /* Coverflow Section */
@@ -239,11 +243,9 @@
     /* Hide mobile-only elements on desktop */
     .flipbook-counter,
     .flipbook-hint,
-    .flipbook-nav,
     .half,
     .flap-down,
-    .flap-up,
-    .fb-divider {
+    .flap-up {
       display: none;
     }
 
@@ -260,7 +262,7 @@
     @media (max-width: 768px) {
       .coverflow-section {
         flex-direction: column;
-        background: linear-gradient(180deg, #e8e4df 0%, #d4cfc9 100%);
+        background: linear-gradient(180deg, var(--dusty-blue-light) 0%, var(--dusty-blue) 100%);
         padding-top: 1rem;
       }
 
@@ -348,17 +350,6 @@
       .half.bottom { bottom: 0; }
       .half.bottom img { top: -100%; }
 
-      /* Crease line */
-      .fb-divider {
-        position: absolute;
-        left: 0; right: 0; top: 50%;
-        height: 2px;
-        background: rgba(0,0,0,0.55);
-        z-index: 20;
-        transform: translateY(-1px);
-        pointer-events: none;
-      }
-
       /* Flap face common */
       .flap-face {
         position: absolute;
@@ -415,94 +406,12 @@
         display: none !important;
       }
 
-      /* Navigation lever */
-      .flipbook-nav {
-        position: absolute;
-        right: -50px;
-        top: 50%;
-        transform: translateY(-50%);
-        z-index: 30;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;
-        user-select: none;
-      }
-
-      .lever-arrow-label {
-        font-size: 0.6rem;
-        color: var(--gray);
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        pointer-events: none;
-      }
-
-      .lever-track {
-        position: relative;
-        width: 36px;
-        height: 150px;
-        border-radius: 18px;
-        background: linear-gradient(to bottom, #1a1e24, #2a2f38 50%, #1a1e24);
-        box-shadow:
-          inset 0 3px 7px rgba(0,0,0,0.5),
-          inset 0 -3px 7px rgba(0,0,0,0.5),
-          0 2px 6px rgba(0,0,0,0.25);
-        border: 1px solid rgba(255,255,255,0.06);
-      }
-
-      .lever-center-mark {
-        position: absolute;
-        left: 6px; right: 6px;
-        top: 50%;
-        height: 1px;
-        background: rgba(255,255,255,0.1);
-        transform: translateY(-0.5px);
-      }
-
-      .lever-handle {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 30px;
-        height: 30px;
-        margin-left: -15px;
-        margin-top: -15px;
-        border-radius: 50%;
-        background: radial-gradient(circle at 35% 30%, #B7CCE0, var(--dusty-blue) 60%, #4d6a86 100%);
-        box-shadow:
-          0 4px 9px rgba(0,0,0,0.4),
-          inset 0 1px 2px rgba(255,255,255,0.55),
-          inset 0 -3px 6px rgba(0,0,0,0.2);
-        cursor: grab;
-        touch-action: none;
-        will-change: transform;
-        transition: box-shadow 0.15s ease;
-      }
-
-      .lever-handle.dragging {
-        cursor: grabbing;
-        box-shadow:
-          0 6px 13px rgba(0,0,0,0.5),
-          inset 0 1px 2px rgba(255,255,255,0.55),
-          inset 0 -3px 6px rgba(0,0,0,0.2);
-      }
-
-      .lever-handle::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        border: 1px solid rgba(0,0,0,0.2);
-      }
-
       /* Show mobile-only elements */
       .flipbook-counter,
       .flipbook-hint,
-      .flipbook-nav,
       .half,
       .flap-down,
-      .flap-up,
-      .fb-divider {
+      .flap-up {
         display: block;
       }
 
@@ -511,7 +420,7 @@
         text-align: center;
         margin-top: 1rem;
         font-size: 0.8rem;
-        color: var(--gray);
+        color: rgba(255,255,255,0.7);
         letter-spacing: 0.15em;
       }
 
@@ -520,7 +429,7 @@
         text-align: center;
         margin-top: 0.5rem;
         font-size: 0.65rem;
-        color: rgba(107,114,128,0.6);
+        color: rgba(255,255,255,0.4);
         letter-spacing: 0.1em;
       }
 
@@ -672,24 +581,14 @@
             <div class="flap-face back"><img id="flapUpBackImg" src="" alt=""></div>
           </div>
 
-          <div class="fb-divider"></div>
           </div>
         </div>
 
-        <!-- Navigation lever -->
-        <div class="flipbook-nav" id="flipbookNav">
-          <span class="lever-arrow-label">Prev</span>
-          <div class="lever-track" id="leverTrack" role="slider" aria-label="Photo navigation lever" aria-valuemin="-1" aria-valuemax="1" aria-valuenow="0">
-            <div class="lever-center-mark"></div>
-            <div class="lever-handle" id="leverHandle"></div>
-          </div>
-          <span class="lever-arrow-label">Next</span>
-        </div>
       </div>
     </div>
 
     <div class="flipbook-counter" id="flipbookCounter">1 / 75</div>
-    <div class="flipbook-hint" id="flipbookHint">drag lever or swipe to flip</div>
+    <div class="flipbook-hint" id="flipbookHint">swipe to flip</div>
 
     <div class="coverflow-footer">
       <p>A Greater Story Together</p>
@@ -1129,72 +1028,6 @@
         }
       }
     });
-
-    // Navigation lever - drag down for next, up for prev
-    const leverTrack = document.getElementById('leverTrack');
-    const leverHandle = document.getElementById('leverHandle');
-
-    if (leverTrack && leverHandle) {
-      let leverDragging = false;
-      let leverMaxOffset = 0;
-      let leverThreshold = 0;
-      let leverStartY = 0;
-      let leverTriggered = false;
-
-      function measureLever() {
-        const trackH = leverTrack.clientHeight;
-        const handleH = leverHandle.clientHeight;
-        leverMaxOffset = (trackH - handleH) / 2 - 4;
-        leverThreshold = leverMaxOffset * 0.55;
-      }
-      measureLever();
-      window.addEventListener('resize', measureLever);
-
-      function setLeverOffset(offset, animated) {
-        leverHandle.style.transition = animated ? 'transform 0.4s cubic-bezier(.34,1.56,.64,1)' : 'none';
-        leverHandle.style.transform = `translateY(${offset}px)`;
-      }
-
-      leverHandle.addEventListener('pointerdown', (e) => {
-        leverDragging = true;
-        leverTriggered = false;
-        leverStartY = e.clientY;
-        leverHandle.classList.add('dragging');
-        leverHandle.setPointerCapture(e.pointerId);
-        stopAutoAdvance();
-      });
-
-      leverHandle.addEventListener('pointermove', (e) => {
-        if (!leverDragging) return;
-        let delta = e.clientY - leverStartY;
-        delta = Math.max(-leverMaxOffset, Math.min(leverMaxOffset, delta));
-        setLeverOffset(delta, false);
-        leverTrack.setAttribute('aria-valuenow', (delta / leverMaxOffset).toFixed(2));
-
-        if (!leverTriggered) {
-          if (delta >= leverThreshold) {
-            leverTriggered = true;
-            goNext();
-          } else if (delta <= -leverThreshold) {
-            leverTriggered = true;
-            goPrev();
-          }
-        }
-      });
-
-      function endLeverDrag(e) {
-        if (!leverDragging) return;
-        leverDragging = false;
-        leverHandle.classList.remove('dragging');
-        try { leverHandle.releasePointerCapture(e.pointerId); } catch (err) {}
-        setLeverOffset(0, true);
-        leverTrack.setAttribute('aria-valuenow', '0');
-        resetInactivityTimer();
-      }
-
-      leverHandle.addEventListener('pointerup', endLeverDrag);
-      leverHandle.addEventListener('pointercancel', endLeverDrag);
-    }
 
     function applyDragPosition(pos) {
       if (isMobile) return; // No drag preview on flipbook

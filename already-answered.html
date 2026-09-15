@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vincent & Myra — Already Answered</title>
+  <title>Myra & Vincent — Already Answered</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Great+Vibes&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
@@ -11,9 +11,10 @@
 
     :root {
       --dusty-blue: #7B99AB;
-      --dusty-blue-dark: #6A8899;
+      --dusty-blue-dark: #5E8399;
+      --dusty-blue-deep: #4A6E8A;
+      --dusty-blue-light: #A8C0CF;
       --cream: #FAF8F5;
-      --cream-dark: #F5F2ED;
       --dark: #2D3748;
       --dark-navy: #3D4F5F;
       --gray: #6B7280;
@@ -28,17 +29,51 @@
 
     .page { display: flex; height: 100vh; width: 100vw; }
 
-    /* Photo Side */
+    /* Photo Side with Slideshow */
     .photo-side {
       flex: 1;
       position: relative;
       overflow: hidden;
     }
-    .photo-side img.photo {
+
+    .slideshow {
+      position: absolute;
+      inset: 0;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+    }
+
+    .slide.active {
+      opacity: 1;
+    }
+
+    .slide img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
+
+    /* Gradient overlay */
+    .photo-side::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.25) 0%,
+        transparent 30%,
+        transparent 50%,
+        rgba(0,0,0,0.4) 100%
+      );
+      z-index: 1;
+      pointer-events: none;
+    }
+
     .photo-top-text {
       position: absolute;
       top: 2.5rem;
@@ -83,15 +118,37 @@
     }
 
     /* Mobile photo monogram */
-    .photo-monogram-mobile {
-      display: none;
+    .photo-monogram-mobile { display: none; }
+
+    /* Bubbles */
+    .bubbles {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .bubble {
+      position: absolute;
+      bottom: -20px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      animation: floatBubble linear infinite;
+    }
+
+    @keyframes floatBubble {
+      0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 0.6; }
+      100% { transform: translateY(-110vh) translateX(30px) scale(0.6); opacity: 0; }
     }
 
     /* Content Side */
     .content-side {
       width: 520px;
       min-width: 440px;
-      background: var(--cream);
+      background: linear-gradient(170deg, var(--dusty-blue) 0%, var(--dusty-blue-dark) 50%, var(--dusty-blue-deep) 100%);
       position: relative;
       display: flex;
       flex-direction: column;
@@ -101,30 +158,36 @@
       overflow-y: auto;
     }
 
-    /* Floral Decorations */
-    .floral-top-right {
+    /* Squircle Container */
+    .squircle {
+      position: relative;
+      background: rgba(255,255,255,0.08);
+      border-radius: 40px;
+      padding: 2.5rem 2rem;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    }
+
+    .squircle-glow {
       position: absolute;
-      top: 0;
-      right: 0;
-      width: 160px;
-      height: 180px;
-      opacity: 0;
-      animation: fadeIn 0.5s 0.4s ease-out both;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.15;
+      pointer-events: none;
     }
-    .floral-bottom-left {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 140px;
-      height: 160px;
-      opacity: 0;
-      animation: fadeIn 0.5s 0.5s ease-out both;
+    .squircle-glow-top {
+      top: -80px;
+      right: -60px;
+      background: white;
     }
-    .floral-mobile-left {
-      display: none;
-    }
-    .floral-mobile-right {
-      display: none;
+    .squircle-glow-bottom {
+      bottom: -80px;
+      left: -60px;
+      background: rgba(255,255,255,0.6);
     }
 
     .content-inner {
@@ -139,6 +202,7 @@
       height: 60px;
       object-fit: contain;
       margin-bottom: 1rem;
+      filter: brightness(0) invert(1);
       opacity: 0;
       animation: scaleIn 0.5s 0.2s ease-out both;
     }
@@ -147,7 +211,7 @@
       font-family: var(--font-serif);
       font-size: 3rem;
       font-weight: 300;
-      color: var(--dark-navy);
+      color: white;
       line-height: 1.1;
       margin-bottom: 0.5rem;
       opacity: 0;
@@ -156,7 +220,7 @@
     .names .amp {
       font-family: var(--font-script);
       font-size: 2.8rem;
-      color: var(--dusty-blue);
+      color: rgba(255,255,255,0.7);
       margin: 0 0.05em;
     }
 
@@ -165,7 +229,7 @@
       font-size: 1rem;
       font-weight: 400;
       letter-spacing: 0.15em;
-      color: var(--dark-navy);
+      color: rgba(255,255,255,0.85);
       text-transform: uppercase;
       margin-bottom: 1rem;
       opacity: 0;
@@ -184,22 +248,20 @@
     .diamond-divider .line {
       width: 60px;
       height: 1px;
-      background: var(--dusty-blue);
-      opacity: 0.4;
+      background: rgba(255,255,255,0.4);
     }
     .diamond-divider .diamond {
       width: 6px;
       height: 6px;
-      background: var(--dusty-blue);
+      background: rgba(255,255,255,0.6);
       transform: rotate(45deg);
-      opacity: 0.6;
     }
 
     .already-title {
       font-family: var(--font-serif);
       font-size: 1.1rem;
       font-weight: 400;
-      color: var(--dark-navy);
+      color: white;
       margin-bottom: 0.8rem;
       opacity: 0;
       animation: fadeUp 0.5s 0.55s ease-out both;
@@ -208,20 +270,20 @@
     .already-response {
       font-family: var(--font-sans);
       font-size: 0.8rem;
-      color: var(--gray);
+      color: rgba(255,255,255,0.8);
       margin-bottom: 0.3rem;
       opacity: 0;
       animation: fadeUp 0.5s 0.6s ease-out both;
     }
     .already-response strong {
-      color: var(--dusty-blue);
+      color: white;
       font-weight: 600;
     }
 
     .already-message {
       font-family: var(--font-script);
       font-size: 1.1rem;
-      color: var(--dusty-blue);
+      color: rgba(255,255,255,0.9);
       margin-bottom: 1.5rem;
       opacity: 0;
       animation: fadeUp 0.5s 0.65s ease-out both;
@@ -239,6 +301,7 @@
       display: inline-block;
       padding: 0.85rem 2.5rem;
       border: none;
+      border-radius: 50px;
       font-family: var(--font-sans);
       font-size: 0.6rem;
       font-weight: 600;
@@ -250,36 +313,45 @@
       min-width: 220px;
     }
     .btn-change {
-      background: var(--dusty-blue);
-      color: white;
+      background: white;
+      color: var(--dusty-blue-dark);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     }
     .btn-change:hover {
-      background: var(--dusty-blue-dark);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 20px rgba(123, 153, 171, 0.3);
+      background: rgba(255,255,255,0.9);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
     }
     .btn-album {
-      background: transparent;
-      color: var(--dusty-blue);
-      border: 1px solid var(--dusty-blue);
+      background: rgba(255,255,255,0.1);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.3);
     }
     .btn-album:hover {
-      background: rgba(123, 153, 171, 0.08);
+      background: rgba(255,255,255,0.2);
+    }
+    .btn-entourage {
+      background: rgba(255,255,255,0.1);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    .btn-entourage:hover {
+      background: rgba(255,255,255,0.2);
     }
     .btn-theme {
       background: transparent;
-      color: var(--gray);
-      border: 1px solid var(--gray-light);
+      color: rgba(255,255,255,0.7);
+      border: 1px solid rgba(255,255,255,0.2);
     }
     .btn-theme:hover {
-      background: rgba(107, 114, 128, 0.06);
+      background: rgba(255,255,255,0.08);
     }
 
     .footer-text {
       font-family: var(--font-serif);
       font-size: 0.8rem;
       font-weight: 300;
-      color: var(--gray);
+      color: rgba(255,255,255,0.7);
       line-height: 1.6;
       margin-top: 1.5rem;
       opacity: 0;
@@ -300,7 +372,7 @@
       font-size: 0.45rem;
       font-weight: 500;
       letter-spacing: 0.2em;
-      color: var(--gray-light);
+      color: rgba(255,255,255,0.4);
       text-transform: uppercase;
       line-height: 1.6;
     }
@@ -332,10 +404,7 @@
         height: 45vh;
         min-height: 320px;
       }
-      .photo-top-text {
-        top: 1.5rem;
-        left: 1.5rem;
-      }
+      .photo-top-text { top: 1.5rem; left: 1.5rem; }
       .photo-bottom-text {
         bottom: auto;
         top: 50%;
@@ -344,11 +413,8 @@
         transform: translateY(-50%);
         text-align: right;
       }
-      .photo-bottom-text .see-you {
-        font-size: 2rem;
-      }
+      .photo-bottom-text .see-you { font-size: 2rem; }
 
-      /* Mobile photo monogram */
       .photo-monogram-mobile {
         display: block;
         position: absolute;
@@ -357,7 +423,7 @@
         width: 48px;
         height: 48px;
         object-fit: contain;
-        z-index: 2;
+        z-index: 3;
         opacity: 0;
         animation: fadeIn 0.6s 0.4s ease-out both;
       }
@@ -370,28 +436,13 @@
         border-radius: 0;
       }
 
+      .squircle {
+        padding: 2rem 1.5rem;
+        border-radius: 30px;
+      }
+      .squircle-glow { display: none; }
+
       .monogram { display: none; }
-
-      .floral-top-right, .floral-bottom-left { display: none; }
-
-      .floral-mobile-left {
-        display: block;
-        position: absolute;
-        top: -30px;
-        left: 0;
-        width: 100px;
-        height: 120px;
-        opacity: 0.5;
-      }
-      .floral-mobile-right {
-        display: block;
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        width: 100px;
-        height: 120px;
-        opacity: 0.5;
-      }
 
       .names { font-size: 2.4rem; }
       .names .amp { font-size: 2.2rem; }
@@ -403,7 +454,7 @@
         text-align: center;
         margin-top: 1.5rem;
         padding-top: 1rem;
-        border-top: 1px solid rgba(123, 153, 171, 0.15);
+        border-top: 1px solid rgba(255,255,255,0.15);
       }
       .same-journey span {
         display: inline;
@@ -419,6 +470,7 @@
       .photo-bottom-text .see-you { font-size: 1.6rem; }
       .photo-monogram-mobile { width: 40px; height: 40px; top: 1rem; right: 1rem; }
       .content-side { padding: 1.5rem 1rem 2.5rem; }
+      .squircle { padding: 1.5rem 1rem; border-radius: 24px; }
       .names { font-size: 2rem; }
       .names .amp { font-size: 1.8rem; }
       .date-info { font-size: 0.85rem; }
@@ -437,7 +489,21 @@
 
   <div class="page">
     <div class="photo-side">
-      <img class="photo" src="https://drive.google.com/thumbnail?id=1sOigdz87q8hGqYrmFx0CZZHQNsjFjx5r&sz=s800" alt="Vincent & Myra">
+      <!-- Slideshow -->
+      <div class="slideshow" id="slideshow">
+        <div class="slide active"><img src="https://drive.google.com/thumbnail?id=1sOigdz87q8hGqYrmFx0CZZHQNsjFjx5r&sz=s800" alt="Myra & Vincent"></div>
+        <div class="slide"><img src="https://drive.google.com/thumbnail?id=1JzDeutzfJnE13-oSqjKnTeybVjXH07c-&sz=s800" alt="Myra & Vincent"></div>
+        <div class="slide"><img src="https://drive.google.com/thumbnail?id=1f1x7ja6LnPJjy3qxjp8LNKiU16oAKssQ&sz=s800" alt="Myra & Vincent"></div>
+        <div class="slide"><img src="https://drive.google.com/thumbnail?id=1TLM9yky5xHOL-E-62F5KH-O6y2oHFpQ4&sz=s800" alt="Myra & Vincent"></div>
+        <div class="slide"><img src="https://drive.google.com/thumbnail?id=1N8RLKSNZraMMKWeRl9H1n4FGAYKwkkPs&sz=s800" alt="Myra & Vincent"></div>
+        <div class="slide"><img src="https://drive.google.com/thumbnail?id=1u9tK-c0tDPuAn1dkzRr_wiTsWU6gwpgo&sz=s800" alt="Myra & Vincent"></div>
+        <div class="slide"><img src="https://drive.google.com/thumbnail?id=1p5AxAPD2g-LZ3j6qsm6BmyI78F17Tktm&sz=s800" alt="Myra & Vincent"></div>
+        <div class="slide"><img src="https://drive.google.com/thumbnail?id=1LxSUd3oq9r9VHuoeBrJHJA2w9_gCZXac&sz=s800" alt="Myra & Vincent"></div>
+      </div>
+
+      <!-- Bubbles -->
+      <div class="bubbles" id="bubbles"></div>
+
       <img src="MV.png" alt="MV" class="photo-monogram-mobile">
       <div class="photo-top-text">
         <span>A Greater</span>
@@ -451,84 +517,41 @@
     </div>
 
     <div class="content-side">
-      <!-- Floral Top Right (Desktop) -->
-      <svg class="floral-top-right" viewBox="0 0 160 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M160 0C140 20 120 60 110 100C105 120 100 140 95 160" stroke="#C5D0D8" stroke-width="0.8" fill="none"/>
-        <path d="M150 0C135 25 125 55 120 90C118 105 115 125 110 145" stroke="#C5D0D8" stroke-width="0.8" fill="none"/>
-        <path d="M140 5C130 30 120 60 115 95C112 115 108 135 102 155" stroke="#C5D0D8" stroke-width="0.8" fill="none"/>
-        <ellipse cx="110" cy="100" rx="8" ry="12" transform="rotate(-20 110 100)" stroke="#C5D0D8" stroke-width="0.6" fill="none"/>
-        <ellipse cx="118" cy="85" rx="6" ry="10" transform="rotate(-35 118 85)" stroke="#C5D0D8" stroke-width="0.6" fill="none"/>
-        <ellipse cx="105" cy="115" rx="7" ry="11" transform="rotate(-10 105 115)" stroke="#C5D0D8" stroke-width="0.6" fill="none"/>
-        <circle cx="120" cy="70" r="3" stroke="#C5D0D8" stroke-width="0.5" fill="none"/>
-        <circle cx="108" cy="90" r="2.5" stroke="#C5D0D8" stroke-width="0.5" fill="none"/>
-        <circle cx="115" cy="105" r="2" stroke="#C5D0D8" stroke-width="0.5" fill="none"/>
-        <path d="M160 30C145 45 130 70 125 100" stroke="#C5D0D8" stroke-width="0.5" fill="none"/>
-        <path d="M155 15C142 35 132 65 128 95" stroke="#C5D0D8" stroke-width="0.5" fill="none"/>
-      </svg>
+      <!-- Squircle Glows -->
+      <div class="squircle-glow squircle-glow-top"></div>
+      <div class="squircle-glow squircle-glow-bottom"></div>
 
-      <!-- Floral Bottom Left (Desktop) -->
-      <svg class="floral-bottom-left" viewBox="0 0 140 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0 160C20 140 40 100 50 60C55 40 60 20 65 0" stroke="#C5D0D8" stroke-width="0.8" fill="none"/>
-        <path d="M10 160C25 135 35 105 40 70C42 55 45 35 50 15" stroke="#C5D0D8" stroke-width="0.8" fill="none"/>
-        <path d="M20 155C30 130 40 100 45 65C48 45 52 25 58 5" stroke="#C5D0D8" stroke-width="0.8" fill="none"/>
-        <ellipse cx="50" cy="60" rx="8" ry="12" transform="rotate(20 50 60)" stroke="#C5D0D8" stroke-width="0.6" fill="none"/>
-        <ellipse cx="42" cy="75" rx="6" ry="10" transform="rotate(35 42 75)" stroke="#C5D0D8" stroke-width="0.6" fill="none"/>
-        <ellipse cx="55" cy="45" rx="7" ry="11" transform="rotate(10 55 45)" stroke="#C5D0D8" stroke-width="0.6" fill="none"/>
-        <circle cx="40" cy="90" r="3" stroke="#C5D0D8" stroke-width="0.5" fill="none"/>
-        <circle cx="52" cy="70" r="2.5" stroke="#C5D0D8" stroke-width="0.5" fill="none"/>
-        <circle cx="45" cy="55" r="2" stroke="#C5D0D8" stroke-width="0.5" fill="none"/>
-        <path d="M0 130C15 115 30 90 35 60" stroke="#C5D0D8" stroke-width="0.5" fill="none"/>
-        <path d="M5 145C18 125 28 95 32 65" stroke="#C5D0D8" stroke-width="0.5" fill="none"/>
-      </svg>
+      <div class="squircle">
+        <div class="content-inner">
+          <img src="MV.png" alt="MV" class="monogram">
 
-      <!-- Floral Mobile Left -->
-      <svg class="floral-mobile-left" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0 120C15 100 25 70 30 40C32 25 35 10 40 0" stroke="#C5D0D8" stroke-width="0.6" fill="none"/>
-        <path d="M8 120C18 95 28 65 32 35C34 20 36 8 38 0" stroke="#C5D0D8" stroke-width="0.6" fill="none"/>
-        <ellipse cx="30" cy="45" rx="6" ry="9" transform="rotate(15 30 45)" stroke="#C5D0D8" stroke-width="0.5" fill="none"/>
-        <ellipse cx="25" cy="60" rx="5" ry="8" transform="rotate(25 25 60)" stroke="#C5D0D8" stroke-width="0.5" fill="none"/>
-        <circle cx="32" cy="35" r="2" stroke="#C5D0D8" stroke-width="0.4" fill="none"/>
-        <circle cx="28" cy="50" r="1.5" stroke="#C5D0D8" stroke-width="0.4" fill="none"/>
-      </svg>
+          <h1 class="names">Myra <span class="amp">&</span> Vincent</h1>
 
-      <!-- Floral Mobile Right -->
-      <svg class="floral-mobile-right" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M100 120C85 100 75 70 70 40C68 25 65 10 60 0" stroke="#C5D0D8" stroke-width="0.6" fill="none"/>
-        <path d="M92 120C82 95 72 65 68 35C66 20 64 8 62 0" stroke="#C5D0D8" stroke-width="0.6" fill="none"/>
-        <ellipse cx="70" cy="45" rx="6" ry="9" transform="rotate(-15 70 45)" stroke="#C5D0D8" stroke-width="0.5" fill="none"/>
-        <ellipse cx="75" cy="60" rx="5" ry="8" transform="rotate(-25 75 60)" stroke="#C5D0D8" stroke-width="0.5" fill="none"/>
-        <circle cx="68" cy="35" r="2" stroke="#C5D0D8" stroke-width="0.4" fill="none"/>
-        <circle cx="72" cy="50" r="1.5" stroke="#C5D0D8" stroke-width="0.4" fill="none"/>
-      </svg>
+          <p class="date-info">October 28, 2026</p>
 
-      <div class="content-inner">
-        <img src="MV.png" alt="MV" class="monogram">
+          <div class="diamond-divider">
+            <div class="line"></div>
+            <div class="diamond"></div>
+            <div class="line"></div>
+          </div>
 
-        <h1 class="names">Vincent <span class="amp">&</span> Myra</h1>
+          <p class="already-title">You have already submitted your answer!</p>
+          <p class="already-response" id="alreadyResponse"></p>
+          <p class="already-message" id="alreadyMessage"></p>
 
-        <p class="date-info">October 28, 2026</p>
+          <div class="buttons">
+            <button class="btn btn-change" id="btnChange">Change my answer</button>
+            <button class="btn btn-album" id="btnAlbum">View Album</button>
+            <button class="btn btn-entourage" id="btnEntourage">Event's Entourage</button>
+            <button class="btn btn-theme" id="btnTheme">View Event's theme</button>
+          </div>
 
-        <div class="diamond-divider">
-          <div class="line"></div>
-          <div class="diamond"></div>
-          <div class="line"></div>
+          <p class="footer-text">Thank you for your response!</p>
         </div>
-
-        <p class="already-title">You have already submitted your answer!</p>
-        <p class="already-response" id="alreadyResponse"></p>
-        <p class="already-message" id="alreadyMessage"></p>
-
-        <div class="buttons">
-          <button class="btn btn-change" id="btnChange">Change my answer</button>
-          <button class="btn btn-album" id="btnAlbum">View Album</button>
-          <button class="btn btn-theme" id="btnTheme">View Event's theme</button>
-        </div>
-
-        <p class="footer-text">Thank you for your response!</p>
       </div>
 
       <div class="same-journey">
-        <span>#SameJourneyAlways</span>
+        <span>#HeaVincentToMyra</span>
       </div>
     </div>
   </div>
@@ -551,9 +574,35 @@
     document.getElementById('btnAlbum').addEventListener('click', () => {
       window.location.href = 'album.html';
     });
-    document.getElementById('btnTheme').addEventListener('click', () => {
-      window.location.href = 'index.html';
+    document.getElementById('btnEntourage').addEventListener('click', () => {
+      window.location.href = 'entourage.html';
     });
+    document.getElementById('btnTheme').addEventListener('click', () => {
+      window.location.href = 'theme.html';
+    });
+
+    // Slideshow
+    const slides = document.querySelectorAll('.slide');
+    let currentSlide = 0;
+    setInterval(() => {
+      slides[currentSlide].classList.remove('active');
+      currentSlide = (currentSlide + 1) % slides.length;
+      slides[currentSlide].classList.add('active');
+    }, 4000);
+
+    // Bubbles
+    const bubblesContainer = document.getElementById('bubbles');
+    for (let i = 0; i < 12; i++) {
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+      const size = Math.random() * 20 + 6;
+      bubble.style.width = size + 'px';
+      bubble.style.height = size + 'px';
+      bubble.style.left = Math.random() * 100 + '%';
+      bubble.style.animationDuration = (Math.random() * 10 + 8) + 's';
+      bubble.style.animationDelay = (Math.random() * 6) + 's';
+      bubblesContainer.appendChild(bubble);
+    }
   </script>
 </body>
 </html>

@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Myra & Vincent — Guest Attire Theme</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Great+Vibes&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --dusty-blue: #7B99AB;
+      --dusty-blue-dark: #5E8399;
+      --dusty-blue-deep: #4A6E8A;
+      --dusty-blue-light: #A8C0CF;
+      --cream: #FAF8F5;
+      --dark: #2D3748;
+      --gray: #6B7280;
+      --font-script: 'Great Vibes', cursive;
+      --font-serif: 'Cormorant Infant', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, sans-serif;
+      --shadow-soft: 0 4px 20px rgba(0,0,0,0.08);
+      --shadow-medium: 0 8px 32px rgba(0,0,0,0.12);
+      --shadow-large: 0 12px 48px rgba(0,0,0,0.16);
+    }
+
+    html { scroll-behavior: smooth; }
+    html, body { min-height: 100vh; overflow-x: hidden; }
+    body {
+      font-family: var(--font-sans);
+      background: linear-gradient(170deg, var(--dusty-blue) 0%, var(--dusty-blue-dark) 50%, var(--dusty-blue-deep) 100%);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1.5rem;
+      line-height: 1.5;
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .monogram {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      margin-bottom: 1rem;
+      filter: brightness(0) invert(1);
+      opacity: 0;
+      animation: scaleIn 0.5s 0.1s ease-out forwards;
+    }
+
+    .title {
+      font-family: var(--font-serif);
+      font-size: 2.5rem;
+      font-weight: 300;
+      color: white;
+      margin-bottom: 0.3rem;
+      opacity: 0;
+      animation: fadeUp 0.5s 0.2s ease-out forwards;
+    }
+
+    .subtitle {
+      font-family: var(--font-sans);
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 0.5s 0.3s ease-out forwards;
+    }
+
+    .theme-name {
+      font-family: var(--font-script);
+      font-size: 3rem;
+      color: white;
+      opacity: 0;
+      animation: fadeUp 0.5s 0.4s ease-out forwards;
+    }
+
+    /* Color Palette */
+    .palette-section {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.5s 0.5s ease-out forwards;
+    }
+
+    .palette-label {
+      font-family: var(--font-sans);
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .palette {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Card-based color swatches */
+    .color-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .color-swatch {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 3px solid transparent;
+      position: relative;
+    }
+
+    .color-card:hover .color-swatch {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+
+    .color-card:focus-visible .color-swatch {
+      outline: 3px solid white;
+      outline-offset: 4px;
+    }
+
+    .color-card.active .color-swatch {
+      border-color: white;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      transform: translateY(-2px);
+    }
+
+    .color-name {
+      font-size: 0.6rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: color 0.2s ease;
+    }
+
+    .color-card.active .color-name {
+      color: white;
+    }
+
+    /* Attire Display */
+    .attire-section {
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.6s ease-out forwards;
+    }
+
+    .attire-card {
+      position: relative;
+      width: 320px;
+      height: 450px;
+      margin: 0 auto;
+    }
+
+    .attire-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 24px;
+      background: var(--dusty-blue);
+      transition: background 0.5s ease;
+      box-shadow: var(--shadow-large);
+    }
+
+    .attire-img {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      z-index: 1;
+      border-radius: 24px;
+    }
+
+    .attire-label {
+      font-family: var(--font-sans);
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      margin-top: 1.25rem;
+      text-align: center;
+    }
+
+    /* Reference Badge */
+    .reference-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 0.8rem;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 50px;
+      font-size: 0.55rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.6);
+      margin-top: 0.75rem;
+      text-align: center;
+      letter-spacing: 0.03em;
+    }
+
+    .reference-badge svg {
+      width: 12px;
+      height: 12px;
+      opacity: 0.6;
+    }
+
+    /* Divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin: 1.5rem 0;
+      opacity: 0;
+      animation: fadeIn 0.5s 0.7s ease-out forwards;
+    }
+
+    .divider .line {
+      width: 60px;
+      height: 1px;
+      background: rgba(255,255,255,0.3);
+    }
+
+    .divider .diamond {
+      width: 5px;
+      height: 5px;
+      background: rgba(255,255,255,0.5);
+      transform: rotate(45deg);
+    }
+
+    /* Note Section */
+    .note-section {
+      text-align: center;
+      max-width: 480px;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.5s 0.8s ease-out forwards;
+    }
+
+    .note {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    .note strong {
+      color: white;
+      font-weight: 500;
+    }
+
+    .note-secondary {
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.6;
+    }
+
+    .note-secondary strong {
+      color: rgba(255,255,255,0.7);
+      font-weight: 500;
+    }
+
+    /* Back Button */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50px;
+      color: white;
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      outline: none;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.5s 0.9s ease-out forwards;
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+
+    .back-btn:focus-visible {
+      outline: 3px solid white;
+      outline-offset: 4px;
+    }
+
+    .back-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Footer */
+    .footer-names {
+      font-family: var(--font-script);
+      font-size: 1.5rem;
+      color: rgba(255,255,255,0.9);
+      opacity: 0;
+      animation: fadeUp 0.5s 1s ease-out forwards;
+    }
+
+    /* Keyframes */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.7); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body { padding: 2rem 1.25rem; }
+      .title { font-size: 2rem; }
+      .theme-name { font-size: 2.5rem; }
+      .attire-card { width: 280px; height: 400px; }
+      .palette { gap: 0.6rem; }
+      .color-swatch { width: 56px; height: 56px; }
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 1.5rem 1rem; }
+      .title { font-size: 1.75rem; }
+      .theme-name { font-size: 2rem; }
+      .attire-card { width: 260px; height: 370px; }
+      .attire-bg { border-radius: 20px; }
+      .palette { gap: 0.5rem; }
+      .color-swatch { width: 50px; height: 50px; border-radius: 12px; }
+      .color-name { font-size: 0.5rem; }
+      .note { font-size: 0.9rem; }
+      .note-secondary { font-size: 0.7rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <img src="MV.png" alt="MV" class="monogram">
+    <h1 class="title">Myra & Vincent</h1>
+    <p class="subtitle">Wedding Attire Theme</p>
+    <p class="theme-name">Dusty Blue</p>
+  </div>
+
+  <div class="palette-section">
+    <p class="palette-label">Color Palette</p>
+    <div class="palette" id="palette" role="radiogroup" aria-label="Color palette selection">
+      <button class="color-card" data-color="#B0BEB5" data-name="Sage Gray" role="radio" aria-checked="false" aria-label="Sage Gray">
+        <div class="color-swatch" style="background: #B0BEB5;"></div>
+        <span class="color-name">Sage Gray</span>
+      </button>
+      <button class="color-card" data-color="#C5D5E4" data-name="Light Dusty" role="radio" aria-checked="false" aria-label="Light Dusty">
+        <div class="color-swatch" style="background: #C5D5E4;"></div>
+        <span class="color-name">Light Dusty</span>
+      </button>
+      <button class="color-card active" data-color="#7B99AB" data-name="Dusty Blue" role="radio" aria-checked="true" aria-label="Dusty Blue">
+        <div class="color-swatch" style="background: #7B99AB;"></div>
+        <span class="color-name">Dusty Blue</span>
+      </button>
+      <button class="color-card" data-color="#4A6E8A" data-name="Steel Blue" role="radio" aria-checked="false" aria-label="Steel Blue">
+        <div class="color-swatch" style="background: #4A6E8A;"></div>
+        <span class="color-name">Steel Blue</span>
+      </button>
+      <button class="color-card" data-color="#3D6080" data-name="Deep Navy" role="radio" aria-checked="false" aria-label="Deep Navy">
+        <div class="color-swatch" style="background: #3D6080;"></div>
+        <span class="color-name">Deep Navy</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="attire-section">
+    <div class="attire-card">
+      <div class="attire-bg" id="attireBg"></div>
+      <img src="Attiretrans.png" alt="Sample wedding attire reference in dusty blue" class="attire-img">
+    </div>
+    <p class="attire-label">Reference Attire</p>
+    <div class="reference-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="16" x2="12" y2="12"/>
+        <line x1="12" y1="8" x2="12.01" y2="8"/>
+      </svg>
+      This is just a reference — any semi-casual attire in our palette is welcome
+    </div>
+  </div>
+
+  <div class="divider">
+    <div class="line"></div>
+    <div class="diamond"></div>
+    <div class="line"></div>
+  </div>
+
+  <div class="note-section">
+    <p class="note">
+      We kindly ask our guests to wear attire in our <strong>Dusty Blue</strong> theme.<br>
+      Any shade from the palette above is welcome!
+    </p>
+    <p class="note-secondary">
+      The image above is <strong>just a reference</strong>. You may wear any <strong>semi-casual attire</strong> — dresses, barong, suits, or combinations — as long as it follows our color palette.
+    </p>
+  </div>
+
+  <a href="already-answered.html" class="back-btn" aria-label="Go back">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 12H5"/>
+      <path d="M12 19l-7-7 7-7"/>
+    </svg>
+    Back
+  </a>
+
+  <p class="footer-names">Myra & Vincent</p>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Color swatch interaction
+    const colorCards = document.querySelectorAll('.color-card');
+    const attireBg = document.getElementById('attireBg');
+
+    colorCards.forEach(card => {
+      card.addEventListener('click', () => {
+        colorCards.forEach(c => {
+          c.classList.remove('active');
+          c.setAttribute('aria-checked', 'false');
+        });
+        card.classList.add('active');
+        card.setAttribute('aria-checked', 'true');
+
+        const color = card.dataset.color;
+
+        gsap.to(attireBg, {
+          backgroundColor: color,
+          duration: 0.5,
+          ease: 'power2.out'
+        });
+      });
+
+      // Keyboard navigation
+      card.addEventListener('keydown', (e) => {
+        const cardArray = Array.from(colorCards);
+        const currentIndex = cardArray.indexOf(card);
+        let newIndex;
+
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          newIndex = (currentIndex + 1) % cardArray.length;
+          cardArray[newIndex].focus();
+          cardArray[newIndex].click();
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          newIndex = (currentIndex - 1 + cardArray.length) % cardArray.length;
+          cardArray[newIndex].focus();
+          cardArray[newIndex].click();
+        }
+      });
+    });
+
+    // Scroll reveal for elements below fold
+    const revealElements = document.querySelectorAll('.note-section, .back-btn, .footer-names');
+    revealElements.forEach(el => {
+      gsap.from(el, {
+        opacity: 0,
+        y: 12,
+        duration: 0.4,
+        ease: 'power1.out',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 90%',
+          toggleActions: 'play none none reverse'
+        }
+      });
+    });
+  </script>
+</body>
+</html>

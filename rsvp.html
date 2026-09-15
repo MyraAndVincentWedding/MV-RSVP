@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vincent & Myra — RSVP</title>
+  <title>Myra & Vincent — RSVP</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Great+Vibes&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -12,7 +12,9 @@
 
     :root {
       --dusty-blue: #7B99AB;
-      --dusty-blue-dark: #6A8899;
+      --dusty-blue-dark: #5E8399;
+      --dusty-blue-deep: #4A6E8A;
+      --dusty-blue-light: #A8C0CF;
       --cream: #FAF8F5;
       --dark: #2D3748;
       --dark-navy: #3D4F5F;
@@ -26,7 +28,18 @@
     html, body { height: 100%; overflow: hidden; }
     body { font-family: var(--font-sans); background: var(--cream); color: var(--dark); }
 
-    .page { display: flex; height: 100vh; width: 100vw; }
+    .page {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+      opacity: 0;
+      animation: fadeInPage 0.8s 0.1s ease-out forwards;
+    }
+
+    @keyframes fadeInPage {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
 
     /* Photo Side */
     .photo-side {
@@ -38,6 +51,11 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      animation: photoZoom 1.2s ease-out both;
+    }
+    @keyframes photoZoom {
+      from { transform: scale(1.08); }
+      to { transform: scale(1); }
     }
     .photo-top-text {
       position: absolute;
@@ -87,7 +105,7 @@
     .form-side {
       width: 520px;
       min-width: 440px;
-      background: var(--cream);
+      background: linear-gradient(170deg, var(--dusty-blue) 0%, var(--dusty-blue-dark) 50%, var(--dusty-blue-deep) 100%);
       position: relative;
       display: flex;
       flex-direction: column;
@@ -95,6 +113,40 @@
       justify-content: center;
       padding: 3rem 3.5rem;
       overflow-y: auto;
+    }
+
+    /* Squircle Container */
+    .squircle {
+      position: relative;
+      background: rgba(255,255,255,0.08);
+      border-radius: 40px;
+      padding: 2.5rem 2rem;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .squircle-glow {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.15;
+      pointer-events: none;
+    }
+    .squircle-glow-top {
+      top: -80px;
+      right: -60px;
+      background: white;
+    }
+    .squircle-glow-bottom {
+      bottom: -80px;
+      left: -60px;
+      background: rgba(255,255,255,0.6);
     }
 
     /* Floral */
@@ -131,6 +183,7 @@
       height: 60px;
       object-fit: contain;
       margin-bottom: 1rem;
+      filter: brightness(0) invert(1);
       opacity: 0;
       animation: scaleIn 0.5s 0.2s ease-out both;
     }
@@ -140,7 +193,7 @@
       font-size: 0.5rem;
       font-weight: 500;
       letter-spacing: 0.3em;
-      color: var(--gray);
+      color: rgba(255,255,255,0.7);
       text-transform: uppercase;
       margin-bottom: 1.5rem;
       line-height: 1.8;
@@ -152,7 +205,7 @@
       font-family: var(--font-serif);
       font-size: 3rem;
       font-weight: 300;
-      color: var(--dark-navy);
+      color: white;
       line-height: 1.1;
       margin-bottom: 0.5rem;
       opacity: 0;
@@ -161,7 +214,7 @@
     .names .amp {
       font-family: var(--font-script);
       font-size: 2.8rem;
-      color: var(--dusty-blue);
+      color: rgba(255,255,255,0.7);
       margin: 0 0.05em;
     }
 
@@ -170,7 +223,7 @@
       font-size: 0.5rem;
       font-weight: 500;
       letter-spacing: 0.3em;
-      color: var(--gray);
+      color: rgba(255,255,255,0.6);
       text-transform: uppercase;
       margin-bottom: 1.2rem;
       opacity: 0;
@@ -182,7 +235,7 @@
       font-size: 1rem;
       font-weight: 400;
       letter-spacing: 0.15em;
-      color: var(--dark-navy);
+      color: rgba(255,255,255,0.9);
       text-transform: uppercase;
       margin-bottom: 0.2rem;
       opacity: 0;
@@ -193,7 +246,7 @@
       font-size: 0.5rem;
       font-weight: 400;
       letter-spacing: 0.2em;
-      color: var(--gray);
+      color: rgba(255,255,255,0.6);
       text-transform: uppercase;
       margin-bottom: 1.2rem;
       opacity: 0;
@@ -212,21 +265,19 @@
     .diamond-divider .line {
       width: 60px;
       height: 1px;
-      background: var(--dusty-blue);
-      opacity: 0.4;
+      background: rgba(255,255,255,0.4);
     }
     .diamond-divider .diamond {
       width: 6px;
       height: 6px;
-      background: var(--dusty-blue);
+      background: rgba(255,255,255,0.6);
       transform: rotate(45deg);
-      opacity: 0.6;
     }
 
     .dear-guest {
       font-family: var(--font-serif);
       font-size: 1rem;
-      color: var(--dark-navy);
+      color: rgba(255,255,255,0.9);
       margin-bottom: 0.5rem;
       opacity: 0;
       animation: fadeUp 0.5s 0.7s ease-out both;
@@ -234,14 +285,14 @@
     .dear-guest .guest-name {
       font-family: var(--font-script);
       font-size: 1.3rem;
-      color: var(--dusty-blue);
+      color: white;
     }
 
     .question-text {
       font-family: var(--font-serif);
       font-size: 0.9rem;
       font-style: italic;
-      color: var(--gray);
+      color: rgba(255,255,255,0.7);
       line-height: 1.7;
       margin-bottom: 1.2rem;
       opacity: 0;
@@ -262,7 +313,7 @@
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.15em;
-      color: var(--gray);
+      color: rgba(255,255,255,0.7);
       margin-bottom: 0.5rem;
     }
 
@@ -275,23 +326,23 @@
       justify-content: center;
       gap: 0.5rem;
       padding: 0.85rem;
-      border: 1.5px solid var(--gray-light);
-      border-radius: 0;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      border-radius: 50px;
       font-family: var(--font-sans);
       font-size: 0.6rem;
       font-weight: 600;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--gray);
+      color: rgba(255,255,255,0.7);
       background: transparent;
       cursor: pointer;
       transition: all 0.25s ease;
     }
-    .radio-opt label:hover { border-color: var(--dusty-blue); color: var(--dusty-blue); }
+    .radio-opt label:hover { border-color: rgba(255,255,255,0.6); color: white; }
     .radio-opt input:checked + label {
-      border-color: var(--dusty-blue);
-      background: var(--dusty-blue);
-      color: white;
+      border-color: white;
+      background: white;
+      color: var(--dusty-blue-dark);
     }
     .radio-opt input:focus-visible + label {
       outline: 2px solid var(--dusty-blue);
@@ -310,29 +361,29 @@
     .form-group textarea {
       width: 100%;
       padding: 0.85rem 1rem;
-      border: 1.5px solid var(--gray-light);
-      border-radius: 0;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
       font-family: var(--font-sans);
       font-size: 0.75rem;
-      color: var(--dark);
+      color: white;
       background: transparent;
       transition: all 0.25s ease;
       outline: none;
       resize: vertical;
       min-height: 80px;
     }
-    .form-group textarea::placeholder { color: var(--gray-light); }
+    .form-group textarea::placeholder { color: rgba(255,255,255,0.4); }
     .form-group textarea:focus {
-      border-color: var(--dusty-blue);
+      border-color: rgba(255,255,255,0.6);
     }
 
     .btn-submit {
       width: 100%;
       padding: 0.95rem;
-      background: var(--dusty-blue);
-      color: white;
+      background: white;
+      color: var(--dusty-blue-dark);
       border: none;
-      border-radius: 0;
+      border-radius: 50px;
       font-family: var(--font-sans);
       font-size: 0.6rem;
       font-weight: 600;
@@ -346,11 +397,12 @@
       gap: 0.5rem;
       opacity: 0;
       animation: fadeUp 0.5s 0.9s ease-out both;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     }
     .btn-submit:hover {
-      background: var(--dusty-blue-dark);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 20px rgba(123, 153, 171, 0.3);
+      background: rgba(255,255,255,0.9);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
     }
     .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
     .btn-submit .arrow { transition: transform 0.3s; }
@@ -369,7 +421,7 @@
       font-family: var(--font-serif);
       font-size: 0.8rem;
       font-weight: 300;
-      color: var(--gray);
+      color: rgba(255,255,255,0.6);
       line-height: 1.6;
       margin-top: 1.2rem;
       opacity: 0;
@@ -390,78 +442,10 @@
       font-size: 0.45rem;
       font-weight: 500;
       letter-spacing: 0.2em;
-      color: var(--gray-light);
+      color: rgba(255,255,255,0.35);
       text-transform: uppercase;
       line-height: 1.6;
     }
-
-    /* Initial Play */
-    .initial-play {
-      position: fixed;
-      inset: 0;
-      background: linear-gradient(135deg, #EBF0F5 0%, #D4DFE8 50%, #C8D4E0 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 99999;
-      transition: opacity 0.5s ease;
-    }
-    .initial-play.hidden { opacity: 0; pointer-events: none; }
-    .big-play-btn {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      background: rgba(123, 153, 171, 0.8);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.4);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s;
-      box-shadow: 0 8px 32px rgba(123, 153, 171, 0.35);
-    }
-    .big-play-btn:hover {
-      transform: scale(1.08);
-      background: rgba(106, 136, 153, 0.9);
-    }
-    .big-play-btn svg { width: 36px; height: 36px; fill: white; margin-left: 4px; }
-
-    /* Loading */
-    .loading-screen {
-      position: fixed;
-      inset: 0;
-      background: linear-gradient(135deg, #EBF0F5 0%, #D4DFE8 50%, #C8D4E0 100%);
-      z-index: 99998;
-      transition: opacity 0.5s ease;
-    }
-    .loading-screen.hidden { opacity: 0; pointer-events: none; }
-    .loading-text {
-      position: absolute;
-      bottom: 15%;
-      left: 50%;
-      transform: translateX(-50%);
-      font-family: var(--font-sans);
-      font-size: 0.7rem;
-      letter-spacing: 0.15em;
-      color: var(--dusty-blue-dark);
-      text-transform: uppercase;
-      opacity: 0.7;
-    }
-    .loading-sprites {
-      position: relative;
-      width: 100vw;
-      height: 600px;
-      overflow: hidden;
-    }
-    .sprite-img {
-      position: absolute;
-      bottom: 0;
-      image-rendering: crisp-edges;
-    }
-    .vincent-sprite { width: 165px; height: 322px; object-fit: contain; z-index: 3; left: -165px; }
-    .myra-sprite { width: 150px; height: 300px; object-fit: contain; z-index: 2; left: -180px; }
 
     /* Confirmation */
     .confirmation { display: none; text-align: center; padding: 1.5rem; }
@@ -470,30 +454,30 @@
       width: 56px;
       height: 56px;
       border-radius: 50%;
-      background: var(--dusty-blue);
+      background: white;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto 1rem;
     }
-    .checkmark svg { width: 28px; height: 28px; stroke: white; }
+    .checkmark svg { width: 28px; height: 28px; stroke: var(--dusty-blue-dark); }
     .confirmation h2 {
       font-family: var(--font-serif);
       font-size: 1.5rem;
       font-weight: 300;
-      color: var(--dark-navy);
+      color: white;
       margin-bottom: 0.5rem;
     }
     .confirmation p {
       font-family: var(--font-serif);
       font-size: 0.9rem;
-      color: var(--gray);
+      color: rgba(255,255,255,0.8);
       line-height: 1.6;
     }
 
     /* Particles */
     .particles { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
-    .particle { position: absolute; width: 3px; height: 3px; background: var(--dusty-blue); border-radius: 50%; opacity: 0; }
+    .particle { position: absolute; width: 3px; height: 3px; background: rgba(255,255,255,0.5); border-radius: 50%; opacity: 0; }
 
     /* Keyframes */
     @keyframes fadeIn {
@@ -528,6 +512,8 @@
         z-index: 2;
       }
       .form-side { width: 100%; min-width: unset; flex: 1; padding: 2rem 1.5rem 3rem; }
+      .squircle { padding: 2rem 1.5rem; border-radius: 30px; }
+      .squircle-glow { display: none; }
       .monogram { display: none; }
       .floral-top-right, .floral-bottom-left { display: none; }
       .floral-mobile-left {
@@ -568,6 +554,7 @@
       .photo-bottom-text .see-you { font-size: 1.6rem; }
       .photo-monogram-mobile { width: 40px; height: 40px; top: 1rem; right: 1rem; }
       .form-side { padding: 1.5rem 1rem 2.5rem; }
+      .squircle { padding: 1.5rem 1rem; border-radius: 24px; }
       .names { font-size: 2rem; }
       .names .amp { font-size: 1.8rem; }
       .invitation-text { font-size: 0.45rem; margin-bottom: 1rem; }
@@ -586,26 +573,9 @@
 </head>
 <body>
 
-  <div class="initial-play" id="initialPlay">
-    <button class="big-play-btn" id="bigPlayBtn">
-      <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-    </button>
-  </div>
-
-  <div class="loading-screen hidden" id="loadingScreen">
-    <div class="loading-sprites">
-      <img id="vincentSprite" src="tengwalk/tengwalk_00000.png" class="sprite-img vincent-sprite">
-      <img id="myraSprite" src="myrawalk/myra_00000.png" class="sprite-img myra-sprite">
-    </div>
-    <div class="loading-text" id="loadingText">Loading animation...</div>
-  </div>
-
-  <audio id="walkMusic"><source src="widding.mp3" type="audio/mpeg"></audio>
-  <div class="particles" id="particles"></div>
-
-  <div class="page" id="mainPage" style="display:none;">
+  <div class="page" id="mainPage">
     <div class="photo-side">
-      <img class="photo" src="https://drive.google.com/thumbnail?id=1sOigdz87q8hGqYrmFx0CZZHQNsjFjx5r&sz=s800" alt="Vincent & Myra">
+      <img class="photo" src="https://drive.google.com/thumbnail?id=1sOigdz87q8hGqYrmFx0CZZHQNsjFjx5r&sz=s800" alt="Myra & Vincent">
       <img src="MV.png" alt="MV" class="photo-monogram-mobile">
       <div class="photo-top-text">
         <span>A Greater</span>
@@ -620,82 +590,90 @@
 
     <div class="form-side">
       <!-- Floral Desktop -->
-      <svg class="floral-top-right" viewBox="0 0 160 180" fill="none"><path d="M160 0C140 20 120 60 110 100C105 120 100 140 95 160" stroke="#C5D0D8" stroke-width="0.8"/><path d="M150 0C135 25 125 55 120 90C118 105 115 125 110 145" stroke="#C5D0D8" stroke-width="0.8"/><path d="M140 5C130 30 120 60 115 95C112 115 108 135 102 155" stroke="#C5D0D8" stroke-width="0.8"/><ellipse cx="110" cy="100" rx="8" ry="12" transform="rotate(-20 110 100)" stroke="#C5D0D8" stroke-width="0.6"/><ellipse cx="118" cy="85" rx="6" ry="10" transform="rotate(-35 118 85)" stroke="#C5D0D8" stroke-width="0.6"/><ellipse cx="105" cy="115" rx="7" ry="11" transform="rotate(-10 105 115)" stroke="#C5D0D8" stroke-width="0.6"/><circle cx="120" cy="70" r="3" stroke="#C5D0D8" stroke-width="0.5"/><circle cx="108" cy="90" r="2.5" stroke="#C5D0D8" stroke-width="0.5"/><circle cx="115" cy="105" r="2" stroke="#C5D0D8" stroke-width="0.5"/></svg>
-      <svg class="floral-bottom-left" viewBox="0 0 140 160" fill="none"><path d="M0 160C20 140 40 100 50 60C55 40 60 20 65 0" stroke="#C5D0D8" stroke-width="0.8"/><path d="M10 160C25 135 35 105 40 70C42 55 45 35 50 15" stroke="#C5D0D8" stroke-width="0.8"/><path d="M20 155C30 130 40 100 45 65C48 45 52 25 58 5" stroke="#C5D0D8" stroke-width="0.8"/><ellipse cx="50" cy="60" rx="8" ry="12" transform="rotate(20 50 60)" stroke="#C5D0D8" stroke-width="0.6"/><ellipse cx="42" cy="75" rx="6" ry="10" transform="rotate(35 42 75)" stroke="#C5D0D8" stroke-width="0.6"/><ellipse cx="55" cy="45" rx="7" ry="11" transform="rotate(10 55 45)" stroke="#C5D0D8" stroke-width="0.6"/><circle cx="40" cy="90" r="3" stroke="#C5D0D8" stroke-width="0.5"/><circle cx="52" cy="70" r="2.5" stroke="#C5D0D8" stroke-width="0.5"/><circle cx="45" cy="55" r="2" stroke="#C5D0D8" stroke-width="0.5"/></svg>
+      <svg class="floral-top-right" viewBox="0 0 160 180" fill="none"><path d="M160 0C140 20 120 60 110 100C105 120 100 140 95 160" stroke="rgba(255,255,255,0.2)" stroke-width="0.8"/><path d="M150 0C135 25 125 55 120 90C118 105 115 125 110 145" stroke="rgba(255,255,255,0.2)" stroke-width="0.8"/><path d="M140 5C130 30 120 60 115 95C112 115 108 135 102 155" stroke="rgba(255,255,255,0.2)" stroke-width="0.8"/><ellipse cx="110" cy="100" rx="8" ry="12" transform="rotate(-20 110 100)" stroke="rgba(255,255,255,0.15)" stroke-width="0.6"/><ellipse cx="118" cy="85" rx="6" ry="10" transform="rotate(-35 118 85)" stroke="rgba(255,255,255,0.15)" stroke-width="0.6"/><ellipse cx="105" cy="115" rx="7" ry="11" transform="rotate(-10 105 115)" stroke="rgba(255,255,255,0.15)" stroke-width="0.6"/><circle cx="120" cy="70" r="3" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/><circle cx="108" cy="90" r="2.5" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/><circle cx="115" cy="105" r="2" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></svg>
+      <svg class="floral-bottom-left" viewBox="0 0 140 160" fill="none"><path d="M0 160C20 140 40 100 50 60C55 40 60 20 65 0" stroke="rgba(255,255,255,0.2)" stroke-width="0.8"/><path d="M10 160C25 135 35 105 40 70C42 55 45 35 50 15" stroke="rgba(255,255,255,0.2)" stroke-width="0.8"/><path d="M20 155C30 130 40 100 45 65C48 45 52 25 58 5" stroke="rgba(255,255,255,0.2)" stroke-width="0.8"/><ellipse cx="50" cy="60" rx="8" ry="12" transform="rotate(20 50 60)" stroke="rgba(255,255,255,0.15)" stroke-width="0.6"/><ellipse cx="42" cy="75" rx="6" ry="10" transform="rotate(35 42 75)" stroke="rgba(255,255,255,0.15)" stroke-width="0.6"/><ellipse cx="55" cy="45" rx="7" ry="11" transform="rotate(10 55 45)" stroke="rgba(255,255,255,0.15)" stroke-width="0.6"/><circle cx="40" cy="90" r="3" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/><circle cx="52" cy="70" r="2.5" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/><circle cx="45" cy="55" r="2" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></svg>
       <!-- Floral Mobile -->
-      <svg class="floral-mobile-left" viewBox="0 0 100 120" fill="none"><path d="M0 120C15 100 25 70 30 40C32 25 35 10 40 0" stroke="#C5D0D8" stroke-width="0.6"/><path d="M8 120C18 95 28 65 32 35C34 20 36 8 38 0" stroke="#C5D0D8" stroke-width="0.6"/><ellipse cx="30" cy="45" rx="6" ry="9" transform="rotate(15 30 45)" stroke="#C5D0D8" stroke-width="0.5"/><ellipse cx="25" cy="60" rx="5" ry="8" transform="rotate(25 25 60)" stroke="#C5D0D8" stroke-width="0.5"/></svg>
-      <svg class="floral-mobile-right" viewBox="0 0 100 120" fill="none"><path d="M100 120C85 100 75 70 70 40C68 25 65 10 60 0" stroke="#C5D0D8" stroke-width="0.6"/><path d="M92 120C82 95 72 65 68 35C66 20 64 8 62 0" stroke="#C5D0D8" stroke-width="0.6"/><ellipse cx="70" cy="45" rx="6" ry="9" transform="rotate(-15 70 45)" stroke="#C5D0D8" stroke-width="0.5"/><ellipse cx="75" cy="60" rx="5" ry="8" transform="rotate(-25 75 60)" stroke="#C5D0D8" stroke-width="0.5"/></svg>
+      <svg class="floral-mobile-left" viewBox="0 0 100 120" fill="none"><path d="M0 120C15 100 25 70 30 40C32 25 35 10 40 0" stroke="rgba(255,255,255,0.15)" stroke-width="0.6"/><path d="M8 120C18 95 28 65 32 35C34 20 36 8 38 0" stroke="rgba(255,255,255,0.15)" stroke-width="0.6"/><ellipse cx="30" cy="45" rx="6" ry="9" transform="rotate(15 30 45)" stroke="rgba(255,255,255,0.12)" stroke-width="0.5"/><ellipse cx="25" cy="60" rx="5" ry="8" transform="rotate(25 25 60)" stroke="rgba(255,255,255,0.12)" stroke-width="0.5"/></svg>
+      <svg class="floral-mobile-right" viewBox="0 0 100 120" fill="none"><path d="M100 120C85 100 75 70 70 40C68 25 65 10 60 0" stroke="rgba(255,255,255,0.15)" stroke-width="0.6"/><path d="M92 120C82 95 72 65 68 35C66 20 64 8 62 0" stroke="rgba(255,255,255,0.15)" stroke-width="0.6"/><ellipse cx="70" cy="45" rx="6" ry="9" transform="rotate(-15 70 45)" stroke="rgba(255,255,255,0.12)" stroke-width="0.5"/><ellipse cx="75" cy="60" rx="5" ry="8" transform="rotate(-25 75 60)" stroke="rgba(255,255,255,0.12)" stroke-width="0.5"/></svg>
 
-      <!-- RSVP Form -->
-      <div id="rsvpForm" class="form-inner">
-        <img src="MV.png" alt="MV" class="monogram">
-        <p class="invitation-text">Together with our families<br>We invite you to celebrate</p>
-        <h1 class="names">Vincent <span class="amp">&</span> Myra</h1>
-        <p class="married-text">Are getting married</p>
-        <p class="date-info">October 28, 2026</p>
-        <p class="time-info">Two o'clock in the afternoon</p>
-        <div class="diamond-divider">
-          <div class="line"></div>
-          <div class="diamond"></div>
-          <div class="line"></div>
-        </div>
-        <p class="dear-guest">Dear <span class="guest-name" id="guestName">Guest</span>,</p>
-        <p class="question-text">Will you be joining us?</p>
+      <!-- Squircle Glows -->
+      <div class="squircle-glow squircle-glow-top"></div>
+      <div class="squircle-glow squircle-glow-bottom"></div>
 
-        <form id="form" novalidate>
-          <div class="form-group" id="formAttending">
-            <label>Your Response</label>
-            <div class="radio-group">
-              <div class="radio-opt">
-                <input type="radio" id="yes" name="attending" value="Yes" required>
-                <label for="yes">
-                  <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                  Joyfully Accept
-                </label>
-              </div>
-              <div class="radio-opt">
-                <input type="radio" id="no" name="attending" value="No">
-                <label for="no">Regretfully Decline</label>
+      <div class="squircle">
+        <!-- RSVP Form -->
+        <div id="rsvpForm" class="form-inner">
+          <img src="MV.png" alt="MV" class="monogram">
+          <p class="invitation-text">Together with our families<br>We invite you to celebrate</p>
+          <h1 class="names">Myra <span class="amp">&</span> Vincent</h1>
+          <p class="married-text">Are getting married</p>
+          <p class="date-info">October 28, 2026</p>
+          <p class="time-info">Two o'clock in the afternoon</p>
+          <div class="diamond-divider">
+            <div class="line"></div>
+            <div class="diamond"></div>
+            <div class="line"></div>
+          </div>
+          <p class="dear-guest">Dear <span class="guest-name" id="guestName">Guest</span>,</p>
+          <p class="question-text">Will you be joining us?</p>
+
+          <form id="form" novalidate>
+            <div class="form-group" id="formAttending">
+              <label>Your Response</label>
+              <div class="radio-group">
+                <div class="radio-opt">
+                  <input type="radio" id="yes" name="attending" value="Yes" required>
+                  <label for="yes">
+                    <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                    Joyfully Accept
+                  </label>
+                </div>
+                <div class="radio-opt">
+                  <input type="radio" id="no" name="attending" value="No">
+                  <label for="no">Regretfully Decline</label>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="form-group" id="formMessage">
-            <label for="message">A Note for the Couple</label>
-            <textarea id="message" placeholder="Share your well-wishes..."></textarea>
-          </div>
-          <div id="error" class="error-msg">Please select your response.</div>
-          <button type="submit" class="btn-submit" id="submitBtn">
-            Send My RSVP <span class="arrow">→</span>
-          </button>
-        </form>
+            <div class="form-group" id="formMessage">
+              <label for="message">A Note for the Couple</label>
+              <textarea id="message" placeholder="Share your well-wishes..."></textarea>
+            </div>
+            <div id="error" class="error-msg">Please select your response.</div>
+            <button type="submit" class="btn-submit" id="submitBtn">
+              Send My RSVP <span class="arrow">→</span>
+            </button>
+          </form>
 
-        <p class="footer-text">With love,<br>Vincent & Myra</p>
-      </div>
+          <p class="footer-text">With love,<br>Myra & Vincent</p>
+        </div>
 
-      <!-- Confirmation -->
-      <div id="confirmation" class="confirmation form-inner">
-        <div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <h2>Thank You!</h2>
-        <p>Your RSVP has been received.<br>We can't wait to celebrate with you!</p>
-        <p class="footer-text" style="opacity:1; margin-top:1rem;">#NaConVinceNaSiMyra</p>
-        <p class="footer-text" style="opacity:1;">With love,<br>Vincent & Myra</p>
-      </div>
+        <!-- Confirmation -->
+        <div id="confirmation" class="confirmation form-inner">
+          <div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <h2>Thank You!</h2>
+          <p>Your RSVP has been received.<br>We can't wait to celebrate with you!</p>
+          <p class="footer-text" style="opacity:1; margin-top:1rem;">#HeaVincentToMyra</p>
+          <p class="footer-text" style="opacity:1;">With love,<br>Myra & Vincent</p>
+        </div>
 
-      <!-- Decline Confirmation -->
-      <div id="declineConfirmation" class="confirmation form-inner">
-        <div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <h2>Thank You!</h2>
-        <p>We appreciate your answer.<br>Hope to see you soon in good health!</p>
-        <p class="footer-text" style="opacity:1; margin-top:1rem;">#NaConVinceNaSiMyra</p>
-        <p class="footer-text" style="opacity:1;">With love,<br>Vincent & Myra</p>
-        <p style="margin-top:1rem; font-size:0.75rem; color:var(--gray); font-family:var(--font-sans);">Redirecting you to our album...</p>
+        <!-- Decline Confirmation -->
+        <div id="declineConfirmation" class="confirmation form-inner">
+          <div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <h2>Thank You!</h2>
+          <p>We appreciate your answer.<br>Hope to see you soon in good health!</p>
+          <p class="footer-text" style="opacity:1; margin-top:1rem;">#HeaVincentToMyra</p>
+          <p class="footer-text" style="opacity:1;">With love,<br>Myra & Vincent</p>
+          <p style="margin-top:1rem; font-size:0.75rem; color:var(--gray); font-family:var(--font-sans);">Redirecting you to our album...</p>
+        </div>
       </div>
 
       <div class="same-journey">
-        <span>#SameJourneyAlways</span>
+        <span>#HeaVincentToMyra</span>
       </div>
     </div>
   </div>
+
+  <div class="particles" id="particles"></div>
 
   <script>
     const urlParams = new URLSearchParams(window.location.search);
@@ -704,120 +682,85 @@
 
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyffN1G9drnWEmKcHWczRtcOzrIuRuFvCHL_BdJhOcXS8WSpBLPT80VKrZXPMqNA1k/exec';
 
-    let guestAlreadyAnswered = false;
-
-    async function checkGuestStatus() {
+    // Check if guest already answered — redirect if so
+    (async function checkGuestStatus() {
       try {
         const res = await fetch(`${SCRIPT_URL}?action=checkGuest&name=${encodeURIComponent(guestName)}`);
         const data = await res.json();
         if (data.found) {
-          guestAlreadyAnswered = true;
           window.location.href = `already-answered.html?name=${encodeURIComponent(guestName)}`;
-          return true;
+          return;
         }
       } catch (e) {
         // Continue to RSVP form if check fails
       }
-      return false;
-    }
+    })();
 
-    const mainPage = document.getElementById('mainPage');
-    const loadingScreen = document.getElementById('loadingScreen');
-    const vincentSprite = document.getElementById('vincentSprite');
-    const myraSprite = document.getElementById('myraSprite');
-    const walkMusic = document.getElementById('walkMusic');
-    const initialPlay = document.getElementById('initialPlay');
-    const bigPlayBtn = document.getElementById('bigPlayBtn');
+    // Album photos - remaining 55 to preload in background while user fills form
+    const albumPhotosRest = [
+      "1Q1OrsZVvOmXfbyPNa4ivWXCGL_U7vc6Y",
+      "1avBp_4cL0WD5g7dM7wqY7t9lLhdj0YI7",
+      "1k4Qy8dhOV2M18B_eBtOf208vOHTwN_sa",
+      "1UVP1YIGAD3A8wwHdtBhnATI7nsrt54Kc",
+      "1XThIgCkfUgVLYaVm12fUlXbOCh2kcboe",
+      "1yRO76B3Q4C6wjfgP4FjX49XgxeOs7ZuA",
+      "16dXCUEdZK9C1Rfw9LXnYdpb0dUOabwzw",
+      "1135f3kgq6r_SR80JzmgExelYH4PyHMoe",
+      "1YZHeAm26AelZmszaTcamaHOoYl0t5Dvx",
+      "1BGRRBky2CCCdqwcUjWPXbmuZmH2u5vaF",
+      "1odm3f7gw95W-aLUJ0gPA5yBFn4PIMg-6",
+      "1Zi9mvox4DujKU_xd8P0fi_dHxqojO772",
+      "1376THsSFZsYXPRkocdIFSCZIuW0fG_VV",
+      "1tmN0zA_gzGdtUFJxpZoRY0gXD4Ib4LCE",
+      "1JoFHk0l7yOL21PoEHDLHfAWn26z4H_EZ",
+      "1FHkYd4wzMzTKw5YKy2aXlnUlLMZv1EdA",
+      "18uUGWDb684Bu00ZkZe5BoF-aj_bMpYw0",
+      "14Oemtn3S1-MVARawRWQkcu72f0gubs1X",
+      "1t2O8kab3hoavMCoSy0X4Mi0buk15i_rP",
+      "19786cnwyOK9CSCCJDI1zoMwaKo3jlnsy",
+      "1Z5eEOl3I5GUWeoWnf2SJqWP6KGvEAQUX",
+      "1PtkNX9CJleZ4Ef40v6sJY3hLbmQAigAq",
+      "11GqbYATZmKAHLIg96-kmK0vvyFd-AbA1",
+      "1o2f5cfkSbEGZIHwNf0wLQ-pgE9se9k8B",
+      "1CTAmXsrqHSLjmevOM3dRaGGcv5Zh5ECw",
+      "1xLezg7tk088RbATmE_A4ho5c7_7gwJ_j",
+      "1piZlapt9J3YpP8oQUDxvOx3a2m7I0BiJ",
+      "1csvlCm4c_JppfWvNjf0W6YBU8RegLOlm",
+      "144Qhcxg69Zxq8VfsxGQ6xlzbLLrwIcKJ",
+      "1MwVZMujIVyKluFYZa_SPFWJS4_Z8oiwN",
+      "15MWr9j9tavBI5KUX4HbgHp9w_Us1t9w8",
+      "1-zYU3TMsVkrCHPfGNhis8ySv5PpnQJJj",
+      "18FaiRudwLaxxLPsILElaLvpUQyqNDGiU",
+      "1hbkItzeFoFGev_RaC-wGGhV_7SjTL--Y",
+      "1KqveW6Uww4Y1VcvQ4Fp8f3k5VDpTEpPe",
+      "1DpCgc8tq0odINTNmCtL3yytiup59eTPa",
+      "1RvnqrFtao_JsYssm5dJu6SLb8_wCS0Hb",
+      "1jz2-NaZlKmVAuo0_imjBehEIA177ZOpl",
+      "14zzWVoNMzNP4vKLm0mCG5gEZLqIMn5zh",
+      "1rQTV_JvA4s2370kEmEiNdp2O5NvciMUo",
+      "1S3aONHP4fXlsPsM8awkWCq3GVFNC8jg5",
+      "1Cq3ZylljD_TpNu2i_tVV5RnZNOwMIvwX",
+      "1CC61z7_dM0EE2kkrQpR2yBIhAPEKcIyr",
+      "108JHCM2e8os1GJ-3YUfGX3XurBuKa3eJ",
+      "1dzMnFErnse5h3Wurx9qd_D5VhMeuWMPY",
+      "1V20L3ZYBehzEF8SoYMXP9GbAC_HdcDXt",
+      "1bueyU-2wWz7pN6WAci6XtR1PQ-222i0S",
+      "1mr0HAaAxI8BZQBrPxd7RzkiuEDtQYxiH",
+      "1N2aI1-q2dnV7C-FF_PHCBkmAtvQn7Zjw",
+      "1L4LV5zlnnN88HHvPgL8yN_kHzF3pmteD",
+      "1UawMoxgIAVvsS00lHDddbjXGq3AavQCR",
+      "1dx8F72biQhz-FBpkebqSrBoQyNtQq7YN",
+      "1gMwsFVd0ohBJm1zVVfd62F5KezR4GHls"
+    ];
 
-    const skipAnimation = urlParams.get('skip') === '1';
-    if (skipAnimation) {
-      initialPlay.style.display = 'none';
-      loadingScreen.style.display = 'none';
-      mainPage.style.display = 'flex';
-      gsap.set(['.monogram','.invitation-text','.names','.married-text','.date-info','.time-info','.diamond-divider','.dear-guest','.question-text','.form-group','.btn-submit','.footer-text','.same-journey'], { opacity: 1, transform: 'none' });
-    }
-
-    bigPlayBtn.addEventListener('click', () => {
-      initialPlay.classList.add('hidden');
-      loadingScreen.classList.remove('hidden');
-      preloadFrames().then(() => {
-        walkMusic.currentTime = 10;
-        walkMusic.play();
-        startWalkingAnimation();
+    function preloadAlbumImages(ids) {
+      ids.forEach(id => {
+        const img = new Image();
+        img.src = `https://drive.google.com/thumbnail?id=${id}&sz=s800`;
       });
-    });
-
-    function preloadFrames() {
-      const totalVincent = 50, totalMyra = 36;
-      let loaded = 0;
-      const total = totalVincent + totalMyra;
-      return new Promise(resolve => {
-        function checkDone() {
-          loaded++;
-          if (loaded >= total) resolve();
-        }
-        for (let i = 0; i < totalVincent; i++) {
-          const img = new Image();
-          img.onload = img.onerror = checkDone;
-          img.src = `tengwalk/tengwalk_${String(i).padStart(5,'0')}.png`;
-        }
-        for (let i = 0; i < totalMyra; i++) {
-          const img = new Image();
-          img.onload = img.onerror = checkDone;
-          img.src = `myrawalk/myra_${String(i * 2).padStart(5,'0')}.png`;
-        }
-      });
     }
 
-    let currentFrameVincent = 0, currentFrameMyra = 0;
-    const totalFramesVincent = 50, totalFramesMyra = 36, frameInterval = 42;
-    function animateSprites() {
-      vincentSprite.src = `tengwalk/tengwalk_${String(currentFrameVincent).padStart(5,'0')}.png`;
-      myraSprite.src = `myrawalk/myra_${String(currentFrameMyra * 2).padStart(5,'0')}.png`;
-      currentFrameVincent = (currentFrameVincent + 1) % totalFramesVincent;
-      currentFrameMyra = (currentFrameMyra + 1) % totalFramesMyra;
-    }
-    const spriteInterval = setInterval(animateSprites, frameInterval);
-
-    function startWalkingAnimation() {
-      const DURATION = 10, VW = 165, MW = 150, GAP = 30;
-      const vs = { x: -VW }, ms = { x: -VW - GAP - MW };
-      const ve = window.innerWidth + VW, me = window.innerWidth + VW + GAP + MW;
-      gsap.to(vs, { x: ve, duration: DURATION, ease: 'none', onUpdate: () => { vincentSprite.style.left = vs.x + 'px'; } });
-      gsap.to(ms, { x: me, duration: DURATION, ease: 'none', onUpdate: () => { myraSprite.style.left = ms.x + 'px'; } });
-      setTimeout(async () => {
-        loadingScreen.classList.add('hidden');
-        walkMusic.pause(); walkMusic.currentTime = 0;
-        clearInterval(spriteInterval);
-        mainPage.style.display = 'flex';
-
-        // Check again after animation — guest may have answered while walking
-        const already = await checkGuestStatus();
-        if (already) return;
-
-        animatePageIn();
-      }, DURATION * 750);
-    }
-
-    function animatePageIn() {
-      const tl = gsap.timeline({ delay: 0.15 });
-      tl.from('.photo-side .photo', { scale: 1.08, duration: 1, ease: 'power2.out' })
-        .to('.photo-side .photo-top-text', { opacity: 1, duration: 0.4 }, '-=0.4')
-        .to('.photo-side .photo-bottom-text', { opacity: 1, duration: 0.4 }, '-=0.2')
-        .to('.monogram', { opacity: 1, scale: 1, duration: 0.35, ease: 'back.out(1.7)' }, '-=0.6')
-        .to('.invitation-text', { opacity: 1, duration: 0.3 }, '-=0.2')
-        .to('.names', { opacity: 1, duration: 0.3 }, '-=0.2')
-        .to('.married-text', { opacity: 1, duration: 0.2 }, '-=0.15')
-        .to('.date-info', { opacity: 1, duration: 0.2 }, '-=0.1')
-        .to('.time-info', { opacity: 1, duration: 0.2 }, '-=0.1')
-        .to('.diamond-divider', { opacity: 1, duration: 0.3 }, '-=0.1')
-        .to('.dear-guest', { opacity: 1, duration: 0.3 }, '-=0.15')
-        .to('.question-text', { opacity: 1, duration: 0.3 }, '-=0.15')
-        .to('.form-group', { opacity: 1, y: 0, duration: 0.25, stagger: 0.08 }, '-=0.1')
-        .to('.btn-submit', { opacity: 1, y: 0, duration: 0.25 }, '-=0.08')
-        .to('.footer-text', { opacity: 1, duration: 0.2 }, '-=0.1')
-        .to('.same-journey', { opacity: 1, duration: 0.2 }, '-=0.1');
-    }
+    preloadAlbumImages(albumPhotosRest);
 
     // Particles
     (function createParticles() {
