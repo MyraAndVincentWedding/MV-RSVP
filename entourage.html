@@ -504,6 +504,46 @@
       text-transform: uppercase;
     }
 
+    /* Desktop view for entourage */
+    .desktop-view {
+      display: grid;
+    }
+
+    /* Mobile view for entourage */
+    .mobile-entourage {
+      display: none;
+    }
+
+    .mobile-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .mobile-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .mobile-group-header {
+      font-family: var(--font-sans);
+      font-size: 0.55rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--dusty-blue-dark);
+      text-align: center;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid rgba(123, 153, 171, 0.2);
+      margin-bottom: 0.5rem;
+    }
+
+    .mobile-group .pair-name {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      color: var(--dark-navy);
+      text-align: center;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid rgba(123, 153, 171, 0.08);
+    }
+
     /* Keyframes */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(10px); }
@@ -550,9 +590,8 @@
       .principal-item .name { font-size: 1rem; }
       .bearers-grid { grid-template-columns: 1fr; gap: 0.8rem; }
 
-      .pairs-grid { grid-template-columns: 1fr; gap: 0.3rem; }
-      .pairs-grid .col-divider { display: none; }
-      .pairs-grid .col-header { display: none; }
+      .pairs-grid { display: none; }
+      .mobile-entourage { display: block; }
       .pair-name { font-size: 0.95rem; padding: 0.4rem 0; }
 
       .venue-card .venue-name { font-size: 1.15rem; }
@@ -684,9 +723,10 @@
 
     <!-- Groomsmen & Bridesmaids -->
     <div class="section" data-reveal>
-      <div class="section-label" style="margin-bottom: 1.5rem;">Groomsmen & Bridesmaids</p>
+      <div class="section-label" style="margin-bottom: 1.5rem;">Groomsmen & Bridesmaids</div>
       <div class="entourage-card">
-        <div class="pairs-grid">
+        <!-- Desktop view -->
+        <div class="pairs-grid desktop-view">
           <div class="col-header">Groomsmen</div>
           <div class="col-divider"></div>
           <div class="col-header">Bridesmaids</div>
@@ -730,6 +770,36 @@
           <p class="pair-name">Eros</p>
           <div class="col-divider"></div>
           <p class="pair-name">Chie</p>
+        </div>
+
+        <!-- Mobile view -->
+        <div class="mobile-entourage">
+          <div class="mobile-group">
+            <p class="mobile-group-header">Groomsmen</p>
+            <p class="pair-name">Kit</p>
+            <p class="pair-name">Roi</p>
+            <p class="pair-name">XL</p>
+            <p class="pair-name">Aboy</p>
+            <p class="pair-name">Joshua</p>
+            <p class="pair-name">Bornok</p>
+            <p class="pair-name">Yoyo</p>
+            <p class="pair-name">Jerry</p>
+            <p class="pair-name">Orlan</p>
+            <p class="pair-name">Eros</p>
+          </div>
+          <div class="mobile-group">
+            <p class="mobile-group-header">Bridesmaids</p>
+            <p class="pair-name">Joy</p>
+            <p class="pair-name">Mharvs</p>
+            <p class="pair-name">Ciara</p>
+            <p class="pair-name">Jenny</p>
+            <p class="pair-name">Maymay</p>
+            <p class="pair-name">Kim</p>
+            <p class="pair-name">Cy</p>
+            <p class="pair-name">Princess</p>
+            <p class="pair-name">Sei</p>
+            <p class="pair-name">Chie</p>
+          </div>
         </div>
       </div>
     </div>
