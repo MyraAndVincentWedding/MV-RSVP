@@ -43,7 +43,7 @@
 
     /* Photo Side */
     .photo-side {
-      flex: 1;
+      flex: 2;
       position: relative;
       overflow: hidden;
     }
@@ -103,16 +103,15 @@
 
     /* Content Side */
     .form-side {
-      width: 520px;
-      min-width: 440px;
+      flex: 1;
       background: linear-gradient(170deg, var(--dusty-blue) 0%, var(--dusty-blue-dark) 50%, var(--dusty-blue-deep) 100%);
       position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 3rem 3.5rem;
-      overflow-y: auto;
+      padding: 2rem 2rem;
+      overflow: hidden;
     }
 
     /* Squircle Container */
@@ -120,13 +119,13 @@
       position: relative;
       background: rgba(255,255,255,0.08);
       border-radius: 40px;
-      padding: 2.5rem 2rem;
+      padding: 2rem 1.5rem;
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(255,255,255,0.12);
       box-shadow: 0 8px 32px rgba(0,0,0,0.1);
       width: 100%;
-      max-width: 400px;
+      max-width: 380px;
     }
 
     .squircle-glow {
@@ -203,7 +202,7 @@
 
     .names {
       font-family: var(--font-serif);
-      font-size: 3rem;
+      font-size: 2.5rem;
       font-weight: 300;
       color: white;
       line-height: 1.1;
@@ -251,27 +250,6 @@
       margin-bottom: 1.2rem;
       opacity: 0;
       animation: fadeUp 0.5s 0.6s ease-out both;
-    }
-
-    .diamond-divider {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.8rem;
-      margin-bottom: 1.2rem;
-      opacity: 0;
-      animation: fadeIn 0.5s 0.65s ease-out both;
-    }
-    .diamond-divider .line {
-      width: 60px;
-      height: 1px;
-      background: rgba(255,255,255,0.4);
-    }
-    .diamond-divider .diamond {
-      width: 6px;
-      height: 6px;
-      background: rgba(255,255,255,0.6);
-      transform: rotate(45deg);
     }
 
     .dear-guest {
@@ -443,7 +421,6 @@
       font-weight: 500;
       letter-spacing: 0.2em;
       color: rgba(255,255,255,0.35);
-      text-transform: uppercase;
       line-height: 1.6;
     }
 
@@ -495,9 +472,9 @@
 
     /* Mobile */
     @media (max-width: 900px) {
-      html, body { overflow: auto; }
-      .page { flex-direction: column; height: auto; min-height: 100vh; }
-      .photo-side { flex: none; height: 45vh; min-height: 320px; }
+      html, body { overflow: hidden; height: 100%; }
+      .page { flex-direction: column; height: 100vh; min-height: unset; }
+      .photo-side { flex: none; height: 35vh; min-height: unset; }
       .photo-top-text { top: 1.5rem; left: 1.5rem; }
       .photo-bottom-text { bottom: auto; top: 50%; left: auto; right: 1.5rem; transform: translateY(-50%); text-align: right; }
       .photo-bottom-text .see-you { font-size: 2rem; }
@@ -511,8 +488,8 @@
         object-fit: contain;
         z-index: 2;
       }
-      .form-side { width: 100%; min-width: unset; flex: 1; padding: 2rem 1.5rem 3rem; }
-      .squircle { padding: 2rem 1.5rem; border-radius: 30px; }
+      .form-side { width: 100%; min-width: unset; flex: 1; padding: 1.5rem 1.5rem 1rem; overflow: hidden; }
+      .squircle { padding: 1.5rem 1.25rem; border-radius: 28px; }
       .squircle-glow { display: none; }
       .monogram { display: none; }
       .floral-top-right, .floral-bottom-left { display: none; }
@@ -534,37 +511,47 @@
         height: 120px;
         opacity: 0.5;
       }
-      .names { font-size: 2.4rem; }
-      .names .amp { font-size: 2.2rem; }
+      .names { font-size: 2rem; margin-bottom: 0.3rem; }
+      .names .amp { font-size: 1.8rem; }
+      .invitation-text { font-size: 0.45rem; margin-bottom: 0.5rem; }
+      .married-text { font-size: 0.45rem; margin-bottom: 0.3rem; }
+      .date-info { font-size: 0.8rem; margin-bottom: 0.2rem; }
+      .time-info { font-size: 0.45rem; margin-bottom: 0.5rem; }
+      .dear-guest { font-size: 0.85rem; margin-bottom: 0.3rem; }
+      .dear-guest .guest-name { font-size: 1rem; }
+      .question-text { font-size: 0.75rem; margin-bottom: 0.5rem; }
+      .radio-group { gap: 0.4rem; }
+      .radio-option { padding: 0.5rem; font-size: 0.65rem; }
       .same-journey {
         position: relative;
         bottom: auto;
         right: auto;
         text-align: center;
-        margin-top: 1.5rem;
-        padding-top: 1rem;
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
         border-top: 1px solid rgba(123, 153, 171, 0.15);
       }
       .same-journey span { display: inline; font-size: 0.5rem; letter-spacing: 0.15em; }
     }
     @media (max-width: 480px) {
-      .photo-side { height: 40vh; min-height: 280px; }
+      .photo-side { height: 30vh; }
       .photo-top-text { top: 1rem; left: 1rem; }
       .photo-top-text span { font-size: 0.5rem; }
       .photo-bottom-text .see-you { font-size: 1.6rem; }
       .photo-monogram-mobile { width: 40px; height: 40px; top: 1rem; right: 1rem; }
-      .form-side { padding: 1.5rem 1rem 2.5rem; }
-      .squircle { padding: 1.5rem 1rem; border-radius: 24px; }
-      .names { font-size: 2rem; }
-      .names .amp { font-size: 1.8rem; }
-      .invitation-text { font-size: 0.45rem; margin-bottom: 1rem; }
-      .married-text { font-size: 0.45rem; }
-      .date-info { font-size: 0.85rem; }
-      .time-info { font-size: 0.45rem; }
-      .dear-guest { font-size: 0.9rem; }
-      .dear-guest .guest-name { font-size: 1.1rem; }
-      .question-text { font-size: 0.8rem; }
-      .radio-group { flex-direction: column; gap: 0.5rem; }
+      .form-side { padding: 1rem 1rem 0.75rem; }
+      .squircle { padding: 1.25rem 1rem; border-radius: 24px; }
+      .names { font-size: 1.75rem; }
+      .names .amp { font-size: 1.6rem; }
+      .invitation-text { font-size: 0.4rem; }
+      .married-text { font-size: 0.4rem; }
+      .date-info { font-size: 0.75rem; }
+      .time-info { font-size: 0.4rem; }
+      .dear-guest { font-size: 0.8rem; }
+      .dear-guest .guest-name { font-size: 0.9rem; }
+      .question-text { font-size: 0.7rem; }
+      .radio-group { gap: 0.3rem; }
+      .radio-option { padding: 0.4rem; font-size: 0.6rem; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
@@ -609,11 +596,6 @@
           <p class="married-text">Are getting married</p>
           <p class="date-info">October 28, 2026</p>
           <p class="time-info">Two o'clock in the afternoon</p>
-          <div class="diamond-divider">
-            <div class="line"></div>
-            <div class="diamond"></div>
-            <div class="line"></div>
-          </div>
           <p class="dear-guest">Dear <span class="guest-name" id="guestName">Guest</span>,</p>
           <p class="question-text">Will you be joining us?</p>
 

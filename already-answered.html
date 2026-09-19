@@ -31,7 +31,7 @@
 
     /* Photo Side with Slideshow */
     .photo-side {
-      flex: 1;
+      flex: 2;
       position: relative;
       overflow: hidden;
     }
@@ -146,16 +146,15 @@
 
     /* Content Side */
     .content-side {
-      width: 520px;
-      min-width: 440px;
+      flex: 1;
       background: linear-gradient(170deg, var(--dusty-blue) 0%, var(--dusty-blue-dark) 50%, var(--dusty-blue-deep) 100%);
       position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 3rem 3.5rem;
-      overflow-y: auto;
+      padding: 2rem 2rem;
+      overflow: hidden;
     }
 
     /* Squircle Container */
@@ -163,11 +162,13 @@
       position: relative;
       background: rgba(255,255,255,0.08);
       border-radius: 40px;
-      padding: 2.5rem 2rem;
+      padding: 2rem 1.5rem;
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(255,255,255,0.12);
       box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      max-width: 380px;
+      width: 100%;
     }
 
     .squircle-glow {
@@ -209,7 +210,7 @@
 
     .names {
       font-family: var(--font-serif);
-      font-size: 3rem;
+      font-size: 2.5rem;
       font-weight: 300;
       color: white;
       line-height: 1.1;
@@ -234,27 +235,6 @@
       margin-bottom: 1rem;
       opacity: 0;
       animation: fadeUp 0.5s 0.4s ease-out both;
-    }
-
-    .diamond-divider {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.8rem;
-      margin-bottom: 1.2rem;
-      opacity: 0;
-      animation: fadeIn 0.5s 0.5s ease-out both;
-    }
-    .diamond-divider .line {
-      width: 60px;
-      height: 1px;
-      background: rgba(255,255,255,0.4);
-    }
-    .diamond-divider .diamond {
-      width: 6px;
-      height: 6px;
-      background: rgba(255,255,255,0.6);
-      transform: rotate(45deg);
     }
 
     .already-title {
@@ -373,7 +353,6 @@
       font-weight: 500;
       letter-spacing: 0.2em;
       color: rgba(255,255,255,0.4);
-      text-transform: uppercase;
       line-height: 1.6;
     }
 
@@ -393,16 +372,16 @@
 
     /* Mobile Responsive */
     @media (max-width: 900px) {
-      html, body { overflow: auto; }
+      html, body { overflow: hidden; height: 100%; }
       .page {
         flex-direction: column;
-        height: auto;
-        min-height: 100vh;
+        height: 100vh;
+        min-height: unset;
       }
       .photo-side {
         flex: none;
-        height: 45vh;
-        min-height: 320px;
+        height: 35vh;
+        min-height: unset;
       }
       .photo-top-text { top: 1.5rem; left: 1.5rem; }
       .photo-bottom-text {
@@ -432,28 +411,35 @@
         width: 100%;
         min-width: unset;
         flex: 1;
-        padding: 2rem 1.5rem 3rem;
+        padding: 1.5rem 1.5rem 1rem;
         border-radius: 0;
+        overflow: hidden;
       }
 
       .squircle {
-        padding: 2rem 1.5rem;
-        border-radius: 30px;
+        padding: 1.5rem 1.25rem;
+        border-radius: 28px;
       }
       .squircle-glow { display: none; }
 
       .monogram { display: none; }
 
-      .names { font-size: 2.4rem; }
-      .names .amp { font-size: 2.2rem; }
+      .names { font-size: 2rem; margin-bottom: 0.3rem; }
+      .names .amp { font-size: 1.8rem; }
+
+      .already-title { font-size: 0.75rem; margin-bottom: 0.5rem; }
+      .already-response { font-size: 0.65rem; margin-bottom: 0.5rem; }
+      .already-message { font-size: 0.8rem; margin-bottom: 0.75rem; }
+
+      .btn { min-width: 200px; padding: 0.6rem 1.2rem; font-size: 0.5rem; margin-bottom: 0.4rem; }
 
       .same-journey {
         position: relative;
         bottom: auto;
         right: auto;
         text-align: center;
-        margin-top: 1.5rem;
-        padding-top: 1rem;
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
         border-top: 1px solid rgba(255,255,255,0.15);
       }
       .same-journey span {
@@ -464,20 +450,19 @@
     }
 
     @media (max-width: 480px) {
-      .photo-side { height: 40vh; min-height: 280px; }
+      .photo-side { height: 30vh; }
       .photo-top-text { top: 1rem; left: 1rem; }
       .photo-top-text span { font-size: 0.5rem; }
       .photo-bottom-text .see-you { font-size: 1.6rem; }
       .photo-monogram-mobile { width: 40px; height: 40px; top: 1rem; right: 1rem; }
-      .content-side { padding: 1.5rem 1rem 2.5rem; }
-      .squircle { padding: 1.5rem 1rem; border-radius: 24px; }
-      .names { font-size: 2rem; }
-      .names .amp { font-size: 1.8rem; }
-      .date-info { font-size: 0.85rem; }
-      .already-title { font-size: 0.95rem; }
-      .already-response { font-size: 0.75rem; }
-      .already-message { font-size: 0.95rem; }
-      .btn { min-width: 180px; padding: 0.75rem 1.5rem; font-size: 0.55rem; }
+      .content-side { padding: 1rem 1rem 0.75rem; }
+      .squircle { padding: 1.25rem 1rem; border-radius: 24px; }
+      .names { font-size: 1.75rem; }
+      .names .amp { font-size: 1.6rem; }
+      .already-title { font-size: 0.7rem; }
+      .already-response { font-size: 0.6rem; }
+      .already-message { font-size: 0.75rem; }
+      .btn { min-width: 180px; padding: 0.5rem 1rem; font-size: 0.45rem; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -528,12 +513,6 @@
           <h1 class="names">Myra <span class="amp">&</span> Vincent</h1>
 
           <p class="date-info">October 28, 2026</p>
-
-          <div class="diamond-divider">
-            <div class="line"></div>
-            <div class="diamond"></div>
-            <div class="line"></div>
-          </div>
 
           <p class="already-title">You have already submitted your answer!</p>
           <p class="already-response" id="alreadyResponse"></p>

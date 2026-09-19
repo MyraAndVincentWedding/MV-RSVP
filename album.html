@@ -100,7 +100,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: var(--cream);
+      background: linear-gradient(165deg, var(--dusty-blue-deep) 0%, var(--dusty-blue) 50%, var(--dusty-blue-light) 100%);
     }
 
     .coverflow-section.visible { display: flex; }
@@ -121,12 +121,12 @@
       font-family: 'Cormorant Infant', serif;
       font-size: 1.8rem;
       font-weight: 300;
-      color: var(--dark);
+      color: white;
     }
 
     .coverflow-header p {
       font-size: 0.7rem;
-      color: var(--gray);
+      color: rgba(255,255,255,0.7);
       letter-spacing: 0.3em;
       text-transform: uppercase;
     }
@@ -229,13 +229,13 @@
     .coverflow-footer p {
       font-family: 'Great Vibes', cursive;
       font-size: 1.3rem;
-      color: var(--dusty-blue);
+      color: white;
     }
 
     .coverflow-footer .footer-date {
       font-family: 'Cormorant Infant', serif;
       font-size: 0.85rem;
-      color: var(--gray);
+      color: rgba(255,255,255,0.7);
       margin-top: 0.2rem;
       letter-spacing: 0.15em;
     }
@@ -262,7 +262,7 @@
     @media (max-width: 768px) {
       .coverflow-section {
         flex-direction: column;
-        background: linear-gradient(180deg, var(--dusty-blue-light) 0%, var(--dusty-blue) 100%);
+        background: linear-gradient(165deg, var(--dusty-blue-deep) 0%, var(--dusty-blue) 50%, var(--dusty-blue-light) 100%);
         padding-top: 1rem;
       }
 
@@ -531,8 +531,32 @@
       backdrop-filter: blur(10px);
     }
 
-    .music-btn:hover { background: rgba(107,140,174,0.25); }
-    .music-btn svg { width: 20px; height: 20px; stroke: var(--dusty-blue); }
+    .music-btn:hover { background: rgba(255,255,255,0.25); }
+    .music-btn svg { width: 20px; height: 20px; stroke: white; }
+
+    /* Bubbles */
+    .album-bubbles {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .album-bubble {
+      position: absolute;
+      bottom: -20px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      animation: bubbleFloat linear infinite;
+    }
+
+    @keyframes bubbleFloat {
+      0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 0.5; }
+      100% { transform: translateY(-110vh) translateX(30px) scale(0.5); opacity: 0; }
+    }
   </style>
 </head>
 <body>
@@ -554,6 +578,7 @@
 
   <!-- Coverflow -->
   <section class="coverflow-section" id="coverflowSection">
+    <div class="album-bubbles" id="albumBubbles"></div>
     <div class="coverflow-header">
       <img src="MV.png" alt="MV">
       <h1>Myra & Vincent</h1>
@@ -695,6 +720,22 @@
     }
     updateSizes();
     window.addEventListener('resize', () => { updateSizes(); updatePositions(); });
+
+    // Create album bubbles
+    (function createAlbumBubbles() {
+      const container = document.getElementById('albumBubbles');
+      for (let i = 0; i < 15; i++) {
+        const bubble = document.createElement('div');
+        bubble.className = 'album-bubble';
+        const size = Math.random() * 20 + 6;
+        bubble.style.width = size + 'px';
+        bubble.style.height = size + 'px';
+        bubble.style.left = Math.random() * 100 + '%';
+        bubble.style.animationDuration = (Math.random() * 10 + 8) + 's';
+        bubble.style.animationDelay = (Math.random() * 6) + 's';
+        container.appendChild(bubble);
+      }
+    })();
 
     // Music
     musicBtn.addEventListener('click', () => {
