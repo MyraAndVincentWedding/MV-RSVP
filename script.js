@@ -749,6 +749,61 @@
       }
     }
 
+    // Returning guest: check for a previous answer before showing the form
+    var alreadyEl = document.getElementById('rsvpAlready');
+    var submitted = false;
+    if (guestName && alreadyEl) {
+      form.style.display = 'none';
+      var checkSettled = false;
+      var revealTimer = setTimeout(function () {
+        // never leave guests staring at an empty section if the check is slow
+        if (!checkSettled && !submitted) form.style.display = '';
+      }, 4000);
+      fetch(SCRIPT_URL + '?action=checkGuest&name=' + encodeURIComponent(guestName))
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          checkSettled = true;
+          clearTimeout(revealTimer);
+          if (submitted) return;
+          if (!data || !data.found) { form.style.display = ''; return; }
+          // guest already started filling the form - don't take it away
+          var radioTouched = !!form.querySelector('input[name="attending"]:checked');
+          var typedMsg = (form.querySelector('#message').value || form.querySelector('#declineMessage').value).trim();
+          if (radioTouched || typedMsg) return;
+          var yes = String(data.response || '').trim().toLowerCase() === 'yes';
+          document.getElementById('alreadyAnswer').textContent = yes
+            ? "You're coming! We're so happy you'll be there."
+            : "You won't be able to make it. We'll miss you!";
+          var prevMsg = String(data.message || '').trim();
+          var msgEl = document.getElementById('alreadyMessage');
+          if (prevMsg && prevMsg !== '(no message)') {
+            msgEl.textContent = '"' + prevMsg + '"';
+            msgEl.style.display = '';
+          } else {
+            msgEl.style.display = 'none';
+          }
+          form.style.display = 'none';
+          alreadyEl.style.display = '';
+          document.getElementById('rsvpChange').addEventListener('click', function () {
+            var radio = form.querySelector('input[name="attending"][value="' + (yes ? 'yes' : 'no') + '"]');
+            if (radio) {
+              radio.checked = true;
+              radio.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+            var field = form.querySelector(yes ? '#message' : '#declineMessage');
+            if (field && prevMsg && prevMsg !== '(no message)') field.value = prevMsg;
+            alreadyEl.style.display = 'none';
+            form.style.display = '';
+            form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          });
+        })
+        .catch(function () {
+          checkSettled = true;
+          clearTimeout(revealTimer);
+          if (!submitted) form.style.display = '';
+        });
+    }
+
     // Show/hide conditional fields
     form.querySelectorAll('input[name="attending"]').forEach(function (radio) {
       radio.addEventListener('change', function () {
@@ -792,6 +847,7 @@
           message: message || '(no message)'
         })
       }).then(function () {
+        submitted = true;
         form.style.display = 'none';
         confirmEl.style.display = '';
         confirmAttending.style.display = attending ? '' : 'none';
