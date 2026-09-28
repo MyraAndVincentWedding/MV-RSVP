@@ -405,13 +405,13 @@
           if (abs > 3) { card.style.display = 'none'; card.style.transform = ''; return; }
           card.style.display = '';
           var angle = offset * 25;
-          card.style.width = '150px';
-          card.style.height = '195px';
+          card.style.width = '215px';
+          card.style.height = '280px';
           card.style.left = '50%';
           card.style.top = '48%';
           card.style.zIndex = String(30 - Math.round(abs * 4));
           card.style.opacity = String(Math.max(0.4, 1 - abs * 0.15));
-          card.style.transform = 'translate(-50%, -50%) translateZ(-235px) rotateY(' + angle + 'deg) translateZ(235px) scale(' + (offset === 0 ? 1.05 : 1) + ')';
+          card.style.transform = 'translate(-50%, -50%) translateZ(-290px) rotateY(' + angle + 'deg) translateZ(290px) scale(' + (offset === 0 ? 1.05 : 1) + ')';
         });
         return;
       }

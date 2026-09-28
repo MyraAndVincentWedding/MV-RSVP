@@ -1513,6 +1513,7 @@ section { padding: 6rem 0; }
     padding: 0 1rem;
     margin-bottom: 0.5rem;
     overflow: visible;
+    touch-action: pan-y;
   }
 
   .flipbook-wrapper {
@@ -1525,15 +1526,11 @@ section { padding: 6rem 0; }
     position: relative;
     width: 94vw;
     max-width: 440px;
-    height: 330px;
-    background: radial-gradient(130% 110% at 50% 0%, #14212e 0%, #070d14 65%, #04070c 100%);
-    border-radius: 14px;
-    padding: 14px;
-    box-shadow:
-      0 24px 70px rgba(0,0,0,0.55),
-      0 10px 26px rgba(0,0,0,0.4),
-      inset 0 1px 0 rgba(255,255,255,0.08),
-      inset 0 -1px 0 rgba(0,0,0,0.35);
+    height: 400px;
+    background: none;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
   }
 
   .flipbook-viewport {
