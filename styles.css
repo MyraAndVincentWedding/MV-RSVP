@@ -950,34 +950,45 @@ section { padding: 6rem 0; }
 .schedule-section { background: var(--off-white); }
 
 .schedule {
-  max-width: clamp(980px, 78vw, 1480px);
+  max-width: min(90vw, 26rem);
   margin: 3rem auto 0;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 0.9rem 0;
+  flex-direction: column;
+  text-align: left;
 }
 
+/* One rail: bullet + time + event per row, line running down between rows */
 .schedule-item {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.6rem;
-  padding: 0 1.5rem;
   position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.85rem;
+  padding: 0.95rem 0;
 }
-/* Small dusty diamond between items */
-.schedule-item:not(:last-child)::after {
+.schedule-item::before {
+  content: '';
+  flex: 0 0 auto;
+  align-self: center;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 2.5px solid var(--dusty);
+}
+.schedule-item::after {
   content: '';
   position: absolute;
-  right: 0;
-  top: 50%;
-  width: 6px;
-  height: 6px;
+  left: 5.5px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
   background: var(--dusty);
-  border-radius: 1px;
-  transform: translateY(-50%) rotate(45deg);
+  opacity: 0.45;
 }
+/* Rail starts at the first bullet and ends at the last one */
+.schedule-item:first-child::after { top: 50%; }
+.schedule-item:last-child::after { top: 0; bottom: auto; height: 50%; }
 
 .schedule-time {
   font-family: var(--font-display);
@@ -1040,6 +1051,15 @@ section { padding: 6rem 0; }
   color: var(--gray);
   max-width: clamp(520px, 40vw, 760px);
   margin: 1.5rem auto 0;
+}
+
+.palette-hint {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--steel);
+  text-align: center;
+  margin: -1rem 0 1.25rem;
 }
 
 .attire-stage {
@@ -1111,32 +1131,6 @@ section { padding: 6rem 0; }
   overflow: hidden;
 }
 
-/* Floating bubbles behind the sheet */
-.ent-bubbles { position: absolute; inset: 0; pointer-events: none; }
-.ent-bubbles span {
-  position: absolute;
-  bottom: -80px;
-  border-radius: 50%;
-  background: rgba(197, 213, 228, 0.4);
-  animation: bubbleRise 16s linear infinite;
-  animation-play-state: paused;
-  will-change: transform;
-}
-.entourage-section.in-view .ent-bubbles span { animation-play-state: running; }
-.ent-bubbles span:nth-child(1) { left: 5%; width: 14px; height: 14px; animation-duration: 17s; }
-.ent-bubbles span:nth-child(2) { left: 18%; width: 8px; height: 8px; animation-duration: 13s; animation-delay: -4s; }
-.ent-bubbles span:nth-child(3) { left: 34%; width: 18px; height: 18px; animation-duration: 20s; animation-delay: -8s; }
-.ent-bubbles span:nth-child(4) { left: 62%; width: 10px; height: 10px; animation-duration: 14s; animation-delay: -2s; }
-.ent-bubbles span:nth-child(5) { left: 78%; width: 16px; height: 16px; animation-duration: 19s; animation-delay: -10s; }
-.ent-bubbles span:nth-child(6) { left: 92%; width: 9px; height: 9px; animation-duration: 15s; animation-delay: -6s; }
-
-@keyframes bubbleRise {
-  0% { transform: translateY(0); opacity: 0; }
-  10% { opacity: 0.7; }
-  90% { opacity: 0.4; }
-  100% { transform: translateY(-115vh); opacity: 0; }
-}
-
 /* Printed-programme style sheet */
 .entourage-sheet {
   position: relative;
@@ -1170,14 +1164,17 @@ section { padding: 6rem 0; }
   background: url('border-first.png') no-repeat center / 100% 100%;
   pointer-events: none;
 }
+/* No divider above the coin bearer */
+.ent-block:last-child::before { display: none; }
 
-/* ---- Headings ---- */
+/* ---- Headings (calligraphy) ---- */
 .ent-block-title {
-  font-family: var(--font-display);
-  font-size: clamp(1.05rem, 0.5vw + 0.9rem, 1.35rem);
-  font-weight: 600;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
+  font-family: var(--font-script);
+  font-size: clamp(1.7rem, 1vw + 1.35rem, 2.3rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.3;
   color: var(--dark-navy);
 }
 .ent-block-title::after {
@@ -1191,11 +1188,12 @@ section { padding: 6rem 0; }
 }
 
 .ent-group-title {
-  font-family: var(--font-display);
-  font-size: clamp(0.92rem, 0.4vw + 0.78rem, 1.08rem);
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font-family: var(--font-script);
+  font-size: clamp(1.4rem, 0.8vw + 1.1rem, 1.85rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.3;
   color: var(--dark-navy);
 }
 
@@ -1862,7 +1860,22 @@ section { padding: 6rem 0; }
 /* ========================================
    FAQ
    ======================================== */
-.faq-section { background: var(--ivory); }
+.faq-section {
+  background: var(--ivory);
+  position: relative;
+}
+/* Ornamental divider strip above "Before You Arrive" */
+.faq-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(60%, 440px);
+  aspect-ratio: 1050 / 75;
+  background: url('border-first.png') no-repeat center / 100% 100%;
+  pointer-events: none;
+}
 
 .faq-list { margin-top: 2.5rem; }
 
@@ -2287,6 +2300,53 @@ section { padding: 6rem 0; }
 }
 
 /* ========================================
+   IN-APP BROWSER PROMPT (Messenger / Facebook)
+   ======================================== */
+#inappBar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 950;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.6rem 0.75rem;
+  padding: 0.7rem 2.75rem 0.7rem 1rem;
+  background: rgba(45, 55, 72, 0.97);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  text-align: center;
+  box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.18);
+}
+#inappBar .inapp-open {
+  border: 0;
+  cursor: pointer;
+  background: var(--white);
+  color: var(--navy);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0.5rem 1.05rem;
+  border-radius: 999px;
+}
+#inappBar .inapp-close {
+  position: absolute;
+  right: 0.4rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: 0;
+  color: var(--white);
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.3rem 0.55rem;
+}
+
+/* ========================================
    DEADLINE BADGE
    ======================================== */
 .deadline-badge {
@@ -2370,7 +2430,7 @@ section { padding: 6rem 0; }
   .connector-line::after { bottom: auto; top: 50%; left: auto; right: -4px; transform: translateY(-50%); }
 
   /* Schedule */
-  .schedule-item { padding: 0 1rem; }
+  .schedule-item { padding: 0.85rem 0; }
   .schedule-time { font-size: 1rem; }
   .schedule-event { font-size: 1.05rem; }
 
@@ -2434,9 +2494,7 @@ section { padding: 6rem 0; }
   .ent-person { letter-spacing: 0.07em; }
   .ent-pair .ent-name { letter-spacing: 0.04em; }
 
-  .schedule { gap: 0.6rem; }
-  .schedule-item { padding: 0 0.75rem; }
-  .schedule-item:not(:last-child)::after { display: none; }
+  .schedule-item { padding: 0.75rem 0; }
   .schedule-time { font-size: 0.95rem; }
   .schedule-event { font-size: 1rem; }
 

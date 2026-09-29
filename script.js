@@ -159,12 +159,6 @@
 
     // Staggered entrance when the sheet scrolls into view
     sheet.classList.add('stagger');
-    var section = document.getElementById('entourage');
-    if (section && 'IntersectionObserver' in window) {
-      new IntersectionObserver(function (entries) {
-        section.classList.toggle('in-view', entries[0].isIntersecting);
-      }, { rootMargin: '100px 0px' }).observe(section);
-    }
     if ('IntersectionObserver' in window) {
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
@@ -969,6 +963,54 @@
     });
   }
 
+  /* ---------- Open in system browser (Messenger / Facebook in-app) ---------- */
+  function initExternalBrowser() {
+    if (!/^https?:$/.test(location.protocol)) return;
+    var ua = navigator.userAgent || '';
+    var inApp = /(FBAN|FBAV|FB_IAB|Instagram|IGAN|Line\/\d)/i.test(ua);
+    if (!inApp) return;
+    var isAndroid = /Android/i.test(ua);
+
+    function intentUrl() {
+      return 'intent://' + location.host + location.pathname + location.search + location.hash +
+        '#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' +
+        encodeURIComponent(location.href) + ';end';
+    }
+    function seen(key) {
+      try { return sessionStorage.getItem(key); } catch (e) { return null; }
+    }
+    function mark(key) {
+      try { sessionStorage.setItem(key, '1'); } catch (e) {}
+    }
+
+    // Android: jump out to Chrome automatically, once per session (never loops)
+    if (isAndroid && !seen('openExternalTried')) {
+      mark('openExternalTried');
+      location.replace(intentUrl());
+      return;
+    }
+
+    // Otherwise show a dismissible bar with a one-tap action
+    var bar = document.createElement('div');
+    bar.id = 'inappBar';
+    bar.innerHTML = '<span class="inapp-msg">For the full experience, open this invitation in your browser.</span>' +
+      '<button type="button" class="inapp-open">Open in Browser</button>' +
+      '<button type="button" class="inapp-close" aria-label="Dismiss">&times;</button>';
+    document.body.appendChild(bar);
+    bar.querySelector('.inapp-open').addEventListener('click', function () {
+      if (isAndroid) { location.href = intentUrl(); return; }
+      // iOS: leave for Chrome if installed, otherwise explain the share-menu way
+      location.href = 'googlechromes://' + location.host + location.pathname + location.search;
+      setTimeout(function () {
+        var msg = bar.querySelector('.inapp-msg');
+        if (msg) msg.textContent = 'Tap the share icon (\u22ef) and choose Open in Safari or Chrome.';
+      }, 900);
+    });
+    bar.querySelector('.inapp-close').addEventListener('click', function () {
+      if (bar.parentNode) bar.parentNode.removeChild(bar);
+    });
+  }
+
   /* ---------- Boot ---------- */
   document.addEventListener('DOMContentLoaded', function () {
     initIntro();
@@ -979,6 +1021,7 @@
     initStoryScroll();
     initDeadlineBadge();
     initEntourage();
+    initExternalBrowser();
     initPalette();
     initFAQ();
     initHashtagCopy();
