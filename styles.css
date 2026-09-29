@@ -1145,174 +1145,148 @@ section { padding: 6rem 0; }
   background: var(--white);
   border: 1px solid var(--light-gray);
   border-radius: var(--radius-lg);
-  padding: clamp(2rem, 6vw, 4rem) clamp(1.25rem, 5vw, 3.5rem);
+  padding: clamp(2.25rem, 6vw, 4.25rem) clamp(1.25rem, 5vw, 3.5rem);
   box-shadow: var(--shadow-sm);
+  text-align: center;
 }
 
+/* ---- Blocks ---- */
 .ent-block { text-align: center; }
 .ent-block + .ent-block {
-  margin-top: 2.5rem;
-  padding-top: 2.5rem;
+  margin-top: 2rem;
+  padding-top: 1.75rem;
   position: relative;
 }
-/* Coin bearer is a single line — keep it close to the previous group */
-.ent-block:last-child {
-  margin-top: 0.75rem;
-  padding-top: 0.75rem;
-}
-/* Ornamental divider strip (first border from border.jpg), line sits on the block edge */
+/* Ornamental divider strip (first border from border.jpg), centred on the block edge */
 .ent-block + .ent-block::before {
   content: '';
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(60%, 440px);
   aspect-ratio: 1050 / 75;
   background: url('border-first.png') no-repeat center / 100% 100%;
-  transform: translateY(-68%);
-}
-.ent-block:last-child::before { display: none; }
-
-.ent-headings {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  pointer-events: none;
 }
 
-.ent-heading {
+/* ---- Headings ---- */
+.ent-block-title {
   font-family: var(--font-display);
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--dark-navy);
-}
-.ent-sub-block .ent-heading { display: block; margin-bottom: 0; }
-
-.ent-section-title {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-size: clamp(1.05rem, 0.5vw + 0.9rem, 1.35rem);
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--dark-navy);
-  margin-bottom: 0.35rem;
 }
-.ent-section-title + .ent-headings { margin-top: 0.85rem; }
+.ent-block-title::after {
+  content: '';
+  display: block;
+  width: 46px;
+  height: 1px;
+  background: var(--steel);
+  opacity: 0.5;
+  margin: 0.7rem auto 0;
+}
 
+.ent-group-title {
+  font-family: var(--font-display);
+  font-size: clamp(0.92rem, 0.4vw + 0.78rem, 1.08rem);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dark-navy);
+}
+
+/* ---- Captions ---- */
 .ent-caption {
   font-family: var(--font-body);
   font-style: italic;
-  font-size: 1.05rem;
+  font-size: clamp(0.98rem, 0.4vw + 0.85rem, 1.1rem);
   color: var(--steel);
-  margin: 0.45rem 0 0.4rem;
+  margin-top: 0.5rem;
 }
-.ent-head { text-align: center; }
-.ent-head .ent-caption { margin: 0.35rem 0 0.4rem; }
-.ent-sub-block .ent-caption { margin-bottom: 0.4rem; }
+.ent-caption-lead {
+  max-width: 46em;
+  margin: 0 auto 1.75rem;
+  font-size: clamp(1rem, 0.45vw + 0.85rem, 1.12rem);
+}
 
-.ent-cols {
+/* ---- Two-column groups with a hairline between them ---- */
+.ent-groups {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  row-gap: clamp(2.25rem, 4vw, 3.25rem);
+  margin-top: 1.75rem;
 }
-.ent-stack {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.5rem;
+.ent-groups > .ent-group:first-child:not(:only-child) {
+  padding-right: clamp(1.5rem, 4vw, 3.5rem);
+  border-right: 1px solid rgba(74, 110, 138, 0.22);
 }
-.ent-stack .ent-card-front {
-  padding-top: 0.3rem;
-  padding-bottom: 0.3rem;
+.ent-groups > .ent-group:nth-child(2) {
+  padding-left: clamp(1.5rem, 4vw, 3.5rem);
 }
-/* Odd trailing pair sits centered at the bottom middle */
-.ent-stack > .ent-card:nth-child(odd):last-child {
-  grid-column: auto;
-  justify-self: stretch;
-  width: 100%;
-}
-.ent-center { max-width: 380px; margin: 0 auto; }
-.ent-sub-block { margin-top: 2.25rem; }
+.ent-group:only-child,
+.ent-group-wide { grid-column: 1 / -1; }
 
-.ent-row {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
+/* Side headings that align with the pair columns below */
+.ent-heads {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.6rem;
 }
-.ent-row .ent-name:first-child { text-align: left; }
-.ent-row .ent-name:last-child { text-align: right; }
-.ent-row::after {
-  content: '&';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+.ent-heads .ent-group-title:last-child { text-align: right; }
+
+/* ---- People ---- */
+.ent-people {
+  list-style: none;
+  margin-top: 1.1rem;
+}
+.ent-person {
   font-family: var(--font-display);
-  font-size: 0.95rem;
+  font-size: clamp(0.98rem, 0.5vw + 0.83rem, 1.15rem);
   font-weight: 600;
-  color: var(--steel);
-  pointer-events: none;
-}
-/* Partner names share one line (wraps only when the screen is too narrow) */
-.ent-card-front.ent-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem 1.5rem;
-  align-items: center;
-  justify-items: stretch;
-}
-
-.ent-name {
-  display: block;
-  font-family: var(--font-display);
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--dark);
-  line-height: 1.7;
+  line-height: 1.75;
 }
+.ent-person + .ent-person { margin-top: 0.6rem; }
 
-/* Partner names sit close together (no outlined chips) */
-.ent-card-front:not(.ent-row):has(.ent-name + .ent-name) .ent-name + .ent-name {
+/* Paired couples: name left, ampersand centre, name right */
+.ent-pairs { margin-top: 1.4rem; }
+.ent-pairs > .ent-person { padding: 0.7rem 0; }
+.ent-pairs > .ent-person:first-child { padding-top: 0; }
+.ent-pairs > .ent-person:last-child { padding-bottom: 0; }
+.ent-pairs > .ent-person + .ent-person {
   margin-top: 0;
+  border-top: 1px solid rgba(74, 110, 138, 0.16);
 }
-
-/* ---- Cards (static, print-style) ---- */
-.ent-card {
-  display: block;
-  width: 100%;
-  padding: 0;
-  border: 0;
-  background: none;
-  font: inherit;
-  text-align: center;
-  border-radius: var(--radius);
-}
-
-.ent-card-inner {
+.ent-pair {
   display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: clamp(0.5rem, 2vw, 2rem);
+  align-items: baseline;
 }
-
-.ent-card-front {
-  grid-area: 1 / 1;
-  border-radius: var(--radius);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: 0;
-  padding: 0.55rem 0.5rem;
+.ent-pair .ent-name:first-child { text-align: left; }
+.ent-pair .ent-name:last-child { text-align: right; }
+.ent-amp {
+  font-family: var(--font-script);
+  font-size: 1.3em;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--steel);
+  line-height: 1;
 }
 
 /* Staggered entrance (enabled by JS) */
-.entourage-sheet.stagger .ent-card {
+.entourage-sheet.stagger .ent-person {
   opacity: 0;
   transform: translateY(18px);
 }
-.entourage-sheet.stagger.is-visible .ent-card {
+.entourage-sheet.stagger.is-visible .ent-person {
   animation: entCardIn 0.55s ease forwards;
   animation-delay: calc(var(--i, 0) * 55ms);
 }
@@ -2409,34 +2383,24 @@ section { padding: 6rem 0; }
   .theme-card .attire-visual img { max-height: 280px; }
 
   /* Entourage */
-  .entourage-sheet { padding: 2rem 1.25rem; }
-  .ent-heading { font-size: 0.75rem; letter-spacing: 0.1em; }
-  .ent-section-title { font-size: 0.95rem; letter-spacing: 0.16em; margin-bottom: 0.35rem; }
-  .ent-cols { gap: 0.75rem; }
-  .ent-stack { grid-template-columns: 1fr; gap: 0.75rem; }
-  .ent-stack > .ent-card:nth-child(odd):last-child { width: 100%; }
-  /* Pairs stay side by side: men on the left, women on the right */
-  .ent-card-front.ent-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.35rem;
-    align-items: stretch;
-    justify-items: stretch;
+  .entourage-sheet { padding: 2.25rem 1.25rem; }
+  .ent-caption-lead { margin-bottom: 1.5rem; }
+  .ent-groups {
+    grid-template-columns: 1fr;
+    row-gap: 2.75rem;
+    margin-top: 1.5rem;
   }
-  .ent-card .ent-card-front.ent-row .ent-name {
-    display: block;
-    font-size: 0.7rem;
-    letter-spacing: 0.02em;
-    padding-left: 0.55em;
-    padding-right: 0.55em;
+  .ent-groups > .ent-group:first-child:not(:only-child),
+  .ent-groups > .ent-group:nth-child(2) {
+    padding-left: 0;
+    padding-right: 0;
+    border-right: 0;
   }
-  .ent-card-front.ent-row .ent-name:first-child { text-align: left; }
-  .ent-card-front.ent-row .ent-name:last-child { text-align: right; }
-  .ent-row::after { font-size: 0.7rem; }
-  .ent-name { font-size: 0.85rem; letter-spacing: 0.04em; line-height: 1.7; }
-  .ent-card-front { padding: 0.5rem; }
-  .ent-block + .ent-block { margin-top: 2rem; padding-top: 2rem; }
-  .ent-block:last-child { margin-top: 0.5rem; padding-top: 0.5rem; }
+  .ent-block + .ent-block { margin-top: 1.75rem; padding-top: 1.5rem; }
+  .ent-block-title::after { width: 38px; }
+  .ent-heads { margin-top: 1.4rem; }
+  .ent-pair { gap: 0.45rem; }
+  .ent-pairs > .ent-person { padding: 0.6rem 0; }
 
   /* RSVP */
   .rsvp-form { padding: 1.5rem; }
@@ -2463,7 +2427,8 @@ section { padding: 6rem 0; }
   .countdown-label { font-size: 0.5rem; }
   .countdown-sep { font-size: 1.5rem; }
 
-  .ent-name { font-size: 0.8rem; }
+  .ent-person { letter-spacing: 0.07em; }
+  .ent-pair .ent-name { letter-spacing: 0.04em; }
 
   .schedule { gap: 0.6rem; }
   .schedule-item { padding: 0 0.75rem; }

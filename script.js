@@ -143,16 +143,16 @@
     }, { passive: true });
   }
 
-  /* ---------- Entourage cards (staggered entrance) ---------- */
+  /* ---------- Entourage people (staggered entrance) ---------- */
   function initEntourage() {
     var sheet = document.querySelector('.entourage-sheet');
     if (!sheet) return;
-    var cards = Array.prototype.slice.call(sheet.querySelectorAll('.ent-card'));
+    var cards = Array.prototype.slice.call(sheet.querySelectorAll('.ent-person'));
     if (!cards.length) return;
 
     // Stagger index resets per block so long lists don't reveal sluggishly
     Array.prototype.forEach.call(sheet.querySelectorAll('.ent-block'), function (block) {
-      Array.prototype.forEach.call(block.querySelectorAll('.ent-card'), function (card, i) {
+      Array.prototype.forEach.call(block.querySelectorAll('.ent-person'), function (card, i) {
         card.style.setProperty('--i', i);
       });
     });
