@@ -1161,6 +1161,11 @@ section { padding: 6rem 0; }
   padding-top: 2.5rem;
   position: relative;
 }
+/* Coin bearer is a single line — keep it close to the previous group */
+.ent-block:last-child {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+}
 /* Ornamental divider strip (first border from border.jpg), line sits on the block edge */
 .ent-block + .ent-block::before {
   content: '';
@@ -1236,17 +1241,32 @@ section { padding: 6rem 0; }
 .ent-sub-block { margin-top: 2.25rem; }
 
 .ent-row {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.25rem;
 }
+.ent-row .ent-name:first-child { text-align: left; }
+.ent-row .ent-name:last-child { text-align: right; }
+.ent-row::after {
+  content: '&';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--steel);
+  pointer-events: none;
+}
 /* Partner names share one line (wraps only when the screen is too narrow) */
 .ent-card-front.ent-row {
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 0.5rem 1.5rem;
+  align-items: center;
+  justify-items: stretch;
 }
 
 .ent-name {
@@ -1260,15 +1280,9 @@ section { padding: 6rem 0; }
   line-height: 1.7;
 }
 
-/* Outlined chips for names shown with a partner (single names stay bare) */
-.ent-card-front:has(.ent-name + .ent-name) .ent-name {
-  border: 1px solid rgba(123, 153, 171, 0.5);
-  background: rgba(197, 213, 228, 0.18);
-  border-radius: 999px;
-  padding: 0.25em 1.15em 0.3em;
-}
+/* Partner names sit close together (no outlined chips) */
 .ent-card-front:not(.ent-row):has(.ent-name + .ent-name) .ent-name + .ent-name {
-  margin-top: 0.5rem;
+  margin-top: 0;
 }
 
 /* ---- Cards (static, print-style) ---- */
@@ -2413,21 +2427,22 @@ section { padding: 6rem 0; }
     grid-template-columns: 1fr 1fr;
     gap: 0.35rem;
     align-items: stretch;
-    justify-items: center;
+    justify-items: stretch;
   }
   .ent-card .ent-card-front.ent-row .ent-name {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: block;
     font-size: 0.7rem;
     letter-spacing: 0.02em;
     padding-left: 0.55em;
     padding-right: 0.55em;
-    text-align: center;
   }
+  .ent-card-front.ent-row .ent-name:first-child { text-align: left; }
+  .ent-card-front.ent-row .ent-name:last-child { text-align: right; }
+  .ent-row::after { font-size: 0.7rem; }
   .ent-name { font-size: 0.85rem; letter-spacing: 0.04em; line-height: 1.7; }
   .ent-card-front { padding: 0.5rem; }
   .ent-block + .ent-block { margin-top: 2rem; padding-top: 2rem; }
+  .ent-block:last-child { margin-top: 0.5rem; padding-top: 0.5rem; }
 
   /* RSVP */
   .rsvp-form { padding: 1.5rem; }
