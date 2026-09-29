@@ -159,12 +159,21 @@
 
     // Staggered entrance when the sheet scrolls into view
     sheet.classList.add('stagger');
+    var section = document.getElementById('entourage');
+    if (section && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        section.classList.toggle('in-view', entries[0].isIntersecting);
+      }, { rootMargin: '100px 0px' }).observe(section);
+    }
     if ('IntersectionObserver' in window) {
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
             sheet.classList.add('is-visible');
             io.disconnect();
+            var maxI = 0;
+            cards.forEach(function (c) { maxI = Math.max(maxI, +c.style.getPropertyValue('--i') || 0); });
+            setTimeout(function () { sheet.classList.add('ent-done'); }, maxI * 55 + 700);
           }
         });
       }, { threshold: 0.1 });
