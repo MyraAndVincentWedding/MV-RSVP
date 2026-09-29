@@ -50,11 +50,11 @@ img { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; }
 
 .container {
-  max-width: 1360px;
+  max-width: 94vw;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 clamp(1rem, 3vw, 3rem);
 }
-.container.narrow { max-width: 780px; }
+.container.narrow { max-width: clamp(780px, 66vw, 1060px); }
 
 /* ========================================
    INTRO OVERLAY — WAVE VIDEO
@@ -253,9 +253,9 @@ a { color: inherit; text-decoration: none; }
 }
 
 .nav-inner {
-  max-width: 1360px;
+  max-width: 94vw;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 clamp(1rem, 3vw, 3rem);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -607,7 +607,7 @@ section { padding: 6rem 0; }
   font-size: 1.2rem;
   color: var(--gray);
   text-align: center;
-  max-width: 600px;
+  max-width: clamp(600px, 44vw, 880px);
   margin: 0 auto 3.5rem;
 }
 
@@ -675,7 +675,7 @@ section { padding: 6rem 0; }
 /* ========================================
    OUR STORY / TIMELINE
    ======================================== */
-.story-section { background: var(--ivory); }
+.story-section { background: var(--ivory); overflow-x: clip; }
 
 .timeline {
   margin-top: 4rem;
@@ -958,7 +958,7 @@ section { padding: 6rem 0; }
 .schedule-section { background: var(--off-white); }
 
 .schedule {
-  max-width: 980px;
+  max-width: clamp(980px, 78vw, 1480px);
   margin: 3rem auto 0;
   display: flex;
   flex-wrap: wrap;
@@ -1046,12 +1046,12 @@ section { padding: 6rem 0; }
   font-family: var(--font-body);
   font-size: 1.1rem;
   color: var(--gray);
-  max-width: 520px;
+  max-width: clamp(520px, 40vw, 760px);
   margin: 1.5rem auto 0;
 }
 
 .attire-stage {
-  max-width: 720px;
+  max-width: clamp(720px, 58vw, 1080px);
   margin: 3rem auto 0;
   padding: 2.5rem;
   border-radius: var(--radius-lg);
@@ -1146,7 +1146,7 @@ section { padding: 6rem 0; }
 .entourage-sheet {
   position: relative;
   z-index: 1;
-  max-width: 1080px;
+  max-width: clamp(1080px, 84vw, 1620px);
   margin: 0 auto;
   background: var(--white);
   border: 1px solid var(--light-gray);
@@ -1806,7 +1806,7 @@ section { padding: 6rem 0; }
 
 .message-body {
   position: relative;
-  max-width: 560px;
+  max-width: clamp(560px, 46vw, 820px);
   margin: 2rem auto;
 }
 .message-body p {
@@ -1846,14 +1846,14 @@ section { padding: 6rem 0; }
   font-family: var(--font-body);
   font-size: 1.15rem;
   color: var(--gray);
-  max-width: 520px;
+  max-width: clamp(520px, 44vw, 800px);
   margin: 0 auto 2rem;
 }
 .gift-card {
   background: var(--white);
   border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  max-width: 640px;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  max-width: clamp(640px, 56vw, 1040px);
   margin: 0 auto;
   box-shadow: 0 6px 24px rgba(30, 45, 61, 0.07);
 }
@@ -1865,7 +1865,7 @@ section { padding: 6rem 0; }
 }
 .gift-qrs img {
   display: block;
-  width: clamp(110px, 26vw, 170px);
+  width: clamp(110px, 26vw, 220px);
   aspect-ratio: 1;
   border-radius: 10px;
 }
@@ -2365,7 +2365,7 @@ section { padding: 6rem 0; }
   .nav-mobile-menu.open { display: flex; }
 
   /* Theme cards stack vertically */
-  .theme-grid { grid-template-columns: 1fr; max-width: 680px; margin-left: auto; margin-right: auto; }
+  .theme-grid { grid-template-columns: 1fr; max-width: min(90vw, 860px); margin-left: auto; margin-right: auto; }
 }
 
 /* ========================================
