@@ -318,6 +318,17 @@
     font-size: 0.9rem;
   }
   .cell-name { font-weight: 600; white-space: nowrap; }
+  .cell-sent { width: 58px; text-align: center; }
+  .sent-check {
+    width: 17px;
+    height: 17px;
+    cursor: pointer;
+    accent-color: var(--brand);
+    vertical-align: middle;
+  }
+  .sent-check:disabled { cursor: progress; opacity: 0.5; }
+  .dot-sent { background: #3d9a6d; }
+  .sk-check { display: inline-block; width: 17px; height: 17px; border-radius: 5px; }
   .avatar {
     display: inline-flex;
     align-items: center;
@@ -473,9 +484,16 @@
     .btn .btn-label { display: none; }
     .guest-table thead { display: none; }
     .guest-table, .guest-table tbody, .guest-table tr, .guest-table td { display: block; width: 100%; }
-    .guest-table tbody tr { padding: 0.85rem 1rem; }
+    .guest-table tbody tr { padding: 0.85rem 1rem; position: relative; }
     .guest-table td { padding: 0.22rem 0; max-width: none !important; }
-    .guest-table td.cell-name { font-size: 1rem; }
+    .guest-table td.cell-name { font-size: 1rem; padding-right: 2.5rem; }
+    .guest-table td.cell-sent {
+      position: absolute;
+      top: 0.95rem;
+      right: 1rem;
+      width: auto;
+      padding: 0;
+    }
     .guest-table td.cell-actions { text-align: left; padding-top: 0.6rem; }
     .cell-msg { white-space: normal; }
     .link-text { max-width: 100%; }
@@ -560,6 +578,7 @@
       <table class="guest-table" id="guestTable">
         <thead>
           <tr>
+            <th>Sent</th>
             <th>Guest</th>
             <th>Status</th>
             <th>Message</th>
@@ -568,12 +587,12 @@
           </tr>
         </thead>
         <tbody id="guestRows">
-          <tr class="sk-row"><td><div class="sk sk-line w70"></div></td><td><span class="sk sk-chip"></span></td><td><div class="sk sk-line w90"></div></td><td><div class="sk sk-line w70"></div></td><td></td></tr>
-          <tr class="sk-row"><td><div class="sk sk-line w40"></div></td><td><span class="sk sk-chip"></span></td><td><div class="sk sk-line w70"></div></td><td><div class="sk sk-line w90"></div></td><td></td></tr>
-          <tr class="sk-row"><td><div class="sk sk-line w70"></div></td><td><span class="sk sk-chip"></span></td><td><div class="sk sk-line w40"></div></td><td><div class="sk sk-line w70"></div></td><td></td></tr>
-          <tr class="sk-row"><td><div class="sk sk-line w90"></div></td><td><span class="sk sk-chip"></span></td><td><div class="sk sk-line w70"></div></td><td><div class="sk sk-line w40"></div></td><td></td></tr>
-          <tr class="sk-row"><td><div class="sk sk-line w40"></div></td><td><span class="sk sk-chip"></span></td><td><div class="sk sk-line w90"></div></td><td><div class="sk sk-line w70"></div></td><td></td></tr>
-          <tr class="sk-row"><td><div class="sk sk-line w70"></div></td><td><span class="sk sk-chip"></span></td><td><div class="sk sk-line w70"></div></td><td><div class="sk sk-line w90"></div></td><td></td></tr>
+          <tr class="sk-row"><td><span class="sk sk-check"></span></td><td><div class="sk sk-line w70"></div></td><td><span class="sk sk-chip"></span></td><td><div class="sk sk-line w90"></div></td><td><div class="sk sk-line w70"></div></td><td></td></tr>
+          <tr class="sk-row"><td><span class="sk sk-check"></span></td><td><div class="sk sk-line w40"></div></td><td><span class="sk sk-chip"></span></td><td><div class="sk sk-line w70"></div></td><td><div class="sk sk-line w90"></div></td><td></td></tr>
+          <tr class="sk-row"><td><span class="sk sk-check"></span></td><td><div class="sk sk-line w70"></div></td><td><span class="sk sk-chip"></span></td><td><div class="sk sk-line w40"></div></td><td><div class="sk sk-line w70"></div></td><td></td></tr>
+          <tr class="sk-row"><td><span class="sk sk-check"></span></td><td><div class="sk sk-line w90"></div></td><td><span class="sk sk-chip"></span></td><td><div class="sk sk-line w70"></div></td><td><div class="sk sk-line w40"></div></td><td></td></tr>
+          <tr class="sk-row"><td><span class="sk sk-check"></span></td><td><div class="sk sk-line w40"></div></td><td><span class="sk sk-chip"></span></td><td><div class="sk sk-line w90"></div></td><td><div class="sk sk-line w70"></div></td><td></td></tr>
+          <tr class="sk-row"><td><span class="sk sk-check"></span></td><td><div class="sk sk-line w70"></div></td><td><span class="sk sk-chip"></span></td><td><div class="sk sk-line w70"></div></td><td><div class="sk sk-line w90"></div></td><td></td></tr>
         </tbody>
       </table>
       <div class="empty" id="guestsEmpty" hidden>
@@ -600,7 +619,13 @@
 (function () {
   'use strict';
 
-  var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyQOiwiJSjLf0Y9Bwo2X_blPHTTzvshOS3XC4ZngTe0greB1pREd0yiZEPQ4SyIoqE/exec';
+  var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz1yHb7Ye6OXZL31I7rS2fR6pLCIj8K9fzIAJwfmDM3uGr7enFSw0YUzhU0WV9JfH4/exec';
+
+  // Message copied together with the guest's link
+  var COPY_MSG = 'We\u2019re getting married! \ud83d\udc8d\ud83e\udd0d\n\n' +
+    'We\u2019d love to celebrate this special day with you.\n\n' +
+    'Please take a moment to visit our wedding website for all the details and to RSVP.\n\n' +
+    'Myra & Vincent\nOctober 28, 2026';
 
   var guests = [];
   var filter = 'all';
@@ -608,6 +633,10 @@
   var activeTab = 'responses';
   var loading = true;
   var loadError = false;
+  var pendingSends = {};   // name -> bool, saves in flight (keeps polls from clobbering)
+  var lastSig = null;      // last rendered data signature (skip no-change re-renders)
+  var POLL_MS = 15000;
+  var pollTimer = null;
 
   var $ = function (id) { return document.getElementById(id); };
 
@@ -662,6 +691,12 @@
   }
 
   /* ---------- Data ---------- */
+  function sig() {
+    return guests.map(function (g) {
+      return g.name + '|' + g.attending + '|' + (g.message || '') + '|' + (g.link || '') + '|' + (g.sent ? 1 : 0);
+    }).join('\n');
+  }
+
   function fetchGuests(silent) {
     if (!silent) {
       loading = true;
@@ -673,9 +708,13 @@
       .then(function (data) {
         if (!data.success || !Array.isArray(data.guests)) throw new Error('bad payload');
         guests = data.guests.filter(function (g) { return g && g.name; });
+        // Keep local in-flight ticks on top of server state until POST confirms
+        Object.keys(pendingSends).forEach(function (n) {
+          guests.forEach(function (g) { if (g.name === n) g.sent = pendingSends[n]; });
+        });
         loading = false;
         loadError = false;
-        render();
+        if (!(silent && sig() === lastSig)) render();
         $('dashFoot').textContent = 'Synced with the wedding Google Sheet · updated ' +
           new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       })
@@ -690,9 +729,10 @@
 
   /* ---------- Derived ---------- */
   function counts() {
-    var c = { all: guests.length, yes: 0, no: 0, awaiting: 0, messages: 0 };
+    var c = { all: guests.length, yes: 0, no: 0, awaiting: 0, messages: 0, sent: 0 };
     guests.forEach(function (g) {
       c[statusOf(g)]++;
+      if (g.sent) c.sent++;
       if (hasMessage(g)) c.messages++;
     });
     return c;
@@ -708,6 +748,7 @@
 
   /* ---------- Render ---------- */
   function render() {
+    lastSig = sig();
     var c = counts();
 
     $('countResponses').textContent = loading ? '–' : c.all;
@@ -738,6 +779,7 @@
     var pct = function (n) { return Math.round((n / total) * 100) + '% of list'; };
     var cards = [
       { label: 'Total guests', dot: 'dot-brand', value: c.all, note: 'on the invitation list' },
+      { label: 'Invites sent', dot: 'dot-sent', value: c.sent, note: pct(c.sent) },
       { label: 'Coming', dot: 'dot-yes', value: c.yes, note: pct(c.yes) },
       { label: 'Declined', dot: 'dot-no', value: c.no, note: pct(c.no) },
       { label: 'Awaiting reply', dot: 'dot-wait', value: c.awaiting, note: pct(c.awaiting) },
@@ -766,6 +808,7 @@
     var out = '';
     for (var i = 0; i < n; i++) {
       out += '<tr class="sk-row">' +
+        '<td><span class="sk sk-check"></span></td>' +
         '<td><div class="sk sk-line ' + widths[i % 6] + '"></div></td>' +
         '<td><span class="sk sk-chip"></span></td>' +
         '<td><div class="sk sk-line ' + widths[(i + 2) % 6] + '"></div></td>' +
@@ -806,6 +849,7 @@
         ? '<td class="cell-msg" title="' + esc(g.message) + '">' + esc(g.message) + '</td>'
         : '<td class="cell-msg no-msg">No message</td>';
       return '<tr>' +
+        '<td class="cell-sent"><input type="checkbox" class="sent-check" data-name="' + esc(g.name) + '"' + (g.sent ? ' checked' : '') + ' aria-label="Invitation sent to ' + esc(g.name) + '"></td>' +
         '<td class="cell-name"><span class="avatar" style="background:' + toneFor(g.name) + '">' + esc(initials(g.name)) + '</span>' + esc(g.name) + '</td>' +
         '<td><span class="chip ' + s.cls + '">' + s.label + '</span></td>' +
         msgCell +
@@ -896,18 +940,62 @@
     var btn = e.target.closest('.copy-btn');
     if (!btn) return;
     var url = btn.getAttribute('data-link');
-    copyText(url).then(function () {
+    copyText(COPY_MSG + '\n\n' + url).then(function () {
       btn.classList.add('copied');
       var label = btn.querySelector('.copy-label');
       var prev = label.textContent;
       label.textContent = 'Copied';
-      showToast('Invitation link copied');
+      showToast('Message and link copied');
       setTimeout(function () {
         btn.classList.remove('copied');
         label.textContent = prev;
       }, 1600);
     }).catch(function () {
       showToast('Copy failed — long-press the link instead');
+    });
+  });
+
+  /* ---------- Sent status (checkbox) ---------- */
+  function postSent(name, sent) {
+    // text/plain is CORS-safelisted so the response (with the real result) is readable
+    return fetch(SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'setSent', name: name, sent: sent })
+    }).then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    }).then(function (d) {
+      if (!d.success) throw new Error(d.error || 'save failed');
+      return d;
+    });
+  }
+
+  document.addEventListener('change', function (e) {
+    var cb = e.target;
+    if (!cb || !cb.classList || !cb.classList.contains('sent-check')) return;
+    var name = cb.getAttribute('data-name');
+    var val = cb.checked;
+    var g = null;
+    for (var i = 0; i < guests.length; i++) if (guests[i].name === name) { g = guests[i]; break; }
+    if (g && !!g.sent === val) return;
+
+    if (g) g.sent = val;
+    pendingSends[name] = val;
+    cb.disabled = true;
+
+    postSent(name, val).then(function () {
+      if (pendingSends[name] === val) delete pendingSends[name];
+      cb.disabled = false;
+      render();
+      showToast(val ? 'Marked as sent' : 'Marked as not sent');
+    }).catch(function () {
+      if (pendingSends[name] === val) {
+        delete pendingSends[name];
+        if (g) g.sent = !val;
+        showToast('Could not save — try again');
+      }
+      render();
     });
   });
 
@@ -950,7 +1038,20 @@
 
   /* ---------- Start ---------- */
   fetchGuests(false);
-  setInterval(function () { fetchGuests(true); }, 60000);
+
+  // Auto-refresh: poll silently so other people's ticks show up on their own
+  function schedulePoll() {
+    clearTimeout(pollTimer);
+    if (document.hidden) return;
+    pollTimer = setTimeout(function () {
+      fetchGuests(true).then(schedulePoll);
+    }, POLL_MS);
+  }
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) { fetchGuests(true); schedulePoll(); }
+  });
+  window.addEventListener('focus', function () { fetchGuests(true); schedulePoll(); });
+  schedulePoll();
 })();
 </script>
 </body>

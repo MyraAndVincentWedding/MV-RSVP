@@ -5,7 +5,7 @@
 (function () {
   'use strict';
 
-  var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyQOiwiJSjLf0Y9Bwo2X_blPHTTzvshOS3XC4ZngTe0greB1pREd0yiZEPQ4SyIoqE/exec';
+  var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz1yHb7Ye6OXZL31I7rS2fR6pLCIj8K9fzIAJwfmDM3uGr7enFSw0YUzhU0WV9JfH4/exec';
   var WEDDING_DATE = new Date('2026-10-28T14:00:00+08:00');
   var HASHTAG = '#HeaVincentToMyra';
 
